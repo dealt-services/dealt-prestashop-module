@@ -4,10 +4,21 @@
 
 > Supported : prestashop@1.7.8
 
-#### 🏗 Dev environment
+#### Dev environment 🏗
 
-Start the docker containers to launch the mysql service & the prestashop instances :
+Start the docker containers to launch the mysql service & the prestashop instances. The dealt module is automatically mounted in the containers.
 
 ```bash
 docker-compose up
 ```
+
+The PS admin panel will be located at `localhost:8080/admin-dealt`
+
+Admin credentials :
+
+```bash
+email: dev@dealt.fr
+password: dealtmodule
+```
+
+> You can override these settings in the .env file at the root of this project (full list of available PS environment variables available [🔗 here](https://hub.docker.com/r/prestashop/prestashop/))
