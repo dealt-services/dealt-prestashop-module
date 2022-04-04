@@ -1,3 +1,5 @@
+<img src="https://dealt.fr/logo.svg" width="200"/>
+
 ### Dealt Prestashop Module
 
 > Supported : prestashop@1.7.8
