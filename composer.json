@@ -1,0 +1,26 @@
+{
+  "name": "dealt/dealt-prestashop",
+  "description": "Dealt prestashop module",
+  "authors": [
+    {
+      "name": "Edvin CANDON",
+      "email": "edvin@lostsolution.io"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "dealt/dealt-sdk": "^0.0.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "DealtModule\\": "src/"
+    },
+    "exclude-from-classmap": []
+  },
+  "config": {
+    "preferred-install": "dist",
+    "prepend-autoloader": false
+  },
+  "type": "prestashop-module",
+  "license": "MIT"
+}
