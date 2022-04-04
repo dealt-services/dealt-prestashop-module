@@ -17,8 +17,8 @@ The PS admin panel will be located at `localhost:8080/admin-dealt`
 Admin credentials :
 
 ```bash
-email: dev@dealt.fr
-password: dealtmodule
+email: demo@prestashop.com
+password: prestashop_demo
 ```
 
 > You can override these settings in the .env file at the root of this project (full list of available PS environment variables available [🔗 here](https://hub.docker.com/r/prestashop/prestashop/))
