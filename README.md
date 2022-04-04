@@ -4,7 +4,9 @@
 
 > Supported : prestashop@1.7.8
 
-#### Dev environment 🏗
+---
+
+### Dev environment 🏗
 
 Start the docker containers to launch the mysql service & the prestashop instances. The dealt module is automatically mounted in the containers.
 
@@ -22,3 +24,26 @@ password: prestashop_demo
 ```
 
 > You can override these settings in the .env file at the root of this project (full list of available PS environment variables available [🔗 here](https://hub.docker.com/r/prestashop/prestashop/))
+
+#### VSCode Setup
+
+Use the PHP Intelephense extension for VSCode for code completion and PS class comprehension :
+
+```bash
+### Clone the PrestaShop repository on your device
+git clone https://github.com/PrestaShop/PrestaShop.git
+```
+
+Edit your `.vscode/settings.json` :
+
+```json
+{
+  "intelephense.environment.includePaths": [
+    "/Path/where/you/cloned/the/PrestaShop/repo"
+  ]
+}
+```
+
+> You may need to restart VSCode or manually trigger a workspace indexing.
+
+---
