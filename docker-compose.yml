@@ -27,7 +27,7 @@ services:
       - DB_PASSWD=${DB_PASSWD}
       - DB_NAME=${DB_NAME}
       - PS_FOLDER_ADMIN=${PS_FOLDER_ADMIN}
-      - PS_DOMAIN=${PS_DOMAIN}:8083
+      - PS_DOMAIN=${PS_DOMAIN}:8080
       - PS_LANGUAGE=${PS_LANGUAGE}
       - PS_COUNTRY=${PS_COUNTRY}
       - PS_FOLDER_INSTALL=installed
