@@ -1,9 +1,12 @@
 <?php
+
+use Dealt\DealtSDK\DealtClient;
+
 if (!defined('_PS_VERSION_')) {
   exit;
 }
 
-class Dealt extends Module
+class DealtModule extends Module
 {
   public function __construct()
   {
