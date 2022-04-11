@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'DealtModule\\Database\\DealtInstaller' => $baseDir . '/src/Database/DealtInstaller.php',
     'DealtModule\\Entity\\DealtMission' => $baseDir . '/src/Entity/DealtMission.php',
     'Dealt\\DealtSDK\\CoreDealtClient' => $vendorDir . '/dealt/dealt-sdk/src/CoreDealtClient.php',
     'Dealt\\DealtSDK\\DealtClient' => $vendorDir . '/dealt/dealt-sdk/src/DealtClient.php',

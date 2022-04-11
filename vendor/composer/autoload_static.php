@@ -27,6 +27,7 @@ class ComposerStaticInit3398ac1475387c591ab5551bf7c440f0
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'DealtModule\\Database\\DealtInstaller' => __DIR__ . '/../..' . '/src/Database/DealtInstaller.php',
         'DealtModule\\Entity\\DealtMission' => __DIR__ . '/../..' . '/src/Entity/DealtMission.php',
         'Dealt\\DealtSDK\\CoreDealtClient' => __DIR__ . '/..' . '/dealt/dealt-sdk/src/CoreDealtClient.php',
         'Dealt\\DealtSDK\\DealtClient' => __DIR__ . '/..' . '/dealt/dealt-sdk/src/DealtClient.php',
