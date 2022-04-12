@@ -44,6 +44,7 @@ Edit your `.vscode/settings.json` :
 }
 ```
 
+> Make sure to build the PrestaShop cache.
 > You may need to restart VSCode or manually trigger a workspace indexing.
 
 ---

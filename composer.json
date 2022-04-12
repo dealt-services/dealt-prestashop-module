@@ -22,5 +22,8 @@
     "prepend-autoloader": false
   },
   "type": "prestashop-module",
-  "license": "MIT"
+  "license": "MIT",
+  "require-dev": {
+    "prestashop/php-dev-tools": "^4.2"
+  }
 }
