@@ -17,7 +17,7 @@ class DealtModule extends Module
     $this->author = 'Dealt Developers';
     $this->need_instance = 0;
     $this->ps_versions_compliancy = [
-      'min' => '1.7.7',
+      'min' => '1.7.8',
       'max' => '1.7.99',
     ];
     $this->bootstrap = true;
