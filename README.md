@@ -44,7 +44,6 @@ Edit your `.vscode/settings.json` :
 }
 ```
 
-> Make sure to build the PrestaShop cache.
-> You may need to restart VSCode or manually trigger a workspace indexing.
+> Make sure to build the PrestaShop cache for class stubbing comprehension in VSCode (`PrestaShop/var/cache/dev/class_stub.php` needs to be compiled) - You may need to restart VSCode or manually trigger a workspace indexing.
 
 ---
