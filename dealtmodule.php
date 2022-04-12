@@ -62,14 +62,14 @@ class DealtModule extends Module
     return parent::uninstall();
   }
 
-  // public function getContent()
-  // {
-  //   // This uses the matching with the route ps_controller_tabs_configure via the _legacy_link property
-  //   // See https://devdocs.prestashop.com/1.7/development/architecture/migration-guide/controller-routing
-  //   Tools::redirectAdmin(
-  //     $this->context->link->getAdminLink('')
-  //   );
-  // }
+  public function getContent()
+  {
+    // This uses the matching with the route ps_controller_tabs_configure via the _legacy_link property
+    // See https://devdocs.prestashop.com/1.7/development/architecture/migration-guide/controller-routing
+    Tools::redirectAdmin(
+      $this->context->link->getAdminLink('AdminDealtConfigureController')
+    );
+  }
 
 
   /**

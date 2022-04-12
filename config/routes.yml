@@ -4,3 +4,4 @@ admin_dealt_configure:
   defaults:
     _controller: 'DealtModule\Controller\Admin\AdminDealtConfigureController::indexAction'
     _legacy_controller: "AdminDealtConfigureController"
+    _legacy_link: "AdminDealtConfigureController"
