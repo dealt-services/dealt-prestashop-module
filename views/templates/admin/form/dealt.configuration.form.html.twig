@@ -1,0 +1,30 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0).
+ * It is also available through the world-wide-web at this URL: https://opensource.org/licenses/AFL-3.0
+ *#}
+
+{% extends '@Modules/dealtmodule/views/templates/admin/layout.html.twig' %}
+
+{% block controllerTitle %}{{ 'Configure controller'|trans({}, 'Modules.Controllertab.Admin') }}{% endblock %}
+
+{% block controllerDescription %}
+    {% block content %}
+        <div class="card">
+        <h3 class="card-header">
+            <i class="material-icons">settings</i> {{ 'Choice form types'|trans({}, 'Modules.DemoSymfonyForm.Admin') }}
+        </h3>
+            {{form_start(form)}}
+            {{form_end(form)}}
+        </div>
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('../modules/dealtmodule/views/public/dealt.configuration.form.bundle.js') }}"></script>
+{% endblock %}

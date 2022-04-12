@@ -23,9 +23,27 @@ class DealtModule extends Module
     $this->bootstrap = true;
 
     parent::__construct();
+
     $this->displayName = $this->l('Dealt Module');
     $this->description = $this->l('The official Dealt prestashop module.');
     $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
+
+    $tabNames = [];
+    foreach (Language::getLanguages(true) as $lang) {
+      $tabNames[$lang['locale']] = $this->trans('Dealt', [], 'Modules.DealtModule.Admin', $lang['locale']);
+    }
+
+    $this->tabs = [
+      [
+        'route_name' => 'admin_dealt_configure',
+        'class_name' => 'AdminDealtConfigure',
+        'visible' => true,
+        'name' => $tabNames,
+        'parent_class_name' => 'IMPROVE',
+        'wording' => 'Dealt',
+        'wording_domain' => 'Modules.DealtModule.Admin'
+      ],
+    ];
 
     if (!Configuration::get('dealtmodule')) {
       $this->warning = $this->l('No name provided');
@@ -43,6 +61,16 @@ class DealtModule extends Module
     $this->unsetup();
     return parent::uninstall();
   }
+
+  // public function getContent()
+  // {
+  //   // This uses the matching with the route ps_controller_tabs_configure via the _legacy_link property
+  //   // See https://devdocs.prestashop.com/1.7/development/architecture/migration-guide/controller-routing
+  //   Tools::redirectAdmin(
+  //     $this->context->link->getAdminLink('')
+  //   );
+  // }
+
 
   /**
    * Instantiates the DealtInstaller module if needed :
