@@ -40,7 +40,7 @@ class DealtModule extends Module
 
   public function uninstall()
   {
-    $this->getInstaller()->dropTables();
+    $this->unsetup();
     return parent::uninstall();
   }
 
@@ -71,10 +71,6 @@ class DealtModule extends Module
 
   private function setup()
   {
-
-    /* create DealtModule SQL tables */
-    $this->getInstaller()->createTables();
-
     /* create internal DealtModule category */
     $match = Category::searchByName(null, static::$DEALT_PRODUCT_CATEGORY_NAME, true);
 
@@ -88,6 +84,20 @@ class DealtModule extends Module
       $category->id_parent = Configuration::get('PS_ROOT_CATEGORY');
       $category->description = "Internal DealtModule category used for Dealt mission virtual products";
       $category->add();
+    }
+
+    /* create DealtModule SQL tables */
+    $this->getInstaller()->createTables();
+  }
+
+  private function unsetup()
+  {
+    /* remove internal dealt category */
+    $match = Category::searchByName(null, static::$DEALT_PRODUCT_CATEGORY_NAME, true);
+
+    if (!empty($match)) {
+      $category = new Category($match['id_category']);
+      $category->delete();
     }
   }
 }
