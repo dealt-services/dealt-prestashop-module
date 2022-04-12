@@ -7,6 +7,8 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) require_once __DIR__ . '/vend
 
 class DealtModule extends Module
 {
+  static $DEALT_PRODUCT_CATEGORY_NAME = "__dealt__";
+
   public function __construct()
   {
     $this->name = 'dealtmodule';
@@ -32,7 +34,7 @@ class DealtModule extends Module
 
   public function install()
   {
-    $this->getInstaller()->createTables();
+    $this->setup();
     return parent::install();
   }
 
@@ -65,5 +67,27 @@ class DealtModule extends Module
     }
 
     return $installer;
+  }
+
+  private function setup()
+  {
+
+    /* create DealtModule SQL tables */
+    $this->getInstaller()->createTables();
+
+    /* create internal DealtModule category */
+    $match = Category::searchByName(null, static::$DEALT_PRODUCT_CATEGORY_NAME, true);
+
+    if (empty($match)) {
+      $idLang = (int) Context::getContext()->language->id;
+
+      $category = new Category();
+      $category->name = [$idLang => static::$DEALT_PRODUCT_CATEGORY_NAME];
+      $category->link_rewrite = [$idLang => Tools::link_rewrite(static::$DEALT_PRODUCT_CATEGORY_NAME)];
+      $category->active = false;
+      $category->id_parent = Configuration::get('PS_ROOT_CATEGORY');
+      $category->description = "Internal DealtModule category used for Dealt mission virtual products";
+      $category->add();
+    }
   }
 }
