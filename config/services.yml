@@ -1,6 +1,23 @@
 services:
+  # Dealt Module Installer
   dealtmodule.installer:
     class: DealtModule\Database\DealtInstaller
     arguments:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"
+  # Dealt Configuration Form
+  # form data provider
+  dealtmodule.admin.form.configuration.provider:
+    class: DealtModule\Forms\Admin\DealtConfigurationFormDataProvider
+    arguments:
+      $configuration: "@prestashop.adapter.legacy.configuration"
+  # form builder
+  dealtmodule.admin.form.configuration.handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+    arguments:
+      $formBuilder: '@=service("form.factory").createBuilder()'
+      $hookDispatcher: "@prestashop.core.hook.dispatcher"
+      $formDataProvider: "@dealtmodule.admin.form.configuration.provider"
+      $formTypes:
+        configuration: 'DealtModule\Forms\Admin\DealtConfigurationFormType'
+      $hookName: "AdminDealtModuleConfiguration"

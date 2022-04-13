@@ -14,14 +14,14 @@ class DealtConfigurationFormType extends AbstractType
   {
     $builder
       ->add('api_key', TextWithLengthCounterType::class, [
-        'label' => 'API Key',
-        'max_length' => 255,
+        'label' => 'API Key (uuid)',
+        'max_length' => 36,
       ])
-      ->add('switch', SwitchType::class, [
+      ->add('prod_env', SwitchType::class, [
         'label' => 'Environment',
         'choices' => [
-          'PROD' => true,
-          'TEST' => false,
+          'Test/Staging' => false,
+          'Production' => true,
         ],
       ]);
   }

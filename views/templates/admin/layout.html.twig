@@ -9,6 +9,7 @@
  *#}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% form_theme form '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block content %}
     <div class="row justify-content-center">
@@ -16,15 +17,17 @@
             <form method="post" class="form-horizontal">
                 <div class="card">
                     <h3 class="card-header">
-                        <i class="material-icons">settings</i> {% block controllerTitle %}{{ 'Configure controller'|trans({}, 'Modules.Controllertab.Admin') }}{% endblock %}
+                        {% block cardHeader %}{{ 'Configure controller'|trans({}, 'Modules.DealtModule.Admin') }}{% endblock %}
                     </h3>
                     <div class="card-block row">
-                        {# <div class="card-text"> #}
-                            {% block controllerDescription %}
+                        <div class="card-text">
+                            {% block cardBody %}
                             {% endblock %}
-                        {# </div> #}
+                        </div>
                     </div>
                     <div class="card-footer">
+                        {% block cardFooter %}
+                        {% endblock %}
                     </div>
                 </div>
             </form>

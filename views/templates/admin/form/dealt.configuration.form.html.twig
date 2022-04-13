@@ -10,19 +10,22 @@
 
 {% extends '@Modules/dealtmodule/views/templates/admin/layout.html.twig' %}
 
-{% block controllerTitle %}{{ 'Configure controller'|trans({}, 'Modules.Controllertab.Admin') }}{% endblock %}
+    {% block cardHeader %}
+        <i class="material-icons">settings</i> {{ 'Choice form types'|trans({}, 'Modules.DealtModule.Admin') }}
+    {% endblock %}
 
-{% block controllerDescription %}
-    {% block content %}
-        <div class="card">
-        <h3 class="card-header">
-            <i class="material-icons">settings</i> {{ 'Choice form types'|trans({}, 'Modules.DemoSymfonyForm.Admin') }}
-        </h3>
-            {{form_start(form)}}
-            {{form_end(form)}}
+    {% block cardBody %}
+    {{ form_start(form)}}
+    {{ form_end(form)}}
+    {% endblock %}
+
+    {% block cardFooter %}
+        <div class="d-flex justify-content-between">
+            <a href="#"></a>
+            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
         </div>
     {% endblock %}
-{% endblock %}
+
 
 {% block javascripts %}
     {{ parent() }}
