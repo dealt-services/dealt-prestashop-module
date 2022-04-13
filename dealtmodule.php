@@ -20,7 +20,7 @@ class DealtModule extends Module
       'min' => '1.7.8',
       'max' => '1.7.99',
     ];
-    $this->bootstrap = true;
+    $this->bootstrap = false;
 
     parent::__construct();
 
@@ -36,7 +36,7 @@ class DealtModule extends Module
     $this->tabs = [
       [
         'route_name' => 'admin_dealt_configure',
-        'class_name' => 'AdminDealtConfigure',
+        'class_name' => 'AdminDealtConfiguration',
         'visible' => true,
         'name' => $tabNames,
         'parent_class_name' => 'IMPROVE',
@@ -67,7 +67,7 @@ class DealtModule extends Module
     // This uses the matching with the route ps_controller_tabs_configure via the _legacy_link property
     // See https://devdocs.prestashop.com/1.7/development/architecture/migration-guide/controller-routing
     Tools::redirectAdmin(
-      $this->context->link->getAdminLink('AdminDealtConfigureController')
+      $this->context->link->getAdminLink('AdminDealtConfigurationController')
     );
   }
 

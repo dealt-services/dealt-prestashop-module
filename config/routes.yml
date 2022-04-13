@@ -1,7 +1,7 @@
 admin_dealt_configure:
   path: /dealt/configure
-  methods: [GET]
+  methods: [GET, POST]
   defaults:
-    _controller: 'DealtModule\Controller\Admin\AdminDealtConfigureController::indexAction'
-    _legacy_controller: "AdminDealtConfigureController"
-    _legacy_link: "AdminDealtConfigureController"
+    _controller: 'DealtModule\Controller\Admin\AdminDealtConfigurationController::indexAction'
+    _legacy_controller: "AdminDealtConfigurationController"
+    _legacy_link: "AdminDealtConfigurationController"
