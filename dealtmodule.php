@@ -24,9 +24,9 @@ class DealtModule extends Module
 
     parent::__construct();
 
-    $this->displayName = $this->l('Dealt Module');
-    $this->description = $this->l('The official Dealt prestashop module.');
-    $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
+    $this->displayName = $this->trans('Dealt Module', [], 'Modules.DealtModule.Admin');
+    $this->description = $this->trans('The official Dealt prestashop module.', [], 'Modules.DealtModule.Admin');
+    $this->confirmUninstall = $this->trans('Are you sure you want to uninstall?', [], 'Modules.DealtModule.Admin');
 
     $tabNames = [];
     foreach (Language::getLanguages(true) as $lang) {
@@ -36,7 +36,7 @@ class DealtModule extends Module
     $this->tabs = [
       [
         'route_name' => 'admin_dealt_configure',
-        'class_name' => 'AdminDealtConfiguration',
+        'class_name' => 'AdminDealtConfigurationController',
         'visible' => true,
         'name' => $tabNames,
         'parent_class_name' => 'IMPROVE',
@@ -46,7 +46,7 @@ class DealtModule extends Module
     ];
 
     if (!Configuration::get('dealtmodule')) {
-      $this->warning = $this->l('No name provided');
+      $this->warning = $this->trans('No name provided', [], 'Modules.DealtModule.Admin');
     }
   }
 
@@ -83,7 +83,7 @@ class DealtModule extends Module
   {
     try {
       $installer = $this->get('dealtmodule.installer');
-    } catch (Exception $e) {
+    } catch (Exception $_) {
       $installer = null;
     }
 
