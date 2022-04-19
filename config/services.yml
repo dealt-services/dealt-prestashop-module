@@ -5,15 +5,15 @@ services:
     arguments:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"
-  ################################
-  ### DEALT CONFIGURATION FORM ###
-  ################################
-  ### DATA PROVIDER ##############
+  #######################################
+  ### DEALT CONFIGURATION FORM ##########
+  #######################################
+  ### DATA PROVIDER #####################
   dealtmodule.admin.form.configuration.provider:
     class: DealtModule\Forms\Admin\DealtConfigurationFormDataProvider
     arguments:
       $configuration: "@prestashop.adapter.legacy.configuration"
-  ### FORM HANDLER ###############
+  ### FORM HANDLER ######################
   dealtmodule.admin.form.configuration.handler:
     class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
     arguments:
@@ -23,11 +23,23 @@ services:
       $formTypes:
         configuration: 'DealtModule\Forms\Admin\DealtConfigurationFormType'
       $hookName: "AdminDealtModuleConfiguration"
-  ################################
-  ### DEALT MISSION GRID  ########
-  ################################
-  ### GRID DEFINITION FACTORY ####
-  dealtmodule.admin.grid.missions.factory:
+  ########################################
+  ### DEALT MISSION GRID  ################
+  ########################################
+  ### MISSION GRID DEFINITION FACTORY ####
+  dealtmodule.admin.grid.missions.definition.factory:
     class: 'DealtModule\Core\Grid\Definition\Factory\DealtMissionGridDefinitionFactory'
     parent: "prestashop.core.grid.definition.factory.abstract_grid_definition"
+  ### MISSION GRID QUERY BUILDER #########
+  dealtmodule.admin.grid.missions.query.builder:
+    class: 'DealtModule\Core\Grid\Query\DealtMissionQueryBuilder'
+    parent: "prestashop.core.grid.abstract_query_builder"
     public: true
+  ### MISSION GRID DATA FACTORY ##########
+  dealtmodule.admin.grid.missions.data.factory:
+    class: "%prestashop.core.grid.data.factory.doctrine_grid_data_factory%"
+    arguments:
+      $gridQueryBuilder: "@dealtmodule.admin.grid.missions.query.builder"
+      $hookDispatcher: "@prestashop.core.hook.dispatcher"
+      $queryParser: "@prestashop.core.grid.query.doctrine_query_parser"
+      $gridId: "dealt_missions"
