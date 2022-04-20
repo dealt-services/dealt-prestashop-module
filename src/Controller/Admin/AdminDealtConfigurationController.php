@@ -42,8 +42,24 @@ class AdminDealtConfigurationController extends FrameworkBundleAdminController
     return $this->render(
       '@Modules/dealtmodule/views/templates/admin/form/dealt.configuration.form.html.twig',
       [
-        'form' => $form->createView()
+        'form' => $form->createView(),
+        'enableSidebar' => true,
+        'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
       ]
     );
+  }
+
+  /**
+   * @return array
+   */
+  private function getToolbarButtons()
+  {
+    return [
+      'add' => [
+        'href' => $this->generateUrl('admin_dealt_missions_list'),
+        'desc' => $this->trans('Configure missions', 'Modules.DealtModule.Admin'),
+        'icon' => 'dehaze',
+      ],
+    ];
   }
 }
