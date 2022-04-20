@@ -43,3 +43,11 @@ services:
       $hookDispatcher: "@prestashop.core.hook.dispatcher"
       $queryParser: "@prestashop.core.grid.query.doctrine_query_parser"
       $gridId: "dealt_missions"
+  ### MISSION GRID FACTORY ################
+  dealtmodule.admin.grid.missions.factory:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      $definitionFactory: "@dealtmodule.admin.grid.missions.definition.factory"
+      $dataFactory: "@dealtmodule.admin.grid.missions.data.factory"
+      $filterFormFactory: "@prestashop.core.grid.filter.form_factory"
+      $hookDispatcher: "@prestashop.core.hook.dispatcher"

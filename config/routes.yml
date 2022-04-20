@@ -5,3 +5,24 @@ admin_dealt_configure:
     _controller: 'DealtModule\Controller\Admin\AdminDealtConfigurationController::indexAction'
     _legacy_controller: "AdminDealtConfigurationController"
     _legacy_link: "AdminDealtConfigurationController"
+admin_dealt_missions_list:
+  path: /dealt/missions/list
+  methods: [GET]
+  defaults:
+    _controller: 'DealtModule\Controller\Admin\AdminDealtMissionController::indexAction'
+    _legacy_controller: "AdminDealtMissionController"
+    _legacy_link: "AdminDealtMissionController"
+admin_dealt_missions_edit:
+  path: /dealt/missions/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'DealtModule\Controller\Admin\AdminDealtMissionController::editAction'
+    _legacy_controller: "AdminDealtMissionController"
+    _legacy_link: "AdminDealtMissionController"
+admin_dealt_missions_delete:
+  path: /dealt/missions/delete
+  methods: [DELETE]
+  defaults:
+    _controller: 'DealtModule\Controller\Admin\AdminDealtMissionController::deleteAction'
+    _legacy_controller: "AdminDealtMissionController"
+    _legacy_link: "AdminDealtMissionController"
