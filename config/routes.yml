@@ -12,11 +12,11 @@ admin_dealt_missions_list:
     _controller: 'DealtModule\Controller\Admin\AdminDealtMissionController::indexAction'
     _legacy_controller: "AdminDealtMissionController"
     _legacy_link: "AdminDealtMissionController"
-admin_dealt_missions_edit:
-  path: /dealt/missions/edit
+admin_dealt_missions_create:
+  path: /dealt/missions/create
   methods: [GET, POST]
   defaults:
-    _controller: 'DealtModule\Controller\Admin\AdminDealtMissionController::editAction'
+    _controller: 'DealtModule\Controller\Admin\AdminDealtMissionController::createAction'
     _legacy_controller: "AdminDealtMissionController"
     _legacy_link: "AdminDealtMissionController"
 admin_dealt_missions_delete:

@@ -23,6 +23,22 @@ services:
       $formTypes:
         configuration: 'DealtModule\Forms\Admin\DealtConfigurationFormType'
       $hookName: "AdminDealtModuleConfiguration"
+  #######################################
+  ### DEALT MISSION FORM ################
+  #######################################
+  ### DATA PROVIDER #####################
+  dealtmodule.admin.form.mission.provider:
+    class: DealtModule\Forms\Admin\DealtMissionFormDataProvider
+  ### FORM HANDLER ######################
+  dealtmodule.admin.form.mission.handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+    arguments:
+      $formBuilder: '@=service("form.factory").createBuilder()'
+      $hookDispatcher: "@prestashop.core.hook.dispatcher"
+      $formDataProvider: "@dealtmodule.admin.form.configuration.provider"
+      $formTypes:
+        mission: 'DealtModule\Forms\Admin\DealtMissionFormType'
+      $hookName: "AdminDealtModuleConfiguration"
   ########################################
   ### DEALT MISSION GRID  ################
   ########################################

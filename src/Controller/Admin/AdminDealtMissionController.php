@@ -32,6 +32,27 @@ class AdminDealtMissionController extends FrameworkBundleAdminController
       'enableSidebar' => true,
       'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
       'grid' => $this->presentGrid($missionsGrid),
+      'layoutHeaderToolbarBtn' => [
+        'mission_create' => [
+          'href' => $this->generateUrl('admin_dealt_missions_create'),
+          'desc' => $this->trans('Add mission', 'Modules.DealtModule.Admin'),
+          'icon' => 'add',
+        ],
+      ]
     ]);
+  }
+
+  public function createAction(Request $request)
+  {
+    $form = $this->get('dealtmodule.admin.form.mission.handler')->getForm();
+    $form->handleRequest($request);
+
+    return $this->render(
+      '@Modules/dealtmodule/views/templates/admin/form/dealt.mission.form.html.twig',
+      [
+        'form' => $form->createView(),
+        'enableSidebar' => true,
+      ]
+    );
   }
 }
