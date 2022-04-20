@@ -55,7 +55,7 @@ class AdminDealtConfigurationController extends FrameworkBundleAdminController
   private function getToolbarButtons()
   {
     return [
-      'add' => [
+      'mission_list' => [
         'href' => $this->generateUrl('admin_dealt_missions_list'),
         'desc' => $this->trans('Configure missions', 'Modules.DealtModule.Admin'),
         'icon' => 'dehaze',
