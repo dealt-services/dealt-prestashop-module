@@ -10,9 +10,10 @@
 
 {% extends '@Modules/dealtmodule/views/templates/admin/layout.html.twig' %}
 
+
 {% block cardHeader %}
-	<i class="material-icons">settings</i>
-	{{ 'Dealt configuration'|trans({}, 'Modules.DealtModule.Admin') }}
+	<i class="material-icons">add</i>
+	{{ 'New Dealt mission'|trans({}, 'Modules.DealtModule.Admin') }}
 {% endblock %}
 
 {% block cardBody %}
@@ -30,5 +31,5 @@
 
 {% block javascripts %}
 	{{ parent() }}
-	<script src="{{ asset('../modules/dealtmodule/views/public/dealt.configuration.form.bundle.js') }}"></script>
+	<script src="{{ asset('../modules/dealtmodule/views/public/dealt.mission.form.bundle.js') }}"></script>
 {% endblock %}

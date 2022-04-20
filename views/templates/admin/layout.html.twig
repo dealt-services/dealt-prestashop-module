@@ -9,40 +9,41 @@
  *#}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% form_theme form '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme form '@Modules/dealtmodule/views/templates/admin/form/form.theme.html.twig' %}
 
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col">
-            <form method="post" class="form-horizontal">
-                <div class="card">
-                    <h3 class="card-header">
-                        {% block cardHeader %}{{ 'Configure controller'|trans({}, 'Modules.DealtModule.Admin') }}{% endblock %}
-                    </h3>
-                    <div class="card-block row">
-                        <div class="card-text">
-                            {% block cardBody %}
-                            {% endblock %}
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        {% block cardFooter %}
-                        {% endblock %}
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+	<div class="row justify-content-center">
+		<div class="col">
+			<form method="post" class="form-horizontal">
+				<div class="card">
+					<h3 class="card-header">
+						{% block cardHeader %}
+							{{ 'Configure controller'|trans({}, 'Modules.DealtModule.Admin') }}
+						{% endblock %}
+					</h3>
+					<div class="card-block row">
+						<div class="card-text">
+							{% block cardBody %}{% endblock %}
+						</div>
+					</div>
+					<div class="card-footer">
+						{% block cardFooter %}{% endblock %}
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/atom-one-dark.min.css">
+	{{ parent() }}
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/atom-one-dark.min.css">
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+	{{ parent() }}
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+	<script>
+		hljs.initHighlightingOnLoad();
+	</script>
 {% endblock %}
