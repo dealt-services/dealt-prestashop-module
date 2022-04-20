@@ -1,6 +1,7 @@
 <?php
 
 use DealtModule\Database\DealtInstaller;
+use PrestaShopBundle\Entity\Repository\TabRepository;
 
 if (!defined('_PS_VERSION_')) exit;
 if (file_exists(__DIR__ . '/vendor/autoload.php')) require_once __DIR__ . '/vendor/autoload.php';
@@ -8,6 +9,27 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) require_once __DIR__ . '/vend
 class DealtModule extends Module
 {
   static $DEALT_PRODUCT_CATEGORY_NAME = "__dealt__";
+  static $DEALT_MAIN_TAB_NAME = "DEALTMODULE";
+  static $DEALT_TABS = [
+    [
+      'class_name' => 'DEALTMODULE',
+      'icon' => 'settings',
+      'parent_class_name' => 'IMPROVE',
+      'name' => 'Dealt',
+    ],
+    [
+      'route_name' => 'admin_dealt_configure',
+      'class_name' => 'AdminDealtConfigurationController',
+      'parent_class_name' => 'DEALTMODULE',
+      'name' => 'Configure',
+    ],
+    [
+      'route_name' => 'admin_dealt_missions_list',
+      'class_name' => 'AdminDealtMissionController',
+      'parent_class_name' => 'DEALTMODULE',
+      'name' => 'Missions configuration',
+    ]
+  ];
 
   public function __construct()
   {
@@ -28,23 +50,6 @@ class DealtModule extends Module
     $this->description = $this->trans('The official Dealt prestashop module.', [], 'Modules.DealtModule.Admin');
     $this->confirmUninstall = $this->trans('Are you sure you want to uninstall?', [], 'Modules.DealtModule.Admin');
 
-    $tabNames = [];
-    foreach (Language::getLanguages(true) as $lang) {
-      $tabNames[$lang['locale']] = $this->trans('Dealt', [], 'Modules.DealtModule.Admin', $lang['locale']);
-    }
-
-    $this->tabs = [
-      [
-        'route_name' => 'admin_dealt_configure',
-        'class_name' => 'AdminDealtConfigurationController',
-        'visible' => true,
-        'name' => $tabNames,
-        'parent_class_name' => 'IMPROVE',
-        'wording' => 'Dealt',
-        'wording_domain' => 'Modules.DealtModule.Admin'
-      ],
-    ];
-
     if (!Configuration::get('dealtmodule')) {
       $this->warning = $this->trans('No name provided', [], 'Modules.DealtModule.Admin');
     }
@@ -53,13 +58,13 @@ class DealtModule extends Module
   public function install()
   {
     $this->setup();
-    return parent::install();
+    return parent::install() && $this->installTabs();
   }
 
   public function uninstall()
   {
     $this->unsetup();
-    return parent::uninstall();
+    return parent::uninstall() && $this->uninstallTabs();
   }
 
   public function getContent()
@@ -127,5 +132,49 @@ class DealtModule extends Module
       $category = new Category($match['id_category']);
       $category->delete();
     }
+  }
+
+  private function installTabs()
+  {
+    $tabRepo = $this->get('prestashop.core.admin.tab.repository');
+
+    foreach (static::$DEALT_TABS as $tabDefinition) {
+      $tabId = (int) $tabRepo->findOneIdByClassName($tabDefinition['class_name']);
+      if (!$tabId) $tabId = null;
+
+      $tab = new Tab($tabId);
+      $tab->active = 1;
+      $tab->class_name = $tabDefinition['class_name'];
+      if (isset($tabDefinition['route_name'])) $tab->route_name = $tabDefinition['route_name'];
+      if (isset($tabDefinition['icon'])) $tab->icon = $tabDefinition['icon'];
+
+      $tab->name = [];
+      foreach (Language::getLanguages() as $lang) {
+        $tab->name[$lang['id_lang']] = $this->trans($tabDefinition['name'], [], 'Modules.DealtModule.Admin', $lang['locale']);
+      }
+      $tab->id_parent = (int) $tabRepo->findOneIdByClassName($tabDefinition['parent_class_name']);
+      $tab->module = $this->name;
+      $tab->wording_domain = "Modules.DealtModule.Admin";
+      $tab->wording = $tabDefinition['name'];
+
+      $tab->save();
+    }
+
+    return true;
+  }
+
+  private function uninstallTabs()
+  {
+    $tabRepo = $this->get('prestashop.core.admin.tab.repository');
+
+    foreach (static::$DEALT_TABS as $tabDefinition) {
+      $tabId = (int) $tabRepo->findOneIdByClassName($tabDefinition['class_name']);
+      if (!$tabId) continue;
+
+      $tab = new Tab($tabId);
+      $tab->delete();
+    }
+
+    return true;
   }
 }
