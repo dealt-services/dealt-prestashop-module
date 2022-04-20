@@ -10,6 +10,7 @@ const psComponentsDir = path.resolve(psJsDir, "components");
 const config = {
   entry: {
     "dealt.configuration.form": ["./js/form/dealt.configuration.form.js"],
+    "dealt.missions.list": ["./js/grid/dealt.missions.list.js"],
   },
   output: {
     path: path.resolve(__dirname, "public"),
