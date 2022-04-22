@@ -9,6 +9,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractFilterableGridDef
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 
 final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
@@ -43,6 +44,17 @@ final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefi
           ->setName($this->trans('Mission title', [], 'Modules.DealtModule.Admin'))
           ->setOptions([
             'field' => 'title_mission',
+          ])
+      )
+      ->add((new LinkColumn('product_link'))
+          ->setName($this->trans('Virtual Dealt Product', [], 'Modules.DealtModule.Admin'))
+          ->setOptions([
+            'icon' => 'edit',
+            'target' => '_BLANK',
+            'field' => 'id_dealt_virtual_product',
+            'route' => 'admin_product_form',
+            'route_param_name' => 'id',
+            'route_param_field' => 'id_dealt_virtual_product',
           ])
       )
       ->add((new ActionColumn('actions'))

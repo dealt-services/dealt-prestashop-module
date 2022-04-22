@@ -17,7 +17,7 @@ class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
   public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
   {
     $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-    $qb->select('dm.id_mission, dm.dealt_id_mission, dm.title_mission')
+    $qb->select('dm.id_mission, dm.dealt_id_mission, dm.title_mission, dm.id_dealt_virtual_product')
       ->groupBy('dm.id_mission')
       ->orderBy(
         $searchCriteria->getOrderBy(),
