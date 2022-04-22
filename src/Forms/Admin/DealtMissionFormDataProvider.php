@@ -2,20 +2,19 @@
 
 namespace DealtModule\Forms\Admin;
 
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 
-final class DealtMissionFormDataProvider implements FormDataProviderInterface
+class DealtMissionFormDataProvider implements FormDataProviderInterface
 {
   /**
    * @return mixed
    */
-  public function getData()
+  public function getData($_)
   {
     return [];
   }
 
-
-  public function setData(array $data)
+  public function getDefaultData()
   {
     return [];
   }

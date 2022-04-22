@@ -44,8 +44,19 @@ class AdminDealtMissionController extends FrameworkBundleAdminController
 
   public function createAction(Request $request)
   {
-    $form = $this->get('dealtmodule.admin.form.mission.handler')->getForm();
+    $formBuilder = $this->get('dealtmodule.admin.form.mission.builder');
+    $form = $formBuilder->getForm();
     $form->handleRequest($request);
+
+    $formHandler = $this->get('dealtmodule.admin.form.mission.handler');
+    $result = $formHandler->handle($form);
+
+    if (null !== $result->getIdentifiableObjectId()) {
+      $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+      return $this->redirectToRoute('admin_dealt_missions_list');
+    }
+
 
     return $this->render(
       '@Modules/dealtmodule/views/templates/admin/form/dealt.mission.form.html.twig',

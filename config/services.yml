@@ -27,18 +27,26 @@ services:
   ### DEALT MISSION FORM ################
   #######################################
   ### DATA PROVIDER #####################
-  dealtmodule.admin.form.mission.provider:
+  dealtmodule.admin.form.mission.data.provider:
     class: DealtModule\Forms\Admin\DealtMissionFormDataProvider
+  ### FORM BUILDER ######################
+  dealtmodule.admin.form.mission.builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: "prestashop.core.form.builder.form_builder_factory:create"
+    arguments:
+      - 'DealtModule\Forms\Admin\DealtMissionFormType'
+      - "@dealtmodule.admin.form.mission.data.provider"
+  ### FORM DATA HANDLER #################
+  dealtmodule.admin.form.mission.data.handler:
+    class: 'DealtModule\Forms\Admin\DealtMissionFormDataHandler'
+    arguments:
+      - "@doctrine.orm.default_entity_manager"
   ### FORM HANDLER ######################
   dealtmodule.admin.form.mission.handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: "prestashop.core.form.identifiable_object.handler.form_handler_factory:create"
     arguments:
-      $formBuilder: '@=service("form.factory").createBuilder()'
-      $hookDispatcher: "@prestashop.core.hook.dispatcher"
-      $formDataProvider: "@dealtmodule.admin.form.configuration.provider"
-      $formTypes:
-        mission: 'DealtModule\Forms\Admin\DealtMissionFormType'
-      $hookName: "AdminDealtModuleConfiguration"
+      - "@dealtmodule.admin.form.mission.data.handler"
   ########################################
   ### DEALT MISSION GRID  ################
   ########################################
