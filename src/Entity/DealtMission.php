@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DealtModule\Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
