@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace DealtModule\Controller\Admin;
 
 use DealtModule\Core\Grid\Filters\DealtMissionFilters;
+use DealtModule\Entity\DealtMission;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class AdminDealtMissionController.
@@ -42,6 +44,11 @@ class AdminDealtMissionController extends FrameworkBundleAdminController
     ]);
   }
 
+  /**
+   * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+   * @param Request $request
+   * @return Response
+   */
   public function createAction(Request $request)
   {
     $formBuilder = $this->get('dealtmodule.admin.form.mission.builder');
@@ -65,5 +72,21 @@ class AdminDealtMissionController extends FrameworkBundleAdminController
         'enableSidebar' => true,
       ]
     );
+  }
+
+  /**
+   * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+   * @param int $missionId
+   * @return Response
+   */
+  public function deleteAction(int $missionId)
+  {
+    /** @var EntityManagerInterface $entityManager */
+    $em = $this->get('doctrine.orm.entity_manager');
+    $mission =  $em->getPartialReference(DealtMission::class, $missionId);
+    $em->remove($mission);
+    $em->flush();
+
+    return $this->redirectToRoute('admin_dealt_missions_list');
   }
 }

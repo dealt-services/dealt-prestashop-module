@@ -74,7 +74,7 @@ final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefi
                   ->setName($this->trans('Delete', [], 'Admin.Actions'))
                   ->setIcon('delete')
                   ->setOptions([
-                    'method' => 'DELETE',
+                    'method' => 'POST',
                     'route' => 'admin_dealt_missions_delete',
                     'route_param_name' => 'missionId',
                     'route_param_field' => 'id_mission',
