@@ -24,7 +24,7 @@ class DealtMission
   private $id;
 
   /**
-   * @var int
+   * @var string
    *
    * @ORM\Column(name="dealt_id_mission", type="string", length=36)
    */
@@ -36,6 +36,13 @@ class DealtMission
    * @ORM\Column(name="title_mission", type="string", length=64)
    */
   private $missionTitle;
+
+  /**
+   * @var int
+   * 
+   * @ORM\Column(name="id_dealt_virtual_product", type="integer")
+   */
+  private $dealtVirtualProductId;
 
   /**
    * @var DateTime
@@ -70,7 +77,7 @@ class DealtMission
   /**
    * @param int
    *
-   * @return ProductComment
+   * @return DealtMission
    */
   public function setMissionTitle($missionTitle)
   {
@@ -89,11 +96,30 @@ class DealtMission
   /**
    * @param int
    *
-   * @return ProductComment
+   * @return DealtMission
    */
   public function setDealtMissionId($dealtMissionId)
   {
     $this->dealtMissionId = $dealtMissionId;
+    return $this;
+  }
+
+  /**
+   * @return int
+   */
+  public function getDealtVirtualProductId()
+  {
+    return $this->dealtVirtualProductId;
+  }
+
+  /**
+   * @param int
+   *
+   * @return DealtMission
+   */
+  public function setDealtVirtualProductId($dealtVirtualProductId)
+  {
+    $this->dealtVirtualProductId = $dealtVirtualProductId;
     return $this;
   }
 
@@ -112,7 +138,7 @@ class DealtMission
    *
    * @param DateTime $dateAdd
    *
-   * @return $this
+   * @return DealtMission
    */
   public function setDateAdd(DateTime $dateAdd)
   {
@@ -131,7 +157,7 @@ class DealtMission
   /**
    * @param DateTime $dateUpd
    *
-   * @return $this
+   * @return DealtMission
    */
   public function setDateUpd(DateTime $dateUpd)
   {
