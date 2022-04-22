@@ -49,7 +49,7 @@ final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefi
       ->add((new LinkColumn('product_link'))
           ->setName($this->trans('Virtual Dealt Product', [], 'Modules.DealtModule.Admin'))
           ->setOptions([
-            'icon' => 'edit',
+            'icon' => 'link',
             'target' => '_BLANK',
             'field' => 'id_dealt_virtual_product',
             'route' => 'admin_product_form',
