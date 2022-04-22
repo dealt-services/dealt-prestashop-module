@@ -7,6 +7,7 @@ use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class DealtMissionFormType extends AbstractType
@@ -16,6 +17,7 @@ class DealtMissionFormType extends AbstractType
   {
     $builder
       ->add('id_mission', HiddenType::class)
+      ->add('id_dealt_virtual_product', HiddenType::class)
       ->add('title_mission', TextType::class, [
         'label' => 'Title',
         'required' => true
@@ -24,6 +26,11 @@ class DealtMissionFormType extends AbstractType
         'label' => 'Mission id',
         'required' => true,
         'max_length' => 36,
+      ])
+      ->add('mission_price', MoneyWithSuffixType::class, [
+        'label' => 'Mission price',
+        'currency' => 'EUR',
+        'suffix' => '(tax excl.)',
       ])
       ->add('ids_category', CategoryChoiceTreeType::class, [
         'multiple' => true,
