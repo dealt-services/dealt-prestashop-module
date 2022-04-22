@@ -176,4 +176,9 @@ class DealtModule extends Module
 
     return true;
   }
+
+  public function isUsingNewTranslationSystem()
+  {
+    return true;
+  }
 }
