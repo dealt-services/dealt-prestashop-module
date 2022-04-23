@@ -3,15 +3,14 @@
 namespace DealtModule\Forms\Admin;
 
 use DealtModule\Entity\DealtMission;
+use DealtModule\Tools\Helpers;
 use Doctrine\ORM\EntityManagerInterface;
-
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+
 use Product;
 use Category;
-use Language;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use StockAvailable;
-use Tools;
 
 class DealtMissionFormDataHandler implements FormDataHandlerInterface
 {
@@ -39,7 +38,7 @@ class DealtMissionFormDataHandler implements FormDataHandlerInterface
     $mission->setMissionTitle($data['title_mission']);
     $mission->setDealtMissionId($data['dealt_id_mission']);
     /* automatically create virtual dealt product for mission */
-    $mission->setDealtVirtualProductId($this->createDealtVirtualProduct($data['title_mission'], $data['dealt_id_mission'], $data['misison_price']));
+    $mission->setDealtVirtualProductId($this->createDealtVirtualProduct($data['title_mission'], $data['dealt_id_mission'], $data['mission_price']));
     $mission->updateTimestamps();
 
     $this->entityManager->persist($mission);
@@ -70,11 +69,11 @@ class DealtMissionFormDataHandler implements FormDataHandlerInterface
 
     $product = new Product();
     $product->reference = $dealtMissionId . '-dealt-product';
-    $product->name = $this->createMultiLangField($missionTitle);
+    $product->name = Helpers::createMultiLangField($missionTitle);
     $product->meta_description = '';
     $product->visibility = 'none'; // we want to hide from the public catalog
     $product->id_category_default = $categoryId;
-    $product->price = $missionPrice;
+    $product->price = Helpers::formatPrice($missionPrice);
     $product->minimal_quantity = 1;
     $product->show_price = 1;
     $product->on_sale = 0;
@@ -89,22 +88,5 @@ class DealtMissionFormDataHandler implements FormDataHandlerInterface
     $stockAvailable->update();
 
     return $product->id;
-  }
-
-  /**
-   * Helper function to create multilang string
-   * TODO: should be moved to custom Tools service
-   * 
-   * @param [type] $field
-   * @return mixed
-   */
-  private function createMultiLangField($field)
-  {
-    $res = [];
-    foreach (Language::getLanguages() as $lang) {
-      $res[$lang['id_lang']] = $field;
-    }
-
-    return $res;
   }
 }
