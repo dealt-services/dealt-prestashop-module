@@ -64,6 +64,9 @@ class AdminDealtMissionController extends FrameworkBundleAdminController
       return $this->redirectToRoute('admin_dealt_missions_list');
     }
 
+    $this->addFlash('warning', $this->trans('
+      When creating a Dealt mission, a virtual dealt product will automatically be created and linked to this entry.
+    ', 'Modules.DealtModule.Admin'));
 
     return $this->render(
       '@Modules/dealtmodule/views/templates/admin/form/dealt.mission.form.html.twig',
