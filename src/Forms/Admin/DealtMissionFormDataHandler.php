@@ -3,6 +3,7 @@
 namespace DealtModule\Forms\Admin;
 
 use DealtModule\Entity\DealtMission;
+use DealtModule\Entity\DealtMissionCategory;
 use DealtModule\Tools\Helpers;
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
@@ -40,6 +41,17 @@ class DealtMissionFormDataHandler implements FormDataHandlerInterface
     /* automatically create virtual dealt product for mission */
     $mission->setVirtualProductId($this->createDealtVirtualProduct($data['title_mission'], $data['dealt_id_mission'], $data['mission_price']));
     $mission->updateTimestamps();
+
+    /* create category relations */
+    foreach ($data['ids_category'] as $categoryId) {
+      $missionCategory = new DealtMissionCategory();
+      $missionCategory
+        ->setMission($mission)
+        ->setCategoryId(intval($categoryId))
+        ->setVirtualProductId($mission->getVirtualProductId());
+
+      $mission->addMissionCategory($missionCategory);
+    }
 
     $this->entityManager->persist($mission);
     $this->entityManager->flush();

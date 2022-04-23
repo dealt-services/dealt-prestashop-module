@@ -83,7 +83,7 @@ class DealtMissionCategory
    *
    * @return DealtMissionCategory
    */
-  public function setCategoryId($categoryId)
+  public function setCategoryId(int $categoryId)
   {
     $this->categoryId = $categoryId;
     return $this;
