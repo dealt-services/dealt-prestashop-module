@@ -20,23 +20,30 @@ class DealtMissionFormType extends AbstractType
       ->add('id_dealt_virtual_product', HiddenType::class)
       ->add('title_mission', TextType::class, [
         'label' => 'Title',
-        'required' => true
+        'required' => true,
+        'help' => "Will also be used as the virtual product's title",
+        'translation_domain' => 'Modules.DealtModule.Admin',
       ])
       ->add('dealt_id_mission', TextWithLengthCounterType::class, [
-        'label' => 'Mission id',
+        'label' => 'Mission UUID',
         'required' => true,
         'max_length' => 36,
+        'position' => 'after',
+        'translation_domain' => 'Modules.DealtModule.Admin',
       ])
       ->add('mission_price', MoneyWithSuffixType::class, [
         'label' => 'Mission price',
         'currency' => 'EUR',
         'suffix' => '(tax excl.)',
+        'help' => "Tax excluded",
+        'translation_domain' => 'Modules.DealtModule.Admin',
       ])
       ->add('ids_category', CategoryChoiceTreeType::class, [
         'multiple' => true,
         'required' => false,
         'label' => 'Categories',
-        'disabled_values' => [] // should disable __dealt__ internal category
+        'disabled_values' => [], // should disable __dealt__ internal category
+        'translation_domain' => 'Modules.DealtModule.Admin',
       ]);
   }
 }
