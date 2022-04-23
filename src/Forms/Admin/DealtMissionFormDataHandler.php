@@ -38,7 +38,7 @@ class DealtMissionFormDataHandler implements FormDataHandlerInterface
     $mission->setMissionTitle($data['title_mission']);
     $mission->setDealtMissionId($data['dealt_id_mission']);
     /* automatically create virtual dealt product for mission */
-    $mission->setDealtVirtualProductId($this->createDealtVirtualProduct($data['title_mission'], $data['dealt_id_mission'], $data['mission_price']));
+    $mission->setVirtualProductId($this->createDealtVirtualProduct($data['title_mission'], $data['dealt_id_mission'], $data['mission_price']));
     $mission->updateTimestamps();
 
     $this->entityManager->persist($mission);

@@ -17,7 +17,7 @@ class DealtMissionFormType extends AbstractType
   {
     $builder
       ->add('id_mission', HiddenType::class)
-      ->add('id_dealt_virtual_product', HiddenType::class)
+      ->add('id_virtual_product', HiddenType::class)
       ->add('title_mission', TextType::class, [
         'label' => 'Title',
         'required' => true,

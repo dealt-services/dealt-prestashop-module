@@ -51,10 +51,10 @@ final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefi
           ->setOptions([
             'icon' => 'link',
             'target' => '_BLANK',
-            'field' => 'id_dealt_virtual_product',
+            'field' => 'id_virtual_product',
             'route' => 'admin_product_form',
             'route_param_name' => 'id',
-            'route_param_field' => 'id_dealt_virtual_product',
+            'route_param_field' => 'id_virtual_product',
           ])
       )
       ->add((new ActionColumn('actions'))
