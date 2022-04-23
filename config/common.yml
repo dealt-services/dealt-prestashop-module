@@ -15,3 +15,11 @@ services:
     factory: ["@doctrine.orm.default_entity_manager", getRepository]
     arguments:
       - DealtModule\Entity\DealtMission
+  #######################################
+  ### DEALT VIRTUAL PRODUCT REPO ########
+  #######################################
+  prestashop.module.link_block.repository:
+    class: DealtModule\Repository\DealtVirtualProductRepository
+    arguments:
+      $connection: "@doctrine.dbal.default_connection"
+      $dbPrefix: "%database_prefix%"
