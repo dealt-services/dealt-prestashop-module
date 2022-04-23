@@ -15,10 +15,12 @@ class DealtConfigurationFormType extends AbstractType
     $builder
       ->add('api_key', TextWithLengthCounterType::class, [
         'label' => 'API Key (uuid)',
+        'translation_domain' => 'Modules.DealtModule.Admin',
         'max_length' => 36,
       ])
       ->add('prod_env', SwitchType::class, [
         'label' => 'Environment',
+        'translation_domain' => 'Modules.DealtModule.Admin',
         'choices' => [
           'Test/Staging' => false,
           'Production' => true,
