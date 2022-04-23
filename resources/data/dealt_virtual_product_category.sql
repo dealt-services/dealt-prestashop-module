@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `PREFIX_dealt_virtual_product_category` (
+CREATE TABLE IF NOT EXISTS `PREFIX_dealt_mission_category` (
   id_mission INT NOT NULL,
   id_virtual_product INT NOT NULL,
   id_category INT NOT NULL
