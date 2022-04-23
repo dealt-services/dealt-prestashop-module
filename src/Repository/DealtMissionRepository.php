@@ -7,6 +7,9 @@ namespace DealtModule\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * Doctrine DealtMission repository class
+ */
 class DealtMissionRepository extends EntityRepository
 {
 }
