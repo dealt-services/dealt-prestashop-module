@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DealtModule\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,6 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DealtMission
 {
+  public function __construct()
+  {
+    $this->missionCategories = new ArrayCollection();
+  }
+
   /**
    * @var int
    *
@@ -43,6 +49,11 @@ class DealtMission
    * @ORM\Column(name="id_virtual_product", type="integer")
    */
   private $virtualProductId;
+
+  /**
+   * @ORM\OneToMany(targetEntity="DealtModule\Entity\DealtMissionCategory", cascade={"persist", "remove"}, mappedBy="mission")
+   */
+  private $missionCategories;
 
   /**
    * @var DateTime
@@ -75,8 +86,6 @@ class DealtMission
   }
 
   /**
-   * @param int
-   *
    * @return DealtMission
    */
   public function setMissionTitle($missionTitle)
@@ -95,7 +104,6 @@ class DealtMission
 
   /**
    * @param int
-   *
    * @return DealtMission
    */
   public function setDealtMissionId($dealtMissionId)
@@ -124,8 +132,28 @@ class DealtMission
   }
 
   /**
-   * Get dateAdd.
-   *
+   * @return ArrayCollection
+   */
+  public function getMissionCategories()
+  {
+    return $this->missionCategories;
+  }
+
+  /**
+   * @param DealtMissionCategory $quoteLang
+   * @return DealtMission
+   */
+  public function addMissionCategory(DealtMissionCategory $missionCategory)
+  {
+    $missionCategory->setMission($this);
+    $this->missionCategories->add($missionCategory);
+
+    return $this;
+  }
+
+
+
+  /**
    * @return DateTime
    */
   public function getDateAdd()
@@ -134,10 +162,7 @@ class DealtMission
   }
 
   /**
-   * Set dateAdd.
-   *
    * @param DateTime $dateAdd
-   *
    * @return DealtMission
    */
   public function setDateAdd(DateTime $dateAdd)
@@ -156,7 +181,6 @@ class DealtMission
 
   /**
    * @param DateTime $dateUpd
-   *
    * @return DealtMission
    */
   public function setDateUpd(DateTime $dateUpd)
