@@ -42,7 +42,7 @@ class DealtInstaller
     $errors = [];
     $this->dropTables();
     $sqlInstallDir = __DIR__ . '/../../resources/data/';
-    $sqlInstallFiles = ["dealt_mission.sql"];
+    $sqlInstallFiles = ["dealt_mission.sql", "dealt_virtual_product_category.sql"];
 
     $sqlQueries = str_replace('PREFIX_', $this->dbPrefix, array_map(function ($file) use ($sqlInstallDir) {
       return file_get_contents($sqlInstallDir . $file);
