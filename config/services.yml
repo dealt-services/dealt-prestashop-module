@@ -1,10 +1,6 @@
+imports:
+  - { resource: ./common.yml }
 services:
-  # Dealt Module Installer
-  dealtmodule.installer:
-    class: DealtModule\Database\DealtInstaller
-    arguments:
-      - "@doctrine.dbal.default_connection"
-      - "%database_prefix%"
   #######################################
   ### DEALT CONFIGURATION FORM ##########
   #######################################

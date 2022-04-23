@@ -1,0 +1,17 @@
+services:
+  #######################################
+  ### DEALT MODULE INSTALLER ############
+  #######################################
+  dealtmodule.installer:
+    class: DealtModule\Database\DealtInstaller
+    arguments:
+      - "@doctrine.dbal.default_connection"
+      - "%database_prefix%"
+  #######################################
+  ### DEALT MISSION REPO ################
+  #######################################
+  dealtmodule.doctrine.dealt.mission.repository:
+    class: DealtModule\Repository\DealtMissionRepository
+    factory: ["@doctrine.orm.default_entity_manager", getRepository]
+    arguments:
+      - DealtModule\Entity\DealtMission
