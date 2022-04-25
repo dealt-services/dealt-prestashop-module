@@ -43,14 +43,16 @@ class DealtMissionFormDataHandler implements FormDataHandlerInterface
     $mission->updateTimestamps();
 
     /* create category relations */
-    foreach ($data['ids_category'] as $categoryId) {
-      $missionCategory = new DealtMissionCategory();
-      $missionCategory
-        ->setMission($mission)
-        ->setCategoryId(intval($categoryId))
-        ->setVirtualProductId($mission->getVirtualProductId());
+    if (isset($data['ids_category'])) {
+      foreach ($data['ids_category'] as $categoryId) {
+        $missionCategory = new DealtMissionCategory();
+        $missionCategory
+          ->setMission($mission)
+          ->setCategoryId(intval($categoryId))
+          ->setVirtualProductId($mission->getVirtualProductId());
 
-      $mission->addMissionCategory($missionCategory);
+        $mission->addMissionCategory($missionCategory);
+      }
     }
 
     $this->entityManager->persist($mission);
