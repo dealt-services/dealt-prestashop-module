@@ -30,8 +30,12 @@ password: prestashop_demo
 Use the PHP Intelephense extension for VSCode for code completion and PS class comprehension :
 
 ```bash
-### Clone the PrestaShop repository on your device
+# Clone the PrestaShop repository on your device
 git clone https://github.com/PrestaShop/PrestaShop.git
+# checkout the 1.7.8 branch to match module version
+git checkout 1.7.8.x
+# install vendors
+composer install
 ```
 
 Edit your `.vscode/settings.json` :
