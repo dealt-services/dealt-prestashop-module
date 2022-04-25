@@ -56,8 +56,7 @@ class DealtModule extends Module
 
   public function install()
   {
-    $this->setup();
-    return parent::install() && $this->installTabs();
+    return parent::install() && $this->registerHook(['displayProductAdditionalInfo']) && $this->installTabs();
   }
 
   public function uninstall()
@@ -180,5 +179,20 @@ class DealtModule extends Module
   public function isUsingNewTranslationSystem()
   {
     return true;
+  }
+
+  /**
+   * DisplayProductActions hook :
+   * - from the current product id -> check wether
+   *
+   * @return void
+   */
+  public function hookDisplayProductAdditionalInfo()
+  {
+    $productId = Tools::getValue('id_product');
+    $product = new Product($productId);
+    $categories = json_encode($product->getCategories());
+
+    return "<div>$productId (categories : $categories)</div>";
   }
 }
