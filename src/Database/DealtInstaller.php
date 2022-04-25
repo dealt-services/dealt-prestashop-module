@@ -6,7 +6,7 @@ namespace DealtModule\Database;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
+use Exception;
 
 class DealtInstaller
 {
@@ -42,7 +42,7 @@ class DealtInstaller
     $errors = [];
     $this->dropTables();
     $sqlInstallDir = __DIR__ . '/../../resources/data/';
-    $sqlInstallFiles = ["dealt_mission.sql", "dealt_virtual_product_category.sql"];
+    $sqlInstallFiles = ["dealt_mission.sql", "dealt_mission_category.sql"];
 
     $sqlQueries = str_replace('PREFIX_', $this->dbPrefix, array_map(function ($file) use ($sqlInstallDir) {
       return file_get_contents($sqlInstallDir . $file);
@@ -74,7 +74,7 @@ class DealtInstaller
   public function dropTables()
   {
     $errors = [];
-    $tableNames = ['dealt_mission'];
+    $tableNames = ["dealt_mission", "dealt_mission_category"];
 
     try {
       foreach ($tableNames as $tableName) {
