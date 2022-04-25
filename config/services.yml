@@ -57,7 +57,7 @@ services:
     public: true
   ### MISSION GRID DATA FACTORY ##########
   dealtmodule.admin.grid.missions.data.factory:
-    class: "%prestashop.core.grid.data.factory.doctrine_grid_data_factory%"
+    class: 'DealtModule\Core\Grid\Data\Factory\DealtMissionGridDataFactory'
     arguments:
       $gridQueryBuilder: "@dealtmodule.admin.grid.missions.query.builder"
       $hookDispatcher: "@prestashop.core.hook.dispatcher"

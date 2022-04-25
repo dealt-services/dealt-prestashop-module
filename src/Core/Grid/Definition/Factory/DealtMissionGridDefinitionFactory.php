@@ -11,6 +11,10 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 
+/**
+ * TODO: https://devdocs.prestashop.com/1.7/development/components/grid/columns-reference/badge/
+ * -> show categories attached count
+ */
 final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
   const GRID_ID = 'dealt_missions';
@@ -44,6 +48,12 @@ final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefi
           ->setName($this->trans('Mission title', [], 'Modules.DealtModule.Admin'))
           ->setOptions([
             'field' => 'title_mission',
+          ])
+      )
+      ->add((new DataColumn('total_categories'))
+          ->setName($this->trans('Total categories', [], 'Modules.DealtModule.Admin'))
+          ->setOptions([
+            'field' => 'total_categories'
           ])
       )
       ->add((new LinkColumn('product_link'))
