@@ -56,13 +56,17 @@ class DealtModule extends Module
 
   public function install()
   {
-    return parent::install() && $this->registerHook(['displayProductAdditionalInfo']) && $this->installTabs();
+    return parent::install()
+      && $this->setup()
+      && $this->installTabs()
+      && $this->registerHook(['displayProductAdditionalInfo']);
   }
 
   public function uninstall()
   {
-    $this->unsetup();
-    return parent::uninstall() && $this->uninstallTabs();
+    return parent::uninstall()
+      && $this->uninstallTabs()
+      && $this->unsetup();
   }
 
   public function getContent()
@@ -100,6 +104,9 @@ class DealtModule extends Module
     return $installer;
   }
 
+  /**
+   * @return bool
+   */
   private function setup()
   {
     /* create internal DealtModule category */
@@ -114,13 +121,16 @@ class DealtModule extends Module
       $category->active = false;
       $category->id_parent = Configuration::get('PS_ROOT_CATEGORY');
       $category->description = "Internal DealtModule category used for Dealt mission virtual products";
-      $category->add();
+      return $category->add();
     }
 
     /* create DealtModule SQL tables */
     $this->getInstaller()->createTables();
   }
 
+  /**
+   * @return bool
+   */
   private function unsetup()
   {
     /* remove internal dealt category */
@@ -128,8 +138,10 @@ class DealtModule extends Module
 
     if (!empty($match)) {
       $category = new Category($match['id_category']);
-      $category->delete();
+      return $category->delete();
     }
+
+    return true;
   }
 
   private function installTabs()
