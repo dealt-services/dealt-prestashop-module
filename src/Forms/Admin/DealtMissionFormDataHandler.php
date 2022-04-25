@@ -2,16 +2,10 @@
 
 namespace DealtModule\Forms\Admin;
 
-use DealtModule\Entity\DealtMission;
-use DealtModule\Entity\DealtMissionCategory;
-use DealtModule\Tools\Helpers;
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
-
-use Product;
-use Category;
-use StockAvailable;
+use DealtModule\Repository\DealtMissionRepository;
+use DealtModule\Repository\DealtVirtualProductRepository;
 
 class DealtMissionFormDataHandler implements FormDataHandlerInterface
 {
@@ -22,12 +16,28 @@ class DealtMissionFormDataHandler implements FormDataHandlerInterface
   private $entityManager;
 
   /**
+   * @var DealtMissionRepository
+   */
+  private  $missionRepository;
+
+  /**
+   * @var DealtVirtualProductRepository
+   */
+  private  $productRepository;
+
+  /**
    * @param EntityManagerInterface $entityManager
+   * @param DealtMissionRepository $missionRepository
+   * @param DealtVirtualProductRepository $productRepository
    */
   public function __construct(
-    EntityManagerInterface $entityManager
+    $entityManager,
+    $missionRepository,
+    $productRepository
   ) {
     $this->entityManager = $entityManager;
+    $this->missionRepository = $missionRepository;
+    $this->productRepository = $productRepository;
   }
 
   /**
@@ -35,28 +45,13 @@ class DealtMissionFormDataHandler implements FormDataHandlerInterface
    */
   public function create(array $data)
   {
-    $mission = new DealtMission();
-    $mission->setMissionTitle($data['title_mission']);
-    $mission->setDealtMissionId($data['dealt_id_mission']);
-    /* automatically create virtual dealt product for mission */
-    $mission->setVirtualProductId($this->createDealtVirtualProduct($data['title_mission'], $data['dealt_id_mission'], $data['mission_price']));
-    $mission->updateTimestamps();
+    $missionTitle = $data['title_mission'];
+    $dealtMissionId = $data['dealt_id_mission'];
+    $missionPrice = $data['mission_price'];
+    $categoryIds = isset($data['ids_category']) ? $data['ids_category'] : [];
 
-    /* create category relations */
-    if (isset($data['ids_category'])) {
-      foreach ($data['ids_category'] as $categoryId) {
-        $missionCategory = new DealtMissionCategory();
-        $missionCategory
-          ->setMission($mission)
-          ->setCategoryId(intval($categoryId))
-          ->setVirtualProductId($mission->getVirtualProductId());
-
-        $mission->addMissionCategory($missionCategory);
-      }
-    }
-
-    $this->entityManager->persist($mission);
-    $this->entityManager->flush();
+    $productId = $this->productRepository->create($missionTitle, $dealtMissionId, $missionPrice);
+    $mission = $this->missionRepository->create($missionTitle, $dealtMissionId, $productId, $categoryIds);
 
     return $mission->getId();
   }
@@ -64,43 +59,14 @@ class DealtMissionFormDataHandler implements FormDataHandlerInterface
   /**
    * {@inheritdoc}
    */
-  public function update($id, array $data)
+  public function update($missionId, array $data)
   {
-  }
+    $missionTitle = $data['title_mission'];
+    $dealtMissionId = $data['dealt_id_mission'];
+    $missionPrice = $data['mission_price'];
+    $categoryIds = isset($data['ids_category']) ? $data['ids_category'] : [];
 
-  /**
-   * Dynamically create the Dealt mission virtual product
-   * 
-   * @param string $missionTitle
-   * @param string $dealtMissionId
-   * @param string $missionPrice
-   * @return int
-   */
-  private function createDealtVirtualProduct(string $missionTitle, string $dealtMissionId, string $missionPrice)
-  {
-    $category = Category::searchByName(null, '__dealt__', true);
-    $categoryId = $category['id_category'];
-
-    $product = new Product();
-    $product->reference = $dealtMissionId . '-dealt-product';
-    $product->name = Helpers::createMultiLangField($missionTitle);
-    $product->meta_description = '';
-    $product->visibility = 'none'; // we want to hide from the public catalog
-    $product->id_category_default = $categoryId;
-    $product->price = Helpers::formatPrice($missionPrice);
-    $product->minimal_quantity = 1;
-    $product->show_price = 1;
-    $product->on_sale = 0;
-    $product->online_only = 1;
-    $product->is_virtual = 1;
-
-    $product->add();
-
-    /* set stock available even when quantity = 0 */
-    $stockAvailable = new StockAvailable($product->id);
-    $stockAvailable->out_of_stock = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
-    $stockAvailable->update();
-
-    return $product->id;
+    $mission = $this->missionRepository->update($missionId, $missionTitle, $dealtMissionId, $categoryIds);
+    $this->productRepository->update($mission->getVirtualProductId(), $missionTitle, $missionPrice);
   }
 }
