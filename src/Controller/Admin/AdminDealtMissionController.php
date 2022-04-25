@@ -12,6 +12,7 @@ use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 
 /**
  * Class AdminDealtMissionController.
@@ -27,13 +28,15 @@ class AdminDealtMissionController extends FrameworkBundleAdminController
    */
   public function indexAction(Request $request, DealtMissionFilters $filters)
   {
+    /** @var GridFactory */
     $missionsGridFactory = $this->get('dealtmodule.admin.grid.missions.factory');
     $missionsGrid = $missionsGridFactory->getGrid($filters);
+    $grid = $this->presentGrid($missionsGrid);
 
     return $this->render('@Modules/dealtmodule/views/templates/admin/missions.list.html.twig', [
       'enableSidebar' => true,
       'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-      'grid' => $this->presentGrid($missionsGrid),
+      'grid' => $grid,
       'layoutHeaderToolbarBtn' => [
         'mission_create' => [
           'href' => $this->generateUrl('admin_dealt_missions_create'),
