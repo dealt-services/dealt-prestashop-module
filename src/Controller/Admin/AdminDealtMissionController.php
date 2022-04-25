@@ -63,13 +63,41 @@ class AdminDealtMissionController extends FrameworkBundleAdminController
 
     if (null !== $result->getIdentifiableObjectId()) {
       $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-
       return $this->redirectToRoute('admin_dealt_missions_list');
     }
 
     $this->addFlash('warning', $this->trans('
       When creating a Dealt mission, a virtual dealt product will automatically be created and linked to this entry.
     ', 'Modules.DealtModule.Admin'));
+
+    return $this->render(
+      '@Modules/dealtmodule/views/templates/admin/form/dealt.mission.form.html.twig',
+      [
+        'form' => $form->createView(),
+        'enableSidebar' => true,
+      ]
+    );
+  }
+
+  /**
+   * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+   * @param int $missionId
+   * @param Request $request
+   * @return Response
+   */
+  public function editAction(Request $request, $missionId)
+  {
+    $formBuilder = $this->get('dealtmodule.admin.form.mission.builder');
+    $form = $formBuilder->getFormFor((int) $missionId);
+    $form->handleRequest($request);
+
+    $formHandler = $this->get('dealtmodule.admin.form.mission.handler');
+    $result = $formHandler->handleFor((int) $missionId, $form);
+
+    if (null !== $result->getIdentifiableObjectId()) {
+      $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+      return $this->redirectToRoute('admin_dealt_missions_list');
+    }
 
     return $this->render(
       '@Modules/dealtmodule/views/templates/admin/form/dealt.mission.form.html.twig',
