@@ -18,7 +18,7 @@ services:
   #######################################
   ### DEALT VIRTUAL PRODUCT REPO ########
   #######################################
-  prestashop.module.link_block.repository:
+  dealtmodule.doctrine.dealt.virtual.product.repository:
     class: DealtModule\Repository\DealtVirtualProductRepository
     arguments:
       $connection: "@doctrine.dbal.default_connection"

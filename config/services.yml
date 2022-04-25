@@ -25,6 +25,9 @@ services:
   ### DATA PROVIDER #####################
   dealtmodule.admin.form.mission.data.provider:
     class: DealtModule\Forms\Admin\DealtMissionFormDataProvider
+    arguments:
+      - "@dealtmodule.doctrine.dealt.mission.repository"
+      - "@dealtmodule.doctrine.dealt.virtual.product.repository"
   ### FORM BUILDER ######################
   dealtmodule.admin.form.mission.builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
@@ -37,6 +40,8 @@ services:
     class: 'DealtModule\Forms\Admin\DealtMissionFormDataHandler'
     arguments:
       - "@doctrine.orm.default_entity_manager"
+      - "@dealtmodule.doctrine.dealt.mission.repository"
+      - "@dealtmodule.doctrine.dealt.virtual.product.repository"
   ### FORM HANDLER ######################
   dealtmodule.admin.form.mission.handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
