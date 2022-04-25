@@ -13,8 +13,16 @@ use Doctrine\ORM\Mapping as ORM;
 class DealtMissionCategory
 {
   /**
-   * @var DealtMission
+   * @var int
+   *
    * @ORM\Id
+   * @ORM\Column(name="id", type="integer")
+   * @ORM\GeneratedValue(strategy="AUTO")
+   */
+  private $id;
+
+  /**
+   * @var DealtMission
    * @ORM\ManyToOne(targetEntity="DealtModule\Entity\DealtMission", inversedBy="missionCategories")
    * @ORM\JoinColumn(name="id_mission", referencedColumnName="id_mission", nullable=false)
    */
@@ -31,6 +39,15 @@ class DealtMissionCategory
    * @ORM\Column(name="id_category", type="integer")
    */
   private $categoryId;
+
+  /**
+   * @return int
+   */
+  public function getId()
+  {
+    return $this->id;
+  }
+
 
   /**
    * @return DealtMission

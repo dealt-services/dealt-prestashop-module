@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="DealtModule\Repository\DealtMissionRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class DealtMission
@@ -140,6 +140,26 @@ class DealtMission
   }
 
   /**
+   * @return array
+   */
+  public function getMissionCategoriesIds()
+  {
+    return $this->getMissionCategories()->map(function (DealtMissionCategory $cat) {
+      return $cat->getId();
+    })->toArray();
+  }
+
+  /**
+   * @return array
+   */
+  public function getMissionCategoriesCategoryIds()
+  {
+    return $this->getMissionCategories()->map(function (DealtMissionCategory $cat) {
+      return $cat->getCategoryId();
+    })->toArray();
+  }
+
+  /**
    * @param DealtMissionCategory $quoteLang
    * @return DealtMission
    */
@@ -151,7 +171,34 @@ class DealtMission
     return $this;
   }
 
+  /**
+   * @return DealtMission
+   */
+  public function clearMissionCategories()
+  {
+    $this->missionCategories->clear();
+    return $this;
+  }
 
+  /**
+   * @param array $categoryIds
+   * @return DealtMission
+   */
+  public function setMissionCategoriesFromIds($categoryIds)
+  {
+    /* create category relations */
+    foreach ($categoryIds as $categoryId) {
+      $missionCategory = new DealtMissionCategory();
+      $missionCategory
+        ->setMission($this)
+        ->setCategoryId(intval($categoryId))
+        ->setVirtualProductId($this->getVirtualProductId());
+
+      $this->addMissionCategory($missionCategory);
+    }
+
+    return $this;
+  }
 
   /**
    * @return DateTime
