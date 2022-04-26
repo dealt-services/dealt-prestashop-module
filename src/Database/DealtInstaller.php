@@ -170,7 +170,7 @@ final class DealtInstaller
       $category->name = Helpers::createMultiLangField(static::$DEALT_PRODUCT_CATEGORY_NAME);
       $category->link_rewrite =  Helpers::createMultiLangField(Tools::link_rewrite(static::$DEALT_PRODUCT_CATEGORY_NAME));
       $category->active = false;
-      $category->id_parent = Configuration::get('PS_ROOT_CATEGORY');
+      $category->id_parent = Category::getRootCategory()->id;
       $category->description = "Internal DealtModule category used for Dealt mission virtual products";
 
       return $category->add();
