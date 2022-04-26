@@ -7,6 +7,9 @@ namespace DealtModule\Repository;
 use Doctrine\DBAL\Connection;
 use DealtModule\Tools\Helpers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 use Category;
 use StockAvailable;
@@ -15,6 +18,8 @@ use StockAvailable;
 /**
  * Repository class to help interacting with
  * the virtual products created by the dealtmodule
+ * 
+ * This Repository uses the legacy ObjectModel API and DBQuery class
  */
 class DealtVirtualProductRepository
 {
@@ -29,6 +34,11 @@ class DealtVirtualProductRepository
   private $dbPrefix;
 
   /**
+   * @var ProductRepository
+   */
+  private $psProductRepository;
+
+  /**
    * LinkBlockRepository constructor.
    *
    * @param Connection $connection
@@ -36,20 +46,22 @@ class DealtVirtualProductRepository
    */
   public function __construct(
     Connection $connection,
-    string $dbPrefix
+    string $dbPrefix,
+    ProductRepository $psProductRepository
   ) {
     $this->connection = $connection;
     $this->dbPrefix = $dbPrefix;
+    $this->psProductRepository = $psProductRepository;
   }
 
 
   /**
-   * @param integer $id
+   * @param integer $productId
    * @return Product
    */
-  public function findOneById(int $id)
+  public function findOneById(int $productId)
   {
-    $product = new Product($id);
+    $product = $this->psProductRepository->get(new ProductId($productId));
     return $product;
   }
 
@@ -96,12 +108,13 @@ class DealtVirtualProductRepository
    * @param int $productId
    * @param string $missionTitle
    * @param string $missionPrice
-   * 
+   *
+   * @throws CoreException
    * @return Product
    */
   public function update(int $productId, string $missionTitle, string $missionPrice)
   {
-    $product = new Product($productId);
+    $product = $this->findOneById($productId);
     $product->name  = Helpers::createMultiLangField($missionTitle);
     $product->price = Helpers::formatPrice($missionPrice);
     $product->save();

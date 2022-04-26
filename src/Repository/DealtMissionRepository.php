@@ -41,16 +41,21 @@ class DealtMissionRepository extends EntityRepository
   }
 
   /**
-   * Updates a Dealt Mission
+   * Updates a Dealt Mission :
+   * On each update, for simplicity, we delete every associated
+   * DealtMissionCategories linked to the current DealtMission and
+   * re-create them from scratch (avoids inconsistencies).
+   * Updating the DealtMission::$virtualProductId is optional.
    * 
    * @param int $missionId
    * @param string $missionTitle
    * @param string $dealtMissionId
+   * @param int|null $virtualProductId
    * @param array $categoryIds
    * 
    * @return DealtMission
    */
-  public function update($missionId, $missionTitle, $dealtMissionId, $categoryIds)
+  public function update($missionId, $missionTitle, $dealtMissionId, $virtualProductId, $categoryIds)
   {
     $em = $this->getEntityManager();
 
@@ -58,6 +63,8 @@ class DealtMissionRepository extends EntityRepository
     $mission = ($this->findOneById($missionId))
       ->setMissionTitle($missionTitle)
       ->setDealtMissionId($dealtMissionId);
+
+    if ($virtualProductId != null) $mission->setVirtualProductId($virtualProductId);
 
     foreach ($mission->getMissionCategories() as $missionCategory) {
       $this->deleteMissionCategory($missionCategory->getId());

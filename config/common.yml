@@ -21,5 +21,6 @@ services:
   dealtmodule.doctrine.dealt.virtual.product.repository:
     class: DealtModule\Repository\DealtVirtualProductRepository
     arguments:
-      $connection: "@doctrine.dbal.default_connection"
-      $dbPrefix: "%database_prefix%"
+      - "@doctrine.dbal.default_connection"
+      - "%database_prefix%"
+      - "@prestashop.adapter.product.repository.product_repository"
