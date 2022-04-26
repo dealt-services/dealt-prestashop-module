@@ -22,7 +22,7 @@ class DealtConfigurationFormType extends AbstractType
         'label' => 'Environment',
         'translation_domain' => 'Modules.DealtModule.Admin',
         'choices' => [
-          'Test/Staging' => false,
+          'Test' => false,
           'Production' => true,
         ],
       ]);
