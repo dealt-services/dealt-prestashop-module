@@ -6,6 +6,8 @@ use DealtModule\Entity\DealtMission;
 use DealtModule\Entity\DealtMissionCategory;
 use DealtModule\Repository\DealtMissionRepository;
 use DealtModule\Repository\DealtVirtualProductRepository;
+use DealtModule\Tools\Helpers;
+use Exception;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 
 class DealtMissionFormDataProvider implements FormDataProviderInterface
@@ -37,12 +39,15 @@ class DealtMissionFormDataProvider implements FormDataProviderInterface
   {
     /** @var DealtMission */
     $mission = $this->dealtMissionRepository->findOneById($missionId);
-    $product = $this->dealtVirtualProductRepository->findOneById($mission->getVirtualProductId());
-
     $missionData = $mission->toArray();
-    $missionData['mission_price'] = $product->price;
     $missionData['ids_category'] = $mission->getMissionCategoriesCategoryIds();
 
+    try {
+      $product = $this->dealtVirtualProductRepository->findOneById($mission->getVirtualProductId());
+      $missionData['mission_price'] = $product->price;
+    } catch (Exception $_) { /* associated product may have been deleted */
+      $missionData['mission_price'] = Helpers::formatPrice('0.00');
+    }
 
     return $missionData;
   }

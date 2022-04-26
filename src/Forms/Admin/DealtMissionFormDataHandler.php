@@ -6,6 +6,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use DealtModule\Repository\DealtMissionRepository;
 use DealtModule\Repository\DealtVirtualProductRepository;
+use DealtModule\Entity\DealtMission;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 
 class DealtMissionFormDataHandler implements FormDataHandlerInterface
 {
@@ -50,8 +52,8 @@ class DealtMissionFormDataHandler implements FormDataHandlerInterface
     $missionPrice = $data['mission_price'];
     $categoryIds = isset($data['ids_category']) ? $data['ids_category'] : [];
 
-    $productId = $this->productRepository->create($missionTitle, $dealtMissionId, $missionPrice);
-    $mission = $this->missionRepository->create($missionTitle, $dealtMissionId, $productId, $categoryIds);
+    $product = $this->productRepository->create($missionTitle, $dealtMissionId, $missionPrice);
+    $mission = $this->missionRepository->create($missionTitle, $dealtMissionId, $product->id, $categoryIds);
 
     return $mission->getId();
   }
@@ -66,7 +68,15 @@ class DealtMissionFormDataHandler implements FormDataHandlerInterface
     $missionPrice = $data['mission_price'];
     $categoryIds = isset($data['ids_category']) ? $data['ids_category'] : [];
 
-    $mission = $this->missionRepository->update($missionId, $missionTitle, $dealtMissionId, $categoryIds);
-    $this->productRepository->update($mission->getVirtualProductId(), $missionTitle, $missionPrice);
+    /** @var DealtMission */
+    $mission = $this->missionRepository->findOneById($missionId);
+
+    try {
+      $this->productRepository->update($mission->getVirtualProductId(), $missionTitle, $missionPrice);
+      $this->missionRepository->update($missionId, $missionTitle, $dealtMissionId, null, $categoryIds);
+    } catch (ProductNotFoundException $_) {
+      $product = $this->productRepository->create($missionTitle, $dealtMissionId, $missionPrice);
+      $this->missionRepository->update($missionId, $missionTitle, $dealtMissionId, $product->id, $categoryIds);
+    }
   }
 }
