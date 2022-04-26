@@ -17,6 +17,14 @@ services:
     arguments:
       - DealtModule\Entity\DealtMission
   #######################################
+  ### DEALT MISSION CATEGORY REPO #######
+  #######################################
+  dealtmodule.doctrine.dealt.mission.category.repository:
+    class: DealtModule\Repository\DealtMissionCategoryRepository
+    factory: ["@doctrine.orm.default_entity_manager", getRepository]
+    arguments:
+      - DealtModule\Entity\DealtMissionCategory
+  #######################################
   ### DEALT VIRTUAL PRODUCT REPO ########
   #######################################
   dealtmodule.doctrine.dealt.virtual.product.repository:

@@ -8,7 +8,6 @@ use DealtModule\Entity\DealtMission;
 use DealtModule\Entity\DealtMissionCategory;
 use Doctrine\ORM\EntityRepository;
 use Exception;
-
 // use Doctrine\ORM\QueryBuilder;
 
 /**
