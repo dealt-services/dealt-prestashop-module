@@ -35,7 +35,8 @@ class DealtVirtualProductRepository
   private $dbPrefix;
 
   /**
-   * @var ProductRepository
+   * ⚠️ The ProductRepository is not available in the FRONT PS Service container
+   * @var ProductRepository|null
    */
   private $psProductRepository;
 
@@ -48,7 +49,7 @@ class DealtVirtualProductRepository
   public function __construct(
     Connection $connection,
     string $dbPrefix,
-    ProductRepository $psProductRepository
+    $psProductRepository
   ) {
     $this->connection = $connection;
     $this->dbPrefix = $dbPrefix;
