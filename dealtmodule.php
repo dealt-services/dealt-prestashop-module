@@ -1,6 +1,8 @@
 <?php
 
 use DealtModule\Database\DealtInstaller;
+use DealtModule\Repository\DealtMissionCategoryRepository;
+use DealtModule\Entity\DealtMissionCategory;
 
 if (!defined('_PS_VERSION_')) exit;
 if (file_exists(__DIR__ . '/vendor/autoload.php')) require_once __DIR__ . '/vendor/autoload.php';
@@ -168,8 +170,40 @@ class DealtModule extends Module
   {
     $productId = Tools::getValue('id_product');
     $product = new Product($productId);
-    $categories = json_encode($product->getCategories());
+    $categories = $product->getCategories();
 
+    /** @var DealtMissionCategoryRepository */
+    $repo = $this->get('dealtmodule.doctrine.dealt.mission.category.repository');
+
+    if (!empty($categories)) {
+      /**
+       * Find only first match - we may have multiple results
+       * but this can only be caused either by :
+       * - a category conflict due to a misconfiguration
+       * - matching a parent/child category
+       */
+      /** @var DealtMissionCategory|null */
+      $missionCategory = $repo->findOneBy(['categoryId' => $categories]);
+
+      if ($missionCategory != null) {
+        $mission = $missionCategory->getMission();
+        $missionProduct = $mission->getVirtualProduct();
+
+        /* retrieve the cover image */
+        $img = $missionProduct->getCover($missionProduct->id);
+
+        $missionImage = Context::getContext()->link->getImageLink(
+          $missionProduct->name[Context::getContext()->language->id],
+          (int)$img['id_image'],
+
+        );
+
+        $this->smarty->assign(['missionProduct' => $missionProduct, 'missionImage' => $missionImage]);
+        return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayProductAdditionalInfo.tpl');
+      }
+    }
+
+    return null;
     return "<div>$productId (categories : $categories)</div>";
   }
 }
