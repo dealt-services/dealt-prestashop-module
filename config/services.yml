@@ -1,5 +1,3 @@
-imports:
-  - { resource: ./common.yml }
 services:
   #######################################
   ### DEALT CONFIGURATION FORM ##########

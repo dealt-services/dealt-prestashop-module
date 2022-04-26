@@ -1,13 +1,6 @@
 services:
-  #######################################
-  ### DEALT MODULE INSTALLER ############
-  #######################################
-  dealtmodule.installer:
-    class: DealtModule\Database\DealtInstaller
-    arguments:
-      - "@doctrine.dbal.default_connection"
-      - "%database_prefix%"
-      - "@dealtmodule.doctrine.dealt.mission.repository"
+  _defaults:
+    public: true
   #######################################
   ### DEALT MISSION REPO ################
   #######################################
@@ -32,4 +25,13 @@ services:
     arguments:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"
-      - "@prestashop.adapter.product.repository.product_repository"
+      - "@=container.has('prestashop.adapter.product.repository.product_repository') ? service('prestashop.adapter.product.repository.product_repository') : '~'"
+  #######################################
+  ### DEALT MODULE INSTALLER ############
+  #######################################
+  dealtmodule.installer:
+    class: DealtModule\Database\DealtInstaller
+    arguments:
+      - "@doctrine.dbal.default_connection"
+      - "%database_prefix%"
+      - "@dealtmodule.doctrine.dealt.mission.repository"
