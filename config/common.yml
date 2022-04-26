@@ -7,6 +7,7 @@ services:
     arguments:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"
+      - "@dealtmodule.doctrine.dealt.mission.repository"
   #######################################
   ### DEALT MISSION REPO ################
   #######################################

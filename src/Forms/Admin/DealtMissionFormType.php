@@ -42,7 +42,7 @@ class DealtMissionFormType extends AbstractType
         'multiple' => true,
         'required' => false,
         'label' => 'Categories',
-        'disabled_values' => [], // should disable __dealt__ internal category
+        'disabled_values' => [], // __dealt__ internal category not visible by default
         'translation_domain' => 'Modules.DealtModule.Admin',
       ]);
   }

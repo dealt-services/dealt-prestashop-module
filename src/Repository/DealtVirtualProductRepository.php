@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 use Category;
+use DealtModule\Database\DealtInstaller;
 use StockAvailable;
 
 
@@ -76,7 +77,7 @@ class DealtVirtualProductRepository
    */
   public function create(string $missionTitle, string $dealtMissionId, string $missionPrice)
   {
-    $category = Category::searchByName(null, '__dealt__', true);
+    $category = Category::searchByName(null, DealtInstaller::$DEALT_PRODUCT_CATEGORY_NAME, true);
     $categoryId = $category['id_category'];
 
     $product = new Product();

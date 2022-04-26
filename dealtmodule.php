@@ -7,7 +7,6 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) require_once __DIR__ . '/vend
 
 class DealtModule extends Module
 {
-  static $DEALT_PRODUCT_CATEGORY_NAME = "__dealt__";
   static $DEALT_MAIN_TAB_NAME = "DEALTMODULE";
   static $DEALT_TABS = [
     [
@@ -29,6 +28,7 @@ class DealtModule extends Module
       'name' => 'Missions configuration',
     ]
   ];
+  static $DEALT_HOOKS = ['displayProductAdditionalInfo'];
 
   public function __construct()
   {
@@ -56,17 +56,21 @@ class DealtModule extends Module
 
   public function install()
   {
+    $installer = $this->getInstaller();
+
     return parent::install()
-      && $this->setup()
+      && $installer->install()
       && $this->installTabs()
-      && $this->registerHook(['displayProductAdditionalInfo']);
+      && $this->registerHook(static::$DEALT_HOOKS);
   }
 
   public function uninstall()
   {
+    $installer = $this->getInstaller();
+
     return parent::uninstall()
-      && $this->uninstallTabs()
-      && $this->unsetup();
+      && $installer->uninstall()
+      && $this->uninstallTabs();
   }
 
   public function getContent()
@@ -97,51 +101,12 @@ class DealtModule extends Module
     if (!$installer) {
       $installer = new DealtInstaller(
         $this->get('doctrine.dbal.default_connection'),
-        $this->getContainer()->getParameter('database_prefix')
+        $this->getContainer()->getParameter('database_prefix'),
+        null /* repository not available yet ! */
       );
     }
 
     return $installer;
-  }
-
-  /**
-   * @return bool
-   */
-  private function setup()
-  {
-    /* create internal DealtModule category */
-    $match = Category::searchByName(null, static::$DEALT_PRODUCT_CATEGORY_NAME, true);
-
-    if (empty($match)) {
-      $idLang = (int) Context::getContext()->language->id;
-
-      $category = new Category();
-      $category->name = [$idLang => static::$DEALT_PRODUCT_CATEGORY_NAME];
-      $category->link_rewrite = [$idLang => Tools::link_rewrite(static::$DEALT_PRODUCT_CATEGORY_NAME)];
-      $category->active = false;
-      $category->id_parent = Configuration::get('PS_ROOT_CATEGORY');
-      $category->description = "Internal DealtModule category used for Dealt mission virtual products";
-      return $category->add();
-    }
-
-    /* create DealtModule SQL tables */
-    $this->getInstaller()->createTables();
-  }
-
-  /**
-   * @return bool
-   */
-  private function unsetup()
-  {
-    /* remove internal dealt category */
-    $match = Category::searchByName(null, static::$DEALT_PRODUCT_CATEGORY_NAME, true);
-
-    if (!empty($match)) {
-      $category = new Category($match['id_category']);
-      return $category->delete();
-    }
-
-    return true;
   }
 
   private function installTabs()
