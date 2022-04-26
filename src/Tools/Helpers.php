@@ -35,4 +35,16 @@ class Helpers
   {
     return number_format(floatval($priceString), 6, '.', '');
   }
+
+  /**
+   * Checks wether a string is a valid UUID v4
+   *
+   * @param string $uuid
+   * @return boolean
+   */
+  static function isValidUUID(string $uuid)
+  {
+    $UUIDv4 = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
+    return (bool) preg_match($UUIDv4, $uuid);
+  }
 }
