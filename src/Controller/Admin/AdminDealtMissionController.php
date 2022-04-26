@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace DealtModule\Controller\Admin;
 
 use DealtModule\Core\Grid\Filters\DealtMissionFilters;
-use DealtModule\Entity\DealtMission;
 use DealtModule\Repository\DealtMissionRepository;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 
 /**
@@ -20,7 +17,7 @@ use PrestaShop\PrestaShop\Core\Grid\GridFactory;
  *
  * @ModuleActivated(moduleName="dealtmodule", redirectRoute="admin_module_manage")
  */
-class AdminDealtMissionController extends FrameworkBundleAdminController
+class AdminDealtMissionController extends AbstractAdminDealtController
 {
   /**
    * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
@@ -33,6 +30,8 @@ class AdminDealtMissionController extends FrameworkBundleAdminController
     $missionsGridFactory = $this->get('dealtmodule.admin.grid.missions.factory');
     $missionsGrid = $missionsGridFactory->getGrid($filters);
     $grid = $this->presentGrid($missionsGrid);
+
+    $this->flashModuleWarnings();
 
     return $this->render('@Modules/dealtmodule/views/templates/admin/missions.list.html.twig', [
       'enableSidebar' => true,

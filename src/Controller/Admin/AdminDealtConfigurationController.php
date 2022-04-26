@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DealtModule\Controller\Admin;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @ModuleActivated(moduleName="dealtmodule", redirectRoute="admin_module_manage")
  */
-class AdminDealtConfigurationController extends FrameworkBundleAdminController
+class AdminDealtConfigurationController extends AbstractAdminDealtController
 {
   /**
    * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
@@ -38,6 +37,7 @@ class AdminDealtConfigurationController extends FrameworkBundleAdminController
       $this->flashErrors($errors);
     }
 
+    $this->flashModuleWarnings();
 
     return $this->render(
       '@Modules/dealtmodule/views/templates/admin/form/dealt.configuration.form.html.twig',
