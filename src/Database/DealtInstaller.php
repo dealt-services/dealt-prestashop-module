@@ -18,6 +18,7 @@ final class DealtInstaller
 {
   static $DEALT_PRODUCT_CATEGORY_NAME = "__dealt__";
   static $DEALT_SQL_TABLES = ["dealt_mission", "dealt_mission_category"];
+
   /**
    * @var Connection
    */
@@ -45,6 +46,30 @@ final class DealtInstaller
     $this->connection = $connection;
     $this->dbPrefix = $dbPrefix;
     $this->missionRepository = $missionRepository;
+  }
+
+  /**
+   * Helper to check wether the API Key is valid
+   * in the module's configuration
+   *
+   * @return boolean
+   */
+  static function isModuleConfigured()
+  {
+    $apiKey = Configuration::get('DEALTMODULE_API_KEY');
+    return Helpers::isValidUUID($apiKey);
+  }
+
+  /**
+   * Helper to check wether the DealtModule is running
+   * in production mode
+   *
+   * @return boolean
+   */
+  static function isProduction()
+  {
+    $prodEnv = Configuration::get('DEALTMODULE_PROD_ENV');
+    return $prodEnv == true;
   }
 
   /**
