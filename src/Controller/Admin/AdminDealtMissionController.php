@@ -6,6 +6,7 @@ namespace DealtModule\Controller\Admin;
 
 use DealtModule\Core\Grid\Filters\DealtMissionFilters;
 use DealtModule\Entity\DealtMission;
+use DealtModule\Repository\DealtMissionRepository;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
@@ -115,11 +116,9 @@ class AdminDealtMissionController extends FrameworkBundleAdminController
    */
   public function deleteAction(int $missionId)
   {
-    /** @var EntityManagerInterface $entityManager */
-    $em = $this->get('doctrine.orm.entity_manager');
-    $mission =  $em->getPartialReference(DealtMission::class, $missionId);
-    $em->remove($mission);
-    $em->flush();
+    /** @var DealtMissionRepository $repo */
+    $repo = $this->get('dealtmodule.doctrine.dealt.mission.repository');
+    $repo->delete($missionId);
 
     return $this->redirectToRoute('admin_dealt_missions_list');
   }

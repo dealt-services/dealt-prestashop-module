@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace DealtModule\Entity;
 
-use DateTime;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
+use Product;
 
 /**
  * @ORM\Table()
@@ -118,6 +120,15 @@ class DealtMission
   public function getVirtualProductId()
   {
     return $this->virtualProductId;
+  }
+
+
+  /**
+   * @return Product
+   */
+  public function getVirtualProduct()
+  {
+    return new Product($this->virtualProductId);
   }
 
   /**

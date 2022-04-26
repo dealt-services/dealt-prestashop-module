@@ -7,6 +7,8 @@ namespace DealtModule\Repository;
 use DealtModule\Entity\DealtMission;
 use DealtModule\Entity\DealtMissionCategory;
 use Doctrine\ORM\EntityRepository;
+use Exception;
+
 // use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -78,6 +80,32 @@ class DealtMissionRepository extends EntityRepository
     $em->flush();
 
     return $mission;
+  }
+
+  /**
+   * Deletes a Dealt Mission and all associated data :
+   * - DealtMissionCategories via CASCADE
+   * - underlying virtual product
+   * 
+   * @param int $missionId
+   * @return void
+   */
+  public function delete($missionId)
+  {
+    $em = $this->getEntityManager();
+
+    /** @var DealtMission */
+    $mission = ($this->findOneById($missionId));
+    $product = $mission->getVirtualProduct();
+
+    try {
+      $product->delete();
+    } catch (Exception $_) {
+      /* product may have been manually delete */
+    }
+
+    $em->remove($mission);
+    $em->flush();
   }
 
   /**

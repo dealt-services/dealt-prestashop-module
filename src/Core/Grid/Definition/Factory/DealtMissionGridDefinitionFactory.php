@@ -85,9 +85,9 @@ final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefi
                     'route_param_name' => 'missionId',
                     'route_param_field' => 'id_mission',
                     'confirm_message' => $this->trans(
-                      'Delete selected item?',
+                      'Are you sure you want to delete this Dealt Mission ? All associated data will be forever lost (virtual product, linked categories etc..)',
                       [],
-                      'Admin.Notifications.Warning'
+                      'Modules.DealtModule.Admin'
                     ),
                   ])
               )
