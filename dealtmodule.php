@@ -1,5 +1,6 @@
 <?php
 
+use DealtModule\Action\DealtAction;
 use DealtModule\Database\DealtInstaller;
 use DealtModule\Repository\DealtMissionCategoryRepository;
 use DealtModule\Entity\DealtMissionCategory;
@@ -164,7 +165,7 @@ class DealtModule extends Module
    * DisplayProductActions hook :
    * - from the current product id -> check wether
    *
-   * @return void
+   * @return string|null
    */
   public function hookDisplayProductAdditionalInfo()
   {
@@ -198,12 +199,23 @@ class DealtModule extends Module
 
         );
 
-        $this->smarty->assign(['missionProduct' => $missionProduct, 'missionImage' => $missionImage]);
+        $this->smarty->assign([
+          'missionProduct' => $missionProduct,
+          'missionImage' => $missionImage,
+          'availabilityUrl' => Context::getContext()->link->getModuleLink(
+            strtolower(DealtModule::class),
+            'api',
+            [
+              "ajax" => true,
+              "action" => DealtAction::$AVAILABILITY
+            ]
+          )
+        ]);
+
         return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayProductAdditionalInfo.tpl');
       }
     }
 
     return null;
-    return "<div>$productId (categories : $categories)</div>";
   }
 }

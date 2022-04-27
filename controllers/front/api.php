@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use DealtModule\Action\DealtAction;
+
 class DealtModuleApiModuleFrontController extends ModuleFrontController
 {
   public $ssl = true;
@@ -9,8 +11,11 @@ class DealtModuleApiModuleFrontController extends ModuleFrontController
 
   public function postProcess()
   {
-    $action = Tools::getValue('dealt_action');
-    if ($action == false) $this->displayAjaxError();
+    $action = Tools::getValue('action');
+    if ($action == false) $this->displayAjaxError("you must specify an action");
+    if (!in_array($action, DealtAction::cases())) $this->displayAjaxError("unknown dealt action");
+
+    $this->handleAction($action);
   }
 
   public function initContent()
@@ -19,14 +24,33 @@ class DealtModuleApiModuleFrontController extends ModuleFrontController
     parent::initContent();
   }
 
-  private function displayAjaxError()
+  private function handleAction($action)
   {
-    ob_end_clean();
-    header('Content-Type: application/json');
+    $this->setResponseHeaders();
+    $this->ajaxRender(json_encode([
+      "ok" => true,
+      "action" => $action
+    ]));
+  }
 
+  /**
+   * @param string $error
+   * @return void
+   */
+  private function displayAjaxError($error)
+  {
+    $this->setResponseHeaders();
     $this->ajaxRender(json_encode([
       "ok" => false,
       "error" => "Unknown dealt action"
     ]));
+
+    exit;
+  }
+
+  protected function setResponseHeaders()
+  {
+    ob_end_clean();
+    header('Content-Type: application/json');
   }
 }
