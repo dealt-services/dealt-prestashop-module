@@ -47,4 +47,24 @@ final class DealtAPIService
       "env" => $this->production ? DealtEnvironment::PRODUCTION : DealtEnvironment::TEST
     ]);
   }
+
+  /**
+   * Checks the availability of a Dealt offer
+   *
+   * @param string $offer_id
+   * @param string $zip_code
+   * @return bool
+   */
+  public function checkAvailability($offer_id, $zip_code)
+  {
+    $offer = $this->getClient()->offers->availability([
+      'offer_id' => $offer_id,
+      'address' => [
+        'country' => 'France', /* only France is supported for now */
+        'zip_code' => $zip_code
+      ]
+    ]);
+
+    return $offer->available;
+  }
 }
