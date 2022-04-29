@@ -12,7 +12,7 @@ abstract class AbstractAdminDealtController extends FrameworkBundleAdminControll
   public function flashModuleWarnings()
   {
     if (!DealtInstaller::isModuleConfigured()) {
-      $this->addFlash('error', $this->trans('The API Key provided is not a valid Dealt UUID.', 'Modules.DealtModule.Admin'));
+      $this->addFlash('error', $this->trans('The API Key provided is invalid.', 'Modules.DealtModule.Admin'));
     }
 
     if (!DealtInstaller::isProduction()) {

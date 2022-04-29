@@ -57,7 +57,7 @@ final class DealtInstaller
   static function isModuleConfigured()
   {
     $apiKey = Configuration::get('DEALTMODULE_API_KEY');
-    return Helpers::isValidUUID($apiKey);
+    return isset($apiKey) && !empty($apiKey);
   }
 
   /**
