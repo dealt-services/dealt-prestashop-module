@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use DealtModule\Action\DealtAction;
+use DealtModule\Service\DealtAPIService;
 
 class DealtModuleApiModuleFrontController extends ModuleFrontController
 {
@@ -26,11 +27,30 @@ class DealtModuleApiModuleFrontController extends ModuleFrontController
 
   private function handleAction($action)
   {
-    $this->setResponseHeaders();
-    $this->ajaxRender(json_encode([
-      "ok" => true,
-      "action" => $action
-    ]));
+
+
+    /** @var DealtAPIService */
+    $client = $this->get('dealtmodule.dealt.api.service');
+    $result = [];
+
+    try {
+      switch ($action) {
+        case DealtAction::$AVAILABILITY:
+          $available = $client->checkAvailability(Tools::getValue('id_dealt_mission'), Tools::getValue('zip_code'));
+          $result['available'] = $available;
+          break;
+      }
+
+      $this->setResponseHeaders();
+
+      $this->ajaxRender(json_encode([
+        "ok" => true,
+        "action" => $action,
+        "result" => $result
+      ]));
+    } catch (Exception $e) {
+      $this->displayAjaxError($e->getMessage());
+    }
   }
 
   /**
@@ -42,7 +62,7 @@ class DealtModuleApiModuleFrontController extends ModuleFrontController
     $this->setResponseHeaders();
     $this->ajaxRender(json_encode([
       "ok" => false,
-      "error" => "Unknown dealt action"
+      "error" => $error
     ]));
 
     exit;
