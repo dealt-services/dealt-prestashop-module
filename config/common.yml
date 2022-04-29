@@ -2,6 +2,19 @@ services:
   _defaults:
     public: true
   #######################################
+  ### DEALT SDK SERVICE #################
+  #######################################
+  dealtmodule.dealt.api.service:
+    class: DealtModule\Service\DealtAPIService
+    arguments:
+      - "@=service('prestashop.adapter.legacy.configuration').get('DEALTMODULE_API_KEY')"
+      - "@=service('prestashop.adapter.legacy.configuration').get('DEALTMODULE_PROD_ENV')"
+  ### FORM HANDLER ######################
+  dealtmodule.admin.form.configuration.handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+    arguments:
+      $formBuilder: '@=service("form.factory").createBuilder()'
+  #######################################
   ### DEALT MISSION REPO ################
   #######################################
   dealtmodule.doctrine.dealt.mission.repository:
