@@ -6,6 +6,7 @@ namespace DealtModule\Service;
 
 use Dealt\DealtSDK\DealtClient;
 use Dealt\DealtSDK\DealtEnvironment;
+use Dealt\DealtSDK\Exceptions\GraphQLFailureException;
 
 /**
  * Dealt API class wrapping the DealtSDK library
@@ -57,14 +58,18 @@ final class DealtAPIService
    */
   public function checkAvailability($offer_id, $zip_code)
   {
-    $offer = $this->getClient()->offers->availability([
-      'offer_id' => $offer_id,
-      'address' => [
-        'country' => 'France', /* only France is supported for now */
-        'zip_code' => $zip_code
-      ]
-    ]);
+    try {
+      $offer = $this->getClient()->offers->availability([
+        'offer_id' => $offer_id,
+        'address' => [
+          'country' => 'France', /* only France is supported for now */
+          'zip_code' => $zip_code
+        ]
+      ]);
 
-    return $offer->available;
+      return $offer->available;
+    } catch (GraphQLFailureException $e) {
+      return false;
+    }
   }
 }
