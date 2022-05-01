@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use DealtModule\Action\DealtCartAction;
 use DealtModule\Controller\Front\ModuleActionHandlerFrontController;
+use DealtModule\Service\DealtCartService;
 
 class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontController
 {
@@ -17,17 +18,20 @@ class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontContr
 
   public function handleAction($action)
   {
-    $result = [];
-
-    try {
-      $this->setResponseHeaders();
-      $this->ajaxRender(json_encode([
-        "ok" => true,
-        "action" => $action,
-        "result" => $result
-      ]));
-    } catch (Exception $e) {
-      $this->displayAjaxError($e->getMessage());
+    switch ($action) {
+      case DealtCartAction::$ADD_TO_CART:
+        return $this->handleAddToCart();
     }
+  }
+
+  protected function handleAddToCart()
+  {
+    /** @var DealtCartService */
+    $cartService = $this->get('dealtmodule.dealt.cart.service');
+
+    return $cartService->addDealtOfferToCart(
+      Tools::getValue('dealtOfferId'),
+      (int) Tools::getValue('productId')
+    );
   }
 }
