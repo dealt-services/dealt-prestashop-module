@@ -17,25 +17,11 @@ class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontContro
   {
     /** @var DealtAPIService */
     $client = $this->get('dealtmodule.dealt.api.service');
-    $result = [];
 
-    try {
-      switch ($action) {
-        case DealtAPIAction::$AVAILABILITY:
-          $available = $client->checkAvailability(Tools::getValue('id_dealt_offer'), Tools::getValue('zip_code'));
-          $result['available'] = $available;
-          break;
-      }
-
-      $this->setResponseHeaders();
-
-      $this->ajaxRender(json_encode([
-        "ok" => true,
-        "action" => $action,
-        "result" => $result
-      ]));
-    } catch (Exception $e) {
-      $this->displayAjaxError($e->getMessage());
+    switch ($action) {
+      case DealtAPIAction::$AVAILABILITY:
+        $available = $client->checkAvailability(Tools::getValue('id_dealt_offer'), Tools::getValue('zip_code'));
+        return ['available' => $available];
     }
   }
 }
