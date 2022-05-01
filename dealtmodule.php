@@ -37,9 +37,6 @@ class DealtModule extends Module
     'actionPresentCart'
   ];
 
-  /** @var DealtCartService $cartService */
-  protected $cartService;
-
   public function __construct()
   {
     $this->name = 'dealtmodule';
@@ -183,8 +180,11 @@ class DealtModule extends Module
    */
   public function hookDisplayProductAdditionalInfo()
   {
+    /** @var DealtCartService */
+    $cartService = $this->get('dealtmodule.dealt.cart.service');
     $productId = (int) Tools::getValue('id_product');
-    $data = $this->getCartService()->getOfferDataForProduct($productId);
+
+    $data = $cartService->getOfferDataForProduct($productId);
     if ($data == null) return;
 
     $this->smarty->assign($data);
@@ -198,16 +198,5 @@ class DealtModule extends Module
   public function hookActionPresentCart($data)
   {
     $cartProducts =  &$data['presentedCart'];
-  }
-
-  /**
-   * @return DealtCartService
-   */
-  protected function getCartService()
-  {
-    if ($this->cartService instanceof DealtCartService) return $this->cartService;
-    $this->cartService = new DealtCartService($this);
-
-    return $this->cartService;
   }
 }

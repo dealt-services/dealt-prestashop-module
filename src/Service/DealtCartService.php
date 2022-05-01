@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace DealtModule\Service;
 
 use DealtModule\Repository\DealtOfferCategoryRepository;
-use DealtModule\Action\DealtAction;
+use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Entity\DealtOfferCategory;
+use DealtModule\Action\DealtAPIAction;
+use DealtModule\Action\DealtCartAction;
+use DealtModule\Entity\DealtOffer;
 use DealtModule;
 use Product;
 use Context;
+use Exception;
 
 /**
  * Dealt Cart class allows interacting with 
@@ -18,19 +22,20 @@ use Context;
  */
 final class DealtCartService
 {
-  /** @var DealtModule */
-  private $module;
+  /** @var DealtOfferRepository */
+  private $offerRepository;
 
   /** @var DealtOfferCategoryRepository */
   private $offerCategoryRepository;
 
   /**
-   * @param DealtModule $module
+   * @param DealtOfferRepository $offerRepository
+   * @param DealtOfferCategoryRepository $offerCategoryRepository
    */
-  public function __construct($module)
+  public function __construct($offerRepository, $offerCategoryRepository)
   {
-    $this->module = $module;
-    $this->offerCategoryRepository = $this->module->get('dealtmodule.doctrine.dealt.offer.category.repository');
+    $this->offerRepository = $offerRepository;
+    $this->offerCategoryRepository = $offerCategoryRepository;
   }
 
   /**
@@ -55,45 +60,87 @@ final class DealtCartService
       ->offerCategoryRepository
       ->findOneBy(['categoryId' => $categories]);
 
-    if ($offerCategory != null) {
-      $offer = $offerCategory->getOffer();
-      $offerProduct = $offer->getVirtualProduct();
+    if ($offerCategory == null) return null;
+    $offer = $offerCategory->getOffer();
+    $offerProduct = $offer->getDealtProduct();
 
-      /* retrieve the cover image */
-      $img = $offerProduct->getCover($offerProduct->id);
-      $offerImage = Context::getContext()->link->getImageLink(
-        $offerProduct->name[Context::getContext()->language->id],
-        (int)$img['id_image'],
+    /* retrieve the cover image */
+    $img = $offerProduct->getCover($offerProduct->id);
+    $offerImage = Context::getContext()->link->getImageLink(
+      $offerProduct->name[Context::getContext()->language->id],
+      (int)$img['id_image'],
 
-      );
-    }
-
-    $productInCart = $this->isProductInCart($productId);
-
+    );
 
     return [
-      'productInCart' => $productInCart,
+      'cartProduct' => $this->getProductFromCart($productId),
       'offer' => $offer,
       'offerProduct' => $offerProduct,
       'offerImage' => $offerImage,
-      'availabilityUrl' => Context::getContext()->link->getModuleLink(
+      'addToCartAction' => Context::getContext()->link->getModuleLink(
+        strtolower(DealtModule::class),
+        'cart',
+        [
+          "ajax" => true,
+          "action" => DealtCartAction::$ADD_TO_CART,
+          "dealtOfferId" => $offer->getDealtOfferId(),
+          "productId" => $productId
+        ]
+      ),
+      'offerAvailabilityAction' => Context::getContext()->link->getModuleLink(
         strtolower(DealtModule::class),
         'api',
         [
           "ajax" => true,
-          "action" => DealtAction::$AVAILABILITY
+          "action" => DealtAPIAction::$AVAILABILITY,
+          "dealtOfferId" => $offer->getDealtOfferId()
         ]
       )
     ];
   }
 
   /**
-   * Checks wether a product is present in the cart
+   * Attaches a dealt product to a product
+   * currently in the prestashop cart and syncs
+   * their quantities
+   *
+   * @param string $dealtOfferId
+   * @param int $productId
+   * @return bool
+   */
+  public function addDealtOfferToCart($dealtOfferId, $productId)
+  {
+    /** @var DealtOffer|null */
+    $offer = $this->offerRepository->findOneBy(['dealtOfferId' => $dealtOfferId]);
+    if ($offer == null) throw new Exception('Unknown Dealt offer id');
+
+    $cart = Context::getContext()->cart;
+    $cartProduct = $this->getProductFromCart($productId);
+    if ($cartProduct == null) throw new Exception('Cannot attach dealt offer to a product which is not currently in the cart');
+
+    $dealtProduct = $this->getProductFromCart($offer->getDealtProductId());
+    $quantity = (int) $cartProduct['quantity'] - (isset($dealtProduct['quantity']) ?
+      (int) $dealtProduct['quantity'] :
+      0
+    );
+
+    /* the quantities of a product and its attached offer must always be in sync */
+    return $cart->updateQty(
+      $quantity,
+      $offer->getDealtProductId(),
+      null,
+      false
+    );
+  }
+
+  /**
+   * Iterates over the products in the current context's
+   * cart and returns the first match
    *
    * @param int $productId
    * @return array|null
    */
-  protected function isProductInCart($productId)
+  protected function getProductFromCart($productId)
   {
     $cartProducts = Context::getContext()->cart->getProducts();
     foreach ($cartProducts as $cartProduct) {
