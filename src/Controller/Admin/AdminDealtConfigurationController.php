@@ -55,9 +55,9 @@ class AdminDealtConfigurationController extends AbstractAdminDealtController
   private function getToolbarButtons()
   {
     return [
-      'mission_list' => [
-        'href' => $this->generateUrl('admin_dealt_missions_list'),
-        'desc' => $this->trans('Configure missions', 'Modules.DealtModule.Admin'),
+      'offers_list' => [
+        'href' => $this->generateUrl('admin_dealt_offer_list'),
+        'desc' => $this->trans('Configure offers', 'Modules.DealtModule.Admin'),
         'icon' => 'dehaze',
       ],
     ];

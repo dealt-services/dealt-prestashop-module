@@ -36,7 +36,7 @@ class DealtModuleApiModuleFrontController extends ModuleFrontController
     try {
       switch ($action) {
         case DealtAction::$AVAILABILITY:
-          $available = $client->checkAvailability(Tools::getValue('id_dealt_mission'), Tools::getValue('zip_code'));
+          $available = $client->checkAvailability(Tools::getValue('id_dealt_offer'), Tools::getValue('zip_code'));
           $result['available'] = $available;
           break;
       }

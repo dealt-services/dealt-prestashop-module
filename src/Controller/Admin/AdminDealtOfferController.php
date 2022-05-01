@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace DealtModule\Controller\Admin;
 
-use DealtModule\Core\Grid\Filters\DealtMissionFilters;
-use DealtModule\Repository\DealtMissionRepository;
+use DealtModule\Core\Grid\Filters\DealtOfferFilters;
+use DealtModule\Repository\DealtOfferRepository;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,34 +13,34 @@ use Symfony\Component\HttpFoundation\Response;
 use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 
 /**
- * Class AdminDealtMissionController.
+ * Class AdminDealtOfferController.
  *
  * @ModuleActivated(moduleName="dealtmodule", redirectRoute="admin_module_manage")
  */
-class AdminDealtMissionController extends AbstractAdminDealtController
+class AdminDealtOfferController extends AbstractAdminDealtController
 {
   /**
    * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
    * @param Request $request
    * @return Response
    */
-  public function indexAction(Request $request, DealtMissionFilters $filters)
+  public function indexAction(Request $request, DealtOfferFilters $filters)
   {
     /** @var GridFactory */
-    $missionsGridFactory = $this->get('dealtmodule.admin.grid.missions.factory');
-    $missionsGrid = $missionsGridFactory->getGrid($filters);
-    $grid = $this->presentGrid($missionsGrid);
+    $offerGridFactory = $this->get('dealtmodule.admin.grid.offer.factory');
+    $offerGrid = $offerGridFactory->getGrid($filters);
+    $grid = $this->presentGrid($offerGrid);
 
     $this->flashModuleWarnings();
 
-    return $this->render('@Modules/dealtmodule/views/templates/admin/missions.list.html.twig', [
+    return $this->render('@Modules/dealtmodule/views/templates/admin/offer.list.html.twig', [
       'enableSidebar' => true,
       'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
       'grid' => $grid,
       'layoutHeaderToolbarBtn' => [
-        'mission_create' => [
-          'href' => $this->generateUrl('admin_dealt_missions_create'),
-          'desc' => $this->trans('Add mission', 'Modules.DealtModule.Admin'),
+        'offer_create' => [
+          'href' => $this->generateUrl('admin_dealt_offer_create'),
+          'desc' => $this->trans('Add offer', 'Modules.DealtModule.Admin'),
           'icon' => 'add',
         ],
       ]
@@ -54,24 +54,24 @@ class AdminDealtMissionController extends AbstractAdminDealtController
    */
   public function createAction(Request $request)
   {
-    $formBuilder = $this->get('dealtmodule.admin.form.mission.builder');
+    $formBuilder = $this->get('dealtmodule.admin.form.offer.builder');
     $form = $formBuilder->getForm();
     $form->handleRequest($request);
 
-    $formHandler = $this->get('dealtmodule.admin.form.mission.handler');
+    $formHandler = $this->get('dealtmodule.admin.form.offer.handler');
     $result = $formHandler->handle($form);
 
     if (null !== $result->getIdentifiableObjectId()) {
       $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-      return $this->redirectToRoute('admin_dealt_missions_list');
+      return $this->redirectToRoute('admin_dealt_offer_list');
     }
 
     $this->addFlash('warning', $this->trans('
-      When creating a Dealt mission, a virtual dealt product will automatically be created and linked to this entry.
+      When creating a Dealt offer, a virtual dealt product will automatically be created and linked to this entry.
     ', 'Modules.DealtModule.Admin'));
 
     return $this->render(
-      '@Modules/dealtmodule/views/templates/admin/form/dealt.mission.form.html.twig',
+      '@Modules/dealtmodule/views/templates/admin/form/dealt.offer.form.html.twig',
       [
         'form' => $form->createView(),
         'enableSidebar' => true,
@@ -81,26 +81,26 @@ class AdminDealtMissionController extends AbstractAdminDealtController
 
   /**
    * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-   * @param int $missionId
+   * @param int $offerId
    * @param Request $request
    * @return Response
    */
-  public function editAction(Request $request, $missionId)
+  public function editAction(Request $request, $offerId)
   {
-    $formBuilder = $this->get('dealtmodule.admin.form.mission.builder');
-    $form = $formBuilder->getFormFor((int) $missionId);
+    $formBuilder = $this->get('dealtmodule.admin.form.offer.builder');
+    $form = $formBuilder->getFormFor((int) $offerId);
     $form->handleRequest($request);
 
-    $formHandler = $this->get('dealtmodule.admin.form.mission.handler');
-    $result = $formHandler->handleFor((int) $missionId, $form);
+    $formHandler = $this->get('dealtmodule.admin.form.offer.handler');
+    $result = $formHandler->handleFor((int) $offerId, $form);
 
     if (null !== $result->getIdentifiableObjectId()) {
       $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-      return $this->redirectToRoute('admin_dealt_missions_list');
+      return $this->redirectToRoute('admin_dealt_offer_list');
     }
 
     return $this->render(
-      '@Modules/dealtmodule/views/templates/admin/form/dealt.mission.form.html.twig',
+      '@Modules/dealtmodule/views/templates/admin/form/dealt.offer.form.html.twig',
       [
         'form' => $form->createView(),
         'enableSidebar' => true,
@@ -110,15 +110,15 @@ class AdminDealtMissionController extends AbstractAdminDealtController
 
   /**
    * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-   * @param int $missionId
+   * @param int $offerId
    * @return Response
    */
-  public function deleteAction(int $missionId)
+  public function deleteAction(int $offerId)
   {
-    /** @var DealtMissionRepository $repo */
-    $repo = $this->get('dealtmodule.doctrine.dealt.mission.repository');
-    $repo->delete($missionId);
+    /** @var DealtOfferRepository $repo */
+    $repo = $this->get('dealtmodule.doctrine.dealt.offer.repository');
+    $repo->delete($offerId);
 
-    return $this->redirectToRoute('admin_dealt_missions_list');
+    return $this->redirectToRoute('admin_dealt_offer_list');
   }
 }

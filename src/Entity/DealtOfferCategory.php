@@ -8,9 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="DealtModule\Repository\DealtMissionCategoryRepository")
+ * @ORM\Entity(repositoryClass="DealtModule\Repository\DealtOfferCategoryRepository")
  */
-class DealtMissionCategory
+class DealtOfferCategory
 {
   /**
    * @var int
@@ -22,11 +22,11 @@ class DealtMissionCategory
   private $id;
 
   /**
-   * @var DealtMission
-   * @ORM\ManyToOne(targetEntity="DealtModule\Entity\DealtMission", inversedBy="missionCategories")
-   * @ORM\JoinColumn(name="id_mission", referencedColumnName="id_mission", nullable=false)
+   * @var DealtOffer
+   * @ORM\ManyToOne(targetEntity="DealtModule\Entity\DealtOffer", inversedBy="offerCategories")
+   * @ORM\JoinColumn(name="id_offer", referencedColumnName="id_offer", nullable=false)
    */
-  private $mission;
+  private $offer;
 
   /**
    * @var int 
@@ -50,20 +50,20 @@ class DealtMissionCategory
 
 
   /**
-   * @return DealtMission
+   * @return DealtOffer
    */
-  public function getMission()
+  public function getOffer()
   {
-    return $this->mission;
+    return $this->offer;
   }
 
   /**
-   * @param DealtMission $mission
-   * @return DealtMissionCategory
+   * @param DealtOffer $offer
+   * @return DealtOfferCategory
    */
-  public function setMission(DealtMission $mission)
+  public function setOffer(DealtOffer $offer)
   {
-    $this->mission = $mission;
+    $this->offer = $offer;
     return $this;
   }
 
@@ -79,7 +79,7 @@ class DealtMissionCategory
   /**
    * @param int
    *
-   * @return DealtMissionCategory
+   * @return DealtOfferCategory
    */
   public function setVirtualProductId($virtualProductId)
   {
@@ -98,7 +98,7 @@ class DealtMissionCategory
   /**
    * @param int
    *
-   * @return DealtMissionCategory
+   * @return DealtOfferCategory
    */
   public function setCategoryId(int $categoryId)
   {

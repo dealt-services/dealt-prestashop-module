@@ -11,9 +11,9 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 
-final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
+final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-  const GRID_ID = 'dealt_missions';
+  const GRID_ID = 'dealt_offer';
 
   protected function getId()
   {
@@ -22,28 +22,28 @@ final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefi
 
   protected function getName()
   {
-    return $this->trans('Dealt missions', [], 'Modules.DealtModule.Admin');
+    return $this->trans('Dealt offer', [], 'Modules.DealtModule.Admin');
   }
 
   protected function getColumns()
   {
     return (new ColumnCollection())
-      ->add((new DataColumn('id_mission'))
+      ->add((new DataColumn('id_offer'))
           ->setName($this->trans('ID', [], 'Admin.Global'))
           ->setOptions([
-            'field' => 'id_mission',
+            'field' => 'id_offer',
           ])
       )
-      ->add((new DataColumn('dealt_id_mission'))
-          ->setName($this->trans('Mission ID', [], 'Modules.DealtModule.Admin'))
+      ->add((new DataColumn('dealt_id_offer'))
+          ->setName($this->trans('Offer ID', [], 'Modules.DealtModule.Admin'))
           ->setOptions([
-            'field' => 'dealt_id_mission',
+            'field' => 'dealt_id_offer',
           ])
       )
-      ->add((new DataColumn('title_mission'))
-          ->setName($this->trans('Mission title', [], 'Modules.DealtModule.Admin'))
+      ->add((new DataColumn('title_offer'))
+          ->setName($this->trans('Offer title', [], 'Modules.DealtModule.Admin'))
           ->setOptions([
-            'field' => 'title_mission',
+            'field' => 'title_offer',
           ])
       )
       ->add((new DataColumn('total_categories'))
@@ -71,9 +71,9 @@ final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefi
                   ->setName($this->trans('Edit', [], 'Admin.Actions'))
                   ->setIcon('edit')
                   ->setOptions([
-                    'route' => 'admin_dealt_missions_edit',
-                    'route_param_name' => 'missionId',
-                    'route_param_field' => 'id_mission',
+                    'route' => 'admin_dealt_offer_edit',
+                    'route_param_name' => 'offerId',
+                    'route_param_field' => 'id_offer',
                   ])
               )
               ->add((new SubmitRowAction('delete'))
@@ -81,11 +81,11 @@ final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefi
                   ->setIcon('delete')
                   ->setOptions([
                     'method' => 'POST',
-                    'route' => 'admin_dealt_missions_delete',
-                    'route_param_name' => 'missionId',
-                    'route_param_field' => 'id_mission',
+                    'route' => 'admin_dealt_offer_delete',
+                    'route_param_name' => 'offerId',
+                    'route_param_field' => 'id_offer',
                     'confirm_message' => $this->trans(
-                      'Are you sure you want to delete this Dealt Mission ? All associated data will be forever lost (virtual product, linked categories etc..)',
+                      'Are you sure you want to delete this Dealt Offer ? All associated data will be forever lost (virtual product, linked categories etc..)',
                       [],
                       'Modules.DealtModule.Admin'
                     ),

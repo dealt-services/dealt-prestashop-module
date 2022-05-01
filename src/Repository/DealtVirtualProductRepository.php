@@ -68,26 +68,26 @@ class DealtVirtualProductRepository
   }
 
   /**
-   * Create the Dealt mission virtual product
+   * Create the Dealt offer virtual product
    * 
-   * @param string $missionTitle
-   * @param string $dealtMissionId
-   * @param string $missionPrice
+   * @param string $offerTitle
+   * @param string $dealtOfferId
+   * @param string $offerPrice
    * 
    * @return Product
    */
-  public function create(string $missionTitle, string $dealtMissionId, string $missionPrice)
+  public function create(string $offerTitle, string $dealtOfferId, string $offerPrice)
   {
     $category = Category::searchByName(null, DealtInstaller::$DEALT_PRODUCT_CATEGORY_NAME, true);
     $categoryId = $category['id_category'];
 
     $product = new Product();
-    $product->reference = $dealtMissionId . '-dealt-product';
-    $product->name = Helpers::createMultiLangField($missionTitle);
+    $product->reference = $dealtOfferId . '-dealt-product';
+    $product->name = Helpers::createMultiLangField($offerTitle);
     $product->meta_description = '';
     $product->visibility = 'none'; // we want to hide from the public catalog
     $product->id_category_default = $categoryId;
-    $product->price = Helpers::formatPrice($missionPrice);
+    $product->price = Helpers::formatPrice($offerPrice);
     $product->minimal_quantity = 1;
     $product->show_price = 1;
     $product->on_sale = 0;
@@ -108,17 +108,17 @@ class DealtVirtualProductRepository
    * Updates the underlying product
    *
    * @param int $productId
-   * @param string $missionTitle
-   * @param string $missionPrice
+   * @param string $offerTitle
+   * @param string $offerPrice
    *
    * @throws CoreException
    * @return Product
    */
-  public function update(int $productId, string $missionTitle, string $missionPrice)
+  public function update(int $productId, string $offerTitle, string $offerPrice)
   {
     $product = $this->findOneById($productId);
-    $product->name  = Helpers::createMultiLangField($missionTitle);
-    $product->price = Helpers::formatPrice($missionPrice);
+    $product->name  = Helpers::createMultiLangField($offerTitle);
+    $product->price = Helpers::formatPrice($offerPrice);
     $product->save();
 
     return $product;

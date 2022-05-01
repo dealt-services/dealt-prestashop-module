@@ -5,35 +5,35 @@ admin_dealt_configure:
     _controller: 'DealtModule\Controller\Admin\AdminDealtConfigurationController::indexAction'
     _legacy_controller: "AdminDealtConfigurationController"
     _legacy_link: "AdminDealtConfigurationController"
-admin_dealt_missions_list:
-  path: /dealt/missions/list
+admin_dealt_offer_list:
+  path: /dealt/offer/list
   methods: [GET]
   defaults:
-    _controller: 'DealtModule\Controller\Admin\AdminDealtMissionController::indexAction'
-    _legacy_controller: "AdminDealtMissionController"
-    _legacy_link: "AdminDealtMissionController"
-admin_dealt_missions_create:
-  path: /dealt/missions/create
+    _controller: 'DealtModule\Controller\Admin\AdminDealtOfferController::indexAction'
+    _legacy_controller: "AdminDealtOfferController"
+    _legacy_link: "AdminDealtOfferController"
+admin_dealt_offer_create:
+  path: /dealt/offer/create
   methods: [GET, POST]
   defaults:
-    _controller: 'DealtModule\Controller\Admin\AdminDealtMissionController::createAction'
-    _legacy_controller: "AdminDealtMissionController"
-    _legacy_link: "AdminDealtMissionController"
-admin_dealt_missions_edit:
-  path: /dealt/missions/edit/{missionId}
+    _controller: 'DealtModule\Controller\Admin\AdminDealtOfferController::createAction'
+    _legacy_controller: "AdminDealtOfferController"
+    _legacy_link: "AdminDealtOfferController"
+admin_dealt_offer_edit:
+  path: /dealt/offer/edit/{offerId}
   methods: [GET, POST]
   defaults:
-    _controller: 'DealtModule\Controller\Admin\AdminDealtMissionController::editAction'
-    _legacy_controller: "AdminDealtMissionController"
-    _legacy_link: "AdminDealtMissionController"
+    _controller: 'DealtModule\Controller\Admin\AdminDealtOfferController::editAction'
+    _legacy_controller: "AdminDealtOfferController"
+    _legacy_link: "AdminDealtOfferController"
   requirements:
-    missionId: \d+
-admin_dealt_missions_delete:
-  path: /dealt/missions/delete/{missionId}
+    offerId: \d+
+admin_dealt_offer_delete:
+  path: /dealt/offer/delete/{offerId}
   methods: [POST]
   defaults:
-    _controller: 'DealtModule\Controller\Admin\AdminDealtMissionController::deleteAction'
-    _legacy_controller: "AdminDealtMissionController"
-    _legacy_link: "AdminDealtMissionController"
+    _controller: 'DealtModule\Controller\Admin\AdminDealtOfferController::deleteAction'
+    _legacy_controller: "AdminDealtOfferController"
+    _legacy_link: "AdminDealtOfferController"
   requirements:
-    missionId: \d+
+    offerId: \d+

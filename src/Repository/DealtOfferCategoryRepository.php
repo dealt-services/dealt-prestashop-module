@@ -7,8 +7,8 @@ namespace DealtModule\Repository;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Doctrine DealtMissionCategory repository class
+ * Doctrine DealtOfferCategory repository class
  */
-class DealtMissionCategoryRepository extends EntityRepository
+class DealtOfferCategoryRepository extends EntityRepository
 {
 }

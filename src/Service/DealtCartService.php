@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace DealtModule\Service;
 
-use DealtModule\Repository\DealtMissionCategoryRepository;
+use DealtModule\Repository\DealtOfferCategoryRepository;
+use DealtModule\Action\DealtAction;
+use DealtModule\Entity\DealtOfferCategory;
 use DealtModule;
 use Product;
 use Context;
-use DealtModule\Action\DealtAction;
-use DealtModule\Entity\DealtMissionCategory;
 
 /**
  * Dealt Cart class allows interacting with 
@@ -21,8 +21,8 @@ final class DealtCartService
   /** @var DealtModule */
   private $module;
 
-  /** @var DealtMissionCategoryRepository */
-  private $missionCategoryRepository;
+  /** @var DealtOfferCategoryRepository */
+  private $offerCategoryRepository;
 
   /**
    * @param DealtModule $module
@@ -30,14 +30,14 @@ final class DealtCartService
   public function __construct($module)
   {
     $this->module = $module;
-    $this->missionCategoryRepository = $this->module->get('dealtmodule.doctrine.dealt.mission.category.repository');
+    $this->offerCategoryRepository = $this->module->get('dealtmodule.doctrine.dealt.offer.category.repository');
   }
 
   /**
    * @param int $productId
    * @return array|null
    */
-  public function getMissionDataForProduct($productId)
+  public function getOfferDataForProduct($productId)
   {
     $product = new Product($productId);
     $categories = $product->getCategories();
@@ -50,19 +50,19 @@ final class DealtCartService
      * - matching a parent/child category
      */
 
-    /** @var DealtMissionCategory|null */
-    $missionCategory = $this
-      ->missionCategoryRepository
+    /** @var DealtOfferCategory|null */
+    $offerCategory = $this
+      ->offerCategoryRepository
       ->findOneBy(['categoryId' => $categories]);
 
-    if ($missionCategory != null) {
-      $mission = $missionCategory->getMission();
-      $missionProduct = $mission->getVirtualProduct();
+    if ($offerCategory != null) {
+      $offer = $offerCategory->getOffer();
+      $offerProduct = $offer->getVirtualProduct();
 
       /* retrieve the cover image */
-      $img = $missionProduct->getCover($missionProduct->id);
-      $missionImage = Context::getContext()->link->getImageLink(
-        $missionProduct->name[Context::getContext()->language->id],
+      $img = $offerProduct->getCover($offerProduct->id);
+      $offerImage = Context::getContext()->link->getImageLink(
+        $offerProduct->name[Context::getContext()->language->id],
         (int)$img['id_image'],
 
       );
@@ -73,9 +73,9 @@ final class DealtCartService
 
     return [
       'productInCart' => $productInCart,
-      'mission' => $mission,
-      'missionProduct' => $missionProduct,
-      'missionImage' => $missionImage,
+      'offer' => $offer,
+      'offerProduct' => $offerProduct,
+      'offerImage' => $offerImage,
       'availabilityUrl' => Context::getContext()->link->getModuleLink(
         strtolower(DealtModule::class),
         'api',

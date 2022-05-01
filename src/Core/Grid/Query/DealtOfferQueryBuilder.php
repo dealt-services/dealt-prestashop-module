@@ -8,7 +8,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
-class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
+class DealtOfferQueryBuilder extends AbstractDoctrineQueryBuilder
 {
   /**
    * @param SearchCriteriaInterface|null $searchCriteria
@@ -17,8 +17,8 @@ class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
   public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
   {
     $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-    $qb->select('dm.id_mission, dm.dealt_id_mission, dm.title_mission, dm.id_virtual_product, dmc.id_category')
-      ->groupBy('dm.id_mission')
+    $qb->select('dm.id_offer, dm.dealt_id_offer, dm.title_offer, dm.id_virtual_product, dmc.id_category')
+      ->groupBy('dm.id_offer')
       ->addGroupBy('dmc.id_category')
       ->orderBy(
         $searchCriteria->getOrderBy(),
@@ -41,7 +41,7 @@ class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
   public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
   {
     $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-    $qb->select('COUNT(dm.id_mission)');
+    $qb->select('COUNT(dm.id_offer)');
 
     return $qb;
   }
@@ -53,15 +53,15 @@ class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
   private function getQueryBuilder(array $filters)
   {
     $allowedFilters = [
-      'id_mission',
-      'dealt_id_mission',
-      'title_mission',
+      'id_offer',
+      'dealt_id_offer',
+      'title_offer',
     ];
 
     $qb = $this->connection
       ->createQueryBuilder()
-      ->from($this->dbPrefix . 'dealt_mission', 'dm')
-      ->leftJoin('dm', $this->dbPrefix . 'dealt_mission_category', 'dmc', 'dm.id_mission = dmc.id_mission');
+      ->from($this->dbPrefix . 'dealt_offer', 'dm')
+      ->leftJoin('dm', $this->dbPrefix . 'dealt_offer_category', 'dmc', 'dm.id_offer = dmc.id_offer');
 
 
     foreach ($filters as $name => $value) {
@@ -69,7 +69,7 @@ class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
         continue;
       }
 
-      if ('id_mission' === $name || 'dealt_id_mission' === $name) {
+      if ('id_offer' === $name || 'dealt_id_offer' === $name) {
         $qb->andWhere('dm.`' . $name . '` = :' . $name);
         $qb->setParameter($name, $value);
 

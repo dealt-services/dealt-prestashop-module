@@ -10,29 +10,29 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class DealtMissionFormType extends AbstractType
+class DealtOfferFormType extends AbstractType
 {
 
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
     $builder
-      ->add('id_mission', HiddenType::class)
+      ->add('id_offer', HiddenType::class)
       ->add('id_virtual_product', HiddenType::class)
-      ->add('title_mission', TextType::class, [
+      ->add('title_offer', TextType::class, [
         'label' => 'Title',
         'required' => true,
         'help' => "Will also be used as the virtual product's title",
         'translation_domain' => 'Modules.DealtModule.Admin',
       ])
-      ->add('dealt_id_mission', TextWithLengthCounterType::class, [
-        'label' => 'Mission UUID',
+      ->add('dealt_id_offer', TextWithLengthCounterType::class, [
+        'label' => 'Offer UUID',
         'required' => true,
         'max_length' => 36,
         'position' => 'after',
         'translation_domain' => 'Modules.DealtModule.Admin',
       ])
-      ->add('mission_price', MoneyWithSuffixType::class, [
-        'label' => 'Mission price',
+      ->add('offer_price', MoneyWithSuffixType::class, [
+        'label' => 'Offer price',
         'currency' => 'EUR',
         'suffix' => '(tax excl.)',
         'help' => "Tax excluded",

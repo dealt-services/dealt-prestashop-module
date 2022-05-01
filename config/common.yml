@@ -10,21 +10,21 @@ services:
       - "@=service('prestashop.adapter.legacy.configuration').get('DEALTMODULE_API_KEY')"
       - "@=service('prestashop.adapter.legacy.configuration').get('DEALTMODULE_PROD_ENV')"
   #######################################
-  ### DEALT MISSION REPO ################
+  ### DEALT OFFER REPO ##################
   #######################################
-  dealtmodule.doctrine.dealt.mission.repository:
-    class: DealtModule\Repository\DealtMissionRepository
+  dealtmodule.doctrine.dealt.offer.repository:
+    class: DealtModule\Repository\DealtOfferRepository
     factory: ["@doctrine.orm.default_entity_manager", getRepository]
     arguments:
-      - DealtModule\Entity\DealtMission
+      - DealtModule\Entity\DealtOffer
   #######################################
-  ### DEALT MISSION CATEGORY REPO #######
+  ### DEALT OFFER CATEGORY REPO #########
   #######################################
-  dealtmodule.doctrine.dealt.mission.category.repository:
-    class: DealtModule\Repository\DealtMissionCategoryRepository
+  dealtmodule.doctrine.dealt.offer.category.repository:
+    class: DealtModule\Repository\DealtOfferCategoryRepository
     factory: ["@doctrine.orm.default_entity_manager", getRepository]
     arguments:
-      - DealtModule\Entity\DealtMissionCategory
+      - DealtModule\Entity\DealtOfferCategory
   #######################################
   ### DEALT VIRTUAL PRODUCT REPO ########
   #######################################
@@ -42,4 +42,4 @@ services:
     arguments:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"
-      - "@dealtmodule.doctrine.dealt.mission.repository"
+      - "@dealtmodule.doctrine.dealt.offer.repository"

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace DealtModule\Database;
 
 use DealtModule\Tools\Helpers;
-use DealtModule\Repository\DealtMissionRepository;
-use DealtModule\Entity\DealtMission;
+use DealtModule\Repository\DealtOfferRepository;
+use DealtModule\Entity\DealtOffer;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Exception;
@@ -17,7 +17,7 @@ use Configuration;
 final class DealtInstaller
 {
   static $DEALT_PRODUCT_CATEGORY_NAME = "__dealt__";
-  static $DEALT_SQL_TABLES = ["dealt_mission", "dealt_mission_category"];
+  static $DEALT_SQL_TABLES = ["dealt_offer", "dealt_offer_category"];
 
   /**
    * @var Connection
@@ -30,9 +30,9 @@ final class DealtInstaller
   private $dbPrefix;
 
   /**
-   * @var DealtMissionRepository
+   * @var DealtOfferRepository
    */
-  private $missionRepository;
+  private $offerRepository;
 
   /**
    * @param Connection $connection
@@ -41,11 +41,11 @@ final class DealtInstaller
   public function __construct(
     $connection,
     $dbPrefix,
-    $missionRepository
+    $offerRepository
   ) {
     $this->connection = $connection;
     $this->dbPrefix = $dbPrefix;
-    $this->missionRepository = $missionRepository;
+    $this->offerRepository = $offerRepository;
   }
 
   /**
@@ -171,7 +171,7 @@ final class DealtInstaller
       $category->link_rewrite =  Helpers::createMultiLangField(Tools::link_rewrite(static::$DEALT_PRODUCT_CATEGORY_NAME));
       $category->active = false;
       $category->id_parent = Category::getRootCategory()->id;
-      $category->description = "Internal DealtModule category used for Dealt mission virtual products";
+      $category->description = "Internal DealtModule category used for Dealt offer virtual products";
 
       return $category->add();
     }
@@ -203,11 +203,11 @@ final class DealtInstaller
    */
   private function cleanUp()
   {
-    /** @var DealtMission[] */
-    $missions = $this->missionRepository->findAll();
+    /** @var DealtOffer[] */
+    $offers = $this->offerRepository->findAll();
 
-    foreach ($missions as $mission) {
-      $product = $mission->getVirtualProduct();
+    foreach ($offers as $offer) {
+      $product = $offer->getVirtualProduct();
       $product->delete();
     }
 

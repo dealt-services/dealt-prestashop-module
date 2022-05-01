@@ -1,9 +1,6 @@
 <?php
 
-use DealtModule\Action\DealtAction;
 use DealtModule\Database\DealtInstaller;
-use DealtModule\Repository\DealtMissionCategoryRepository;
-use DealtModule\Entity\DealtMissionCategory;
 use DealtModule\Service\DealtCartService;
 
 if (!defined('_PS_VERSION_')) exit;
@@ -27,10 +24,10 @@ class DealtModule extends Module
       'name' => 'Configure',
     ],
     [
-      'route_name' => 'admin_dealt_missions_list',
-      'class_name' => 'AdminDealtMissionController',
+      'route_name' => 'admin_dealt_offer_list',
+      'class_name' => 'AdminDealtOfferController',
       'parent_class_name' => 'DEALTMODULE',
-      'name' => 'Missions configuration',
+      'name' => 'Offers configuration',
     ]
   ];
 
@@ -172,14 +169,14 @@ class DealtModule extends Module
   public function hookActionFrontControllerSetMedia()
   {
     if ('product' === $this->context->controller->php_self) {
-      $jsModule = "/modules/" . $this->name . '/views/public/dealt.front.mission.product.bundle.js';
+      $jsModule = "/modules/" . $this->name . '/views/public/dealt.front.offer.product.bundle.js';
       $this->context->controller->registerJavascript(sha1($jsModule), $jsModule);
     }
   }
 
   /**
    * DisplayProductActions hook
-   * display hook data if current product matches a dealt mission
+   * display hook data if current product matches a dealt offer
    * via its category
    *
    * @return string|null
@@ -187,7 +184,7 @@ class DealtModule extends Module
   public function hookDisplayProductAdditionalInfo()
   {
     $productId = (int) Tools::getValue('id_product');
-    $data = $this->getCartService()->getMissionDataForProduct($productId);
+    $data = $this->getCartService()->getOfferDataForProduct($productId);
     if ($data == null) return;
 
     $this->smarty->assign($data);

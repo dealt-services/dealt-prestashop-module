@@ -6,7 +6,7 @@ namespace DealtModule\Action;
 
 class DealtAction
 {
-  static $AVAILABILITY = "dealt_api_check_availability";
+  static $AVAILABILITY = "DealtAPI_offerAvailability";
 
   static function cases()
   {

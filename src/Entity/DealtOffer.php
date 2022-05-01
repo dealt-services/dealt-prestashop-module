@@ -12,21 +12,21 @@ use Product;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="DealtModule\Repository\DealtMissionRepository")
+ * @ORM\Entity(repositoryClass="DealtModule\Repository\DealtOfferRepository")
  * @ORM\HasLifecycleCallbacks
  */
-class DealtMission
+class DealtOffer
 {
   public function __construct()
   {
-    $this->missionCategories = new ArrayCollection();
+    $this->offerCategories = new ArrayCollection();
   }
 
   /**
    * @var int
    *
    * @ORM\Id
-   * @ORM\Column(name="id_mission", type="integer")
+   * @ORM\Column(name="id_offer", type="integer")
    * @ORM\GeneratedValue(strategy="AUTO")
    */
   private $id;
@@ -34,16 +34,16 @@ class DealtMission
   /**
    * @var string
    *
-   * @ORM\Column(name="dealt_id_mission", type="string", length=36)
+   * @ORM\Column(name="dealt_id_offer", type="string", length=36)
    */
-  private $dealtMissionId;
+  private $dealtOfferId;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="title_mission", type="string", length=64)
+   * @ORM\Column(name="title_offer", type="string", length=64)
    */
-  private $missionTitle;
+  private $offerTitle;
 
   /**
    * @var int
@@ -53,9 +53,9 @@ class DealtMission
   private $virtualProductId;
 
   /**
-   * @ORM\OneToMany(targetEntity="DealtModule\Entity\DealtMissionCategory", cascade={"persist", "remove"}, mappedBy="mission")
+   * @ORM\OneToMany(targetEntity="DealtModule\Entity\DealtOfferCategory", cascade={"persist", "remove"}, mappedBy="offer")
    */
-  private $missionCategories;
+  private $offerCategories;
 
   /**
    * @var DateTime
@@ -82,35 +82,35 @@ class DealtMission
   /**
    * @return int
    */
-  public function getMissionTitle()
+  public function getOfferTitle()
   {
-    return $this->missionTitle;
+    return $this->offerTitle;
   }
 
   /**
-   * @return DealtMission
+   * @return DealtOffer
    */
-  public function setMissionTitle($missionTitle)
+  public function setOfferTitle($offerTitle)
   {
-    $this->missionTitle = $missionTitle;
+    $this->offerTitle = $offerTitle;
     return $this;
   }
 
   /**
    * @return int
    */
-  public function getDealtMissionId()
+  public function getDealtOfferId()
   {
-    return $this->dealtMissionId;
+    return $this->dealtOfferId;
   }
 
   /**
    * @param int
-   * @return DealtMission
+   * @return DealtOffer
    */
-  public function setDealtMissionId($dealtMissionId)
+  public function setDealtOfferId($dealtOfferId)
   {
-    $this->dealtMissionId = $dealtMissionId;
+    $this->dealtOfferId = $dealtOfferId;
     return $this;
   }
 
@@ -134,7 +134,7 @@ class DealtMission
   /**
    * @param int
    *
-   * @return DealtMission
+   * @return DealtOffer
    */
   public function setVirtualProductId($virtualProductId)
   {
@@ -145,17 +145,17 @@ class DealtMission
   /**
    * @return ArrayCollection
    */
-  public function getMissionCategories()
+  public function getOfferCategories()
   {
-    return $this->missionCategories;
+    return $this->offerCategories;
   }
 
   /**
    * @return array
    */
-  public function getMissionCategoriesIds()
+  public function getOfferCategoriesIds()
   {
-    return $this->getMissionCategories()->map(function (DealtMissionCategory $cat) {
+    return $this->getOfferCategories()->map(function (DealtOfferCategory $cat) {
       return $cat->getId();
     })->toArray();
   }
@@ -163,49 +163,49 @@ class DealtMission
   /**
    * @return array
    */
-  public function getMissionCategoriesCategoryIds()
+  public function getOfferCategoriesCategoryIds()
   {
-    return $this->getMissionCategories()->map(function (DealtMissionCategory $cat) {
+    return $this->getOfferCategories()->map(function (DealtOfferCategory $cat) {
       return $cat->getCategoryId();
     })->toArray();
   }
 
   /**
-   * @param DealtMissionCategory $quoteLang
-   * @return DealtMission
+   * @param DealtOfferCategory $quoteLang
+   * @return DealtOffer
    */
-  public function addMissionCategory(DealtMissionCategory $missionCategory)
+  public function addOfferCategory(DealtOfferCategory $offerCategory)
   {
-    $missionCategory->setMission($this);
-    $this->missionCategories->add($missionCategory);
+    $offerCategory->setOffer($this);
+    $this->offerCategories->add($offerCategory);
 
     return $this;
   }
 
   /**
-   * @return DealtMission
+   * @return DealtOffer
    */
-  public function clearMissionCategories()
+  public function clearOfferCategories()
   {
-    $this->missionCategories->clear();
+    $this->offerCategories->clear();
     return $this;
   }
 
   /**
    * @param array $categoryIds
-   * @return DealtMission
+   * @return DealtOffer
    */
-  public function setMissionCategoriesFromIds($categoryIds)
+  public function setOfferCategoriesFromIds($categoryIds)
   {
     /* create category relations */
     foreach ($categoryIds as $categoryId) {
-      $missionCategory = new DealtMissionCategory();
-      $missionCategory
-        ->setMission($this)
+      $offerCategory = new DealtOfferCategory();
+      $offerCategory
+        ->setOffer($this)
         ->setCategoryId(intval($categoryId))
         ->setVirtualProductId($this->getVirtualProductId());
 
-      $this->addMissionCategory($missionCategory);
+      $this->addOfferCategory($offerCategory);
     }
 
     return $this;
@@ -221,7 +221,7 @@ class DealtMission
 
   /**
    * @param DateTime $dateAdd
-   * @return DealtMission
+   * @return DealtOffer
    */
   public function setDateAdd(DateTime $dateAdd)
   {
@@ -239,7 +239,7 @@ class DealtMission
 
   /**
    * @param DateTime $dateUpd
-   * @return DealtMission
+   * @return DealtOffer
    */
   public function setDateUpd(DateTime $dateUpd)
   {
@@ -266,9 +266,9 @@ class DealtMission
   public function toArray()
   {
     return [
-      'id_mission' => $this->getId(),
-      'dealt_id_mission' => $this->getDealtMissionId(),
-      'title_mission' => $this->getMissionTitle(),
+      'id_offer' => $this->getId(),
+      'dealt_id_offer' => $this->getDealtOfferId(),
+      'title_offer' => $this->getOfferTitle(),
       'date_add' => $this->getDateAdd(),
       'date_upd' => $this->getDateUpd()
     ];

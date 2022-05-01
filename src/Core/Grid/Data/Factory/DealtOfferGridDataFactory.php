@@ -13,7 +13,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\DependencyInjection\Container;
 
-final class DealtMissionGridDataFactory implements GridDataFactoryInterface
+final class DealtOfferGridDataFactory implements GridDataFactoryInterface
 {
   /**
    * @var DoctrineQueryBuilderInterface
@@ -70,29 +70,29 @@ final class DealtMissionGridDataFactory implements GridDataFactoryInterface
     $records = $searchQueryBuilder->execute()->fetchAll();
     $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
 
-    $missionsById = [];
-    $missionCategoriesById = [];
+    $offersById = [];
+    $offerCategoriesById = [];
     foreach ($records as $record) {
-      $missionId = (int) $record["id_mission"];
+      $offerId = (int) $record["id_offer"];
       if (isset($record["id_category"])) {
-        $missionCategoriesById[$missionId][] = (int) $record["id_category"];
+        $offerCategoriesById[$offerId][] = (int) $record["id_category"];
       }
 
-      $missionsById[$missionId] = $record;
+      $offersById[$offerId] = $record;
     }
 
 
-    $missions = [];
-    foreach ($missionsById as $missionId => $mission) {
-      $hasCategories = isset($missionCategoriesById[$missionId]);
-      $mission["id_categories"] = $hasCategories ? $missionCategoriesById[$missionId] : [];
-      $mission["total_categories"] = count($mission["id_categories"]);
-      unset($mission["id_category"]);
-      $missions[] = $mission;
+    $offers = [];
+    foreach ($offersById as $offerId => $offer) {
+      $hasCategories = isset($offerCategoriesById[$offerId]);
+      $offer["id_categories"] = $hasCategories ? $offerCategoriesById[$offerId] : [];
+      $offer["total_categories"] = count($offer["id_categories"]);
+      unset($offer["id_category"]);
+      $offers[] = $offer;
     }
 
 
-    $records = new RecordCollection($missions);
+    $records = new RecordCollection($offers);
 
     return new GridData(
       $records,
