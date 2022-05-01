@@ -63,9 +63,9 @@ class DealtMission
 
   /**
    * @var int 
-   * @ORM\Column(name="id_virtual_product", type="integer")
+   * @ORM\Column(name="id_dealt_product", type="integer")
    */
-  private $virtualProductId;
+  private $dealtProductId;
 
   /**
    * @var int 
@@ -220,17 +220,17 @@ class DealtMission
   /**
    * @return int
    */
-  public function getVirtualProductId()
+  public function getDealtProductId()
   {
-    return $this->virtualProductId;
+    return $this->dealtProductId;
   }
 
   /**
    * @return Product
    */
-  public function getVirtualProduct()
+  public function getDealtProduct()
   {
-    return new Product($this->virtualProductId);
+    return new Product($this->dealtProductId);
   }
 
   /**
@@ -238,9 +238,9 @@ class DealtMission
    *
    * @return DealtMission
    */
-  public function setVirtualProductId($virtualProductId)
+  public function setDealtProductId($dealtProductId)
   {
-    $this->virtualProductId = $virtualProductId;
+    $this->dealtProductId = $dealtProductId;
     return $this;
   }
 

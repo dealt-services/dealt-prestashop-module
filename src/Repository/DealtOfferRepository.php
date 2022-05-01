@@ -20,19 +20,19 @@ class DealtOfferRepository extends EntityRepository
    * 
    * @param string $offerTitle
    * @param string $dealtOfferId
-   * @param int $virtualProductId
+   * @param int $dealtProductId
    * @param array $categoryIds
    * 
    * @return DealtOffer
    */
-  public function create($offerTitle, $dealtOfferId, $virtualProductId, $categoryIds)
+  public function create($offerTitle, $dealtOfferId, $dealtProductId, $categoryIds)
   {
     $em = $this->getEntityManager();
 
     $offer = (new DealtOffer())
       ->setOfferTitle($offerTitle)
       ->setDealtOfferId($dealtOfferId)
-      ->setVirtualProductId($virtualProductId)
+      ->setDealtProductId($dealtProductId)
       ->setOfferCategoriesFromIds($categoryIds);
 
     $em->persist($offer);
@@ -46,17 +46,17 @@ class DealtOfferRepository extends EntityRepository
    * On each update, for simplicity, we delete every associated
    * DealtOfferCategories linked to the current DealtOffer and
    * re-create them from scratch (avoids inconsistencies).
-   * Updating the DealtOffer::$virtualProductId is optional.
+   * Updating the DealtOffer::$dealtProductId is optional.
    * 
    * @param int $offerId
    * @param string $offerTitle
    * @param string $dealtOfferId
-   * @param int|null $virtualProductId
+   * @param int|null $dealtProductId
    * @param array $categoryIds
    * 
    * @return DealtOffer
    */
-  public function update($offerId, $offerTitle, $dealtOfferId, $virtualProductId, $categoryIds)
+  public function update($offerId, $offerTitle, $dealtOfferId, $dealtProductId, $categoryIds)
   {
     $em = $this->getEntityManager();
 
@@ -65,7 +65,7 @@ class DealtOfferRepository extends EntityRepository
       ->setOfferTitle($offerTitle)
       ->setDealtOfferId($dealtOfferId);
 
-    if ($virtualProductId != null) $offer->setVirtualProductId($virtualProductId);
+    if ($dealtProductId != null) $offer->setDealtProductId($dealtProductId);
 
     foreach ($offer->getOfferCategories() as $offerCategory) {
       $this->deleteOfferCategory($offerCategory->getId());
@@ -95,7 +95,7 @@ class DealtOfferRepository extends EntityRepository
 
     /** @var DealtOffer */
     $offer = ($this->findOneById($offerId));
-    $product = $offer->getVirtualProduct();
+    $product = $offer->getDealtProduct();
 
     try {
       $product->delete();

@@ -4,7 +4,7 @@ namespace DealtModule\Forms\Admin;
 
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Repository\DealtOfferRepository;
-use DealtModule\Repository\DealtVirtualProductRepository;
+use DealtModule\Repository\DealtProductRepository;
 use DealtModule\Tools\Helpers;
 use Exception;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
@@ -17,18 +17,18 @@ class DealtOfferFormDataProvider implements FormDataProviderInterface
   private  $dealtOfferRepository;
 
   /**
-   * @var DealtVirtualProductRepository
+   * @var DealtProductRepository
    */
-  private  $dealtVirtualProductRepository;
+  private  $dealtDealtProductRepository;
 
   /**
    * @param DealtOfferRepository $dealtOfferRepository
-   * @param DealtVirtualProductRepository $dealtVirtualProductRepository
+   * @param DealtProductRepository $dealtDealtProductRepository
    */
-  public function __construct($dealtOfferRepository, $dealtVirtualProductRepository)
+  public function __construct($dealtOfferRepository, $dealtDealtProductRepository)
   {
     $this->dealtOfferRepository = $dealtOfferRepository;
-    $this->dealtVirtualProductRepository = $dealtVirtualProductRepository;
+    $this->dealtDealtProductRepository = $dealtDealtProductRepository;
   }
   /**
    * @param int $offerId
@@ -42,7 +42,7 @@ class DealtOfferFormDataProvider implements FormDataProviderInterface
     $offerData['ids_category'] = $offer->getOfferCategoriesCategoryIds();
 
     try {
-      $product = $this->dealtVirtualProductRepository->findOneById($offer->getVirtualProductId());
+      $product = $this->dealtDealtProductRepository->findOneById($offer->getDealtProductId());
       $offerData['offer_price'] = $product->price;
     } catch (Exception $_) { /* associated product may have been deleted */
       $offerData['offer_price'] = Helpers::formatPrice('0.00');

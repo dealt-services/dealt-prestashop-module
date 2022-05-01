@@ -50,10 +50,10 @@ services:
     arguments:
       - DealtModule\Entity\DealtMission
   #######################################
-  ### DEALT VIRTUAL PRODUCT REPO ########
+  ### DEALT PRODUCT REPO ################
   #######################################
-  dealtmodule.doctrine.dealt.virtual.product.repository:
-    class: DealtModule\Repository\DealtVirtualProductRepository
+  dealtmodule.doctrine.dealt.product.repository:
+    class: DealtModule\Repository\DealtProductRepository
     arguments:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"

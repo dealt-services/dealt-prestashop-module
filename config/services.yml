@@ -25,7 +25,7 @@ services:
     class: DealtModule\Forms\Admin\DealtOfferFormDataProvider
     arguments:
       - "@dealtmodule.doctrine.dealt.offer.repository"
-      - "@dealtmodule.doctrine.dealt.virtual.product.repository"
+      - "@dealtmodule.doctrine.dealt.product.repository"
   ### FORM BUILDER ######################
   dealtmodule.admin.form.offer.builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
@@ -39,7 +39,7 @@ services:
     arguments:
       - "@doctrine.orm.default_entity_manager"
       - "@dealtmodule.doctrine.dealt.offer.repository"
-      - "@dealtmodule.doctrine.dealt.virtual.product.repository"
+      - "@dealtmodule.doctrine.dealt.product.repository"
   ### FORM HANDLER ######################
   dealtmodule.admin.form.offer.handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'

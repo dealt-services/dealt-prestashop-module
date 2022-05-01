@@ -25,7 +25,7 @@ class DealtCartProductOffer
   /**
    * @var DealtOffer
    * @ORM\OneToOne(targetEntity="DealtModule\Entity\DealtOffer")
-   * @ORM\JoinColumn(name="id_virtual_product", referencedColumnName="id_virtual_product", nullable=false)
+   * @ORM\JoinColumn(name="id_dealt_product", referencedColumnName="id_dealt_product", nullable=false)
    */
   private $offer;
 
@@ -43,9 +43,9 @@ class DealtCartProductOffer
 
   /**
    * @var int 
-   * @ORM\Column(name="id_virtual_product", type="integer")
+   * @ORM\Column(name="id_dealt_product", type="integer")
    */
-  private $virtualProductId;
+  private $dealtProductId;
 
   /**
    * @return int
@@ -124,9 +124,9 @@ class DealtCartProductOffer
   /**
    * @return int
    */
-  public function getVirtualProductId()
+  public function getDealtProductId()
   {
-    return $this->virtualProductId;
+    return $this->dealtProductId;
   }
 
   /**
@@ -134,9 +134,9 @@ class DealtCartProductOffer
    *
    * @return DealtCartProductOffer
    */
-  public function setVirtualProductId($virtualProductId)
+  public function setDealtProductId($dealtProductId)
   {
-    $this->virtualProductId = $virtualProductId;
+    $this->dealtProductId = $dealtProductId;
     return $this;
   }
 }

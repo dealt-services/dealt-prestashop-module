@@ -212,7 +212,7 @@ final class DealtInstaller
     $offers = $this->offerRepository->findAll();
 
     foreach ($offers as $offer) {
-      $product = $offer->getVirtualProduct();
+      $product = $offer->getDealtProduct();
       $product->delete();
     }
 

@@ -57,10 +57,10 @@ final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefini
           ->setOptions([
             'icon' => 'link',
             'target' => '_BLANK',
-            'field' => 'id_virtual_product',
+            'field' => 'id_dealt_product',
             'route' => 'admin_product_form',
             'route_param_name' => 'id',
-            'route_param_field' => 'id_virtual_product',
+            'route_param_field' => 'id_dealt_product',
           ])
       )
       ->add((new ActionColumn('actions'))
@@ -85,7 +85,7 @@ final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefini
                     'route_param_name' => 'offerId',
                     'route_param_field' => 'id_offer',
                     'confirm_message' => $this->trans(
-                      'Are you sure you want to delete this Dealt Offer ? All associated data will be forever lost (virtual product, linked categories etc..)',
+                      'Are you sure you want to delete this Dealt Offer ? All associated data will be forever lost (dealt product, linked categories etc..)',
                       [],
                       'Modules.DealtModule.Admin'
                     ),

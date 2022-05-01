@@ -5,7 +5,7 @@ namespace DealtModule\Forms\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use DealtModule\Repository\DealtOfferRepository;
-use DealtModule\Repository\DealtVirtualProductRepository;
+use DealtModule\Repository\DealtProductRepository;
 use DealtModule\Entity\DealtOffer;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 
@@ -23,14 +23,14 @@ class DealtOfferFormDataHandler implements FormDataHandlerInterface
   private  $offerRepository;
 
   /**
-   * @var DealtVirtualProductRepository
+   * @var DealtProductRepository
    */
   private  $productRepository;
 
   /**
    * @param EntityManagerInterface $entityManager
    * @param DealtOfferRepository $offerRepository
-   * @param DealtVirtualProductRepository $productRepository
+   * @param DealtProductRepository $productRepository
    */
   public function __construct(
     $entityManager,
@@ -72,7 +72,7 @@ class DealtOfferFormDataHandler implements FormDataHandlerInterface
     $offer = $this->offerRepository->findOneById($offerId);
 
     try {
-      $this->productRepository->update($offer->getVirtualProductId(), $offerTitle, $offerPrice);
+      $this->productRepository->update($offer->getDealtProductId(), $offerTitle, $offerPrice);
       $this->offerRepository->update($offerId, $offerTitle, $dealtOfferId, null, $categoryIds);
     } catch (ProductNotFoundException $_) {
       $product = $this->productRepository->create($offerTitle, $dealtOfferId, $offerPrice);

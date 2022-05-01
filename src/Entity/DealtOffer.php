@@ -48,9 +48,9 @@ class DealtOffer
   /**
    * @var int
    * 
-   * @ORM\Column(name="id_virtual_product", type="integer")
+   * @ORM\Column(name="id_dealt_product", type="integer")
    */
-  private $virtualProductId;
+  private $dealtProductId;
 
   /**
    * @ORM\OneToMany(targetEntity="DealtModule\Entity\DealtOfferCategory", cascade={"persist", "remove"}, mappedBy="offer")
@@ -117,18 +117,18 @@ class DealtOffer
   /**
    * @return int
    */
-  public function getVirtualProductId()
+  public function getDealtProductId()
   {
-    return $this->virtualProductId;
+    return $this->dealtProductId;
   }
 
 
   /**
    * @return Product
    */
-  public function getVirtualProduct()
+  public function getDealtProduct()
   {
-    return new Product($this->virtualProductId);
+    return new Product($this->dealtProductId);
   }
 
   /**
@@ -136,9 +136,9 @@ class DealtOffer
    *
    * @return DealtOffer
    */
-  public function setVirtualProductId($virtualProductId)
+  public function setDealtProductId($dealtProductId)
   {
-    $this->virtualProductId = $virtualProductId;
+    $this->dealtProductId = $dealtProductId;
     return $this;
   }
 
@@ -203,7 +203,7 @@ class DealtOffer
       $offerCategory
         ->setOffer($this)
         ->setCategoryId(intval($categoryId))
-        ->setVirtualProductId($this->getVirtualProductId());
+        ->setDealtProductId($this->getDealtProductId());
 
       $this->addOfferCategory($offerCategory);
     }

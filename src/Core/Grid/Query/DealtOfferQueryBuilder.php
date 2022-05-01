@@ -17,7 +17,7 @@ class DealtOfferQueryBuilder extends AbstractDoctrineQueryBuilder
   public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
   {
     $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-    $qb->select('dm.id_offer, dm.dealt_id_offer, dm.title_offer, dm.id_virtual_product, dmc.id_category')
+    $qb->select('dm.id_offer, dm.dealt_id_offer, dm.title_offer, dm.id_dealt_product, dmc.id_category')
       ->groupBy('dm.id_offer')
       ->addGroupBy('dmc.id_category')
       ->orderBy(

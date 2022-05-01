@@ -17,7 +17,7 @@ class DealtOfferFormType extends AbstractType
   {
     $builder
       ->add('id_offer', HiddenType::class)
-      ->add('id_virtual_product', HiddenType::class)
+      ->add('id_dealt_product', HiddenType::class)
       ->add('title_offer', TextType::class, [
         'label' => 'Title',
         'required' => true,

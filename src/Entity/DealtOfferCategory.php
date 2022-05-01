@@ -30,9 +30,9 @@ class DealtOfferCategory
 
   /**
    * @var int 
-   * @ORM\Column(name="id_virtual_product", type="integer")
+   * @ORM\Column(name="id_dealt_product", type="integer")
    */
-  private $virtualProductId;
+  private $dealtProductId;
 
   /**
    * @var int 
@@ -71,9 +71,9 @@ class DealtOfferCategory
   /**
    * @return int
    */
-  public function getVirtualProductId()
+  public function getDealtProductId()
   {
-    return $this->virtualProductId;
+    return $this->dealtProductId;
   }
 
   /**
@@ -81,9 +81,9 @@ class DealtOfferCategory
    *
    * @return DealtOfferCategory
    */
-  public function setVirtualProductId($virtualProductId)
+  public function setDealtProductId($dealtProductId)
   {
-    $this->virtualProductId = $virtualProductId;
+    $this->dealtProductId = $dealtProductId;
     return $this;
   }
 

@@ -22,7 +22,7 @@ use StockAvailable;
  * 
  * This Repository uses the legacy ObjectModel API and DBQuery class
  */
-class DealtVirtualProductRepository
+class DealtProductRepository
 {
   /**
    * @var Connection
