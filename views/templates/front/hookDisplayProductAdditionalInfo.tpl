@@ -19,19 +19,20 @@
 		{include file="modules/dealtmodule/views/templates/front/form/zipcode.autocomplete.tpl"}
 	</div>
 	<br />
-	{if $productInCart != null}
-		NO WAU
+	{if $cartProduct != null}
 	{/if}
 </div>
 
 <script>
 	window.__DEALT__ = {
 		cart: {
-			currentProduct: JSON.parse('{$productInCart|@json_encode nofilter}'),
+			currentProduct: JSON.parse('{$cartProduct|@json_encode nofilter}'),
+			addToCartAction: {$addToCartAction|@json_encode nofilter}
 		},
 		offer: {
 			productId: parseInt('{$offerProduct->id}', 10),
-			offerId: '{$offer->getDealtOfferId()}'
+			offerId: '{$offer->getDealtOfferId()}',
+			offerAvailabilityAction: {$offerAvailabilityAction|@json_encode nofilter}
 		}
 	};
 </script>
