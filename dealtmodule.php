@@ -4,6 +4,7 @@ use DealtModule\Action\DealtAction;
 use DealtModule\Database\DealtInstaller;
 use DealtModule\Repository\DealtMissionCategoryRepository;
 use DealtModule\Entity\DealtMissionCategory;
+use DealtModule\Service\DealtCartService;
 
 if (!defined('_PS_VERSION_')) exit;
 if (file_exists(__DIR__ . '/vendor/autoload.php')) require_once __DIR__ . '/vendor/autoload.php';
@@ -11,6 +12,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) require_once __DIR__ . '/vend
 class DealtModule extends Module
 {
   static $DEALT_MAIN_TAB_NAME = "DEALTMODULE";
+
   static $DEALT_TABS = [
     [
       'class_name' => 'DEALTMODULE',
@@ -31,7 +33,15 @@ class DealtModule extends Module
       'name' => 'Missions configuration',
     ]
   ];
-  static $DEALT_HOOKS = ['displayProductAdditionalInfo'];
+
+  static $DEALT_HOOKS = [
+    'actionFrontControllerSetMedia',
+    'displayProductAdditionalInfo',
+    'actionPresentCart'
+  ];
+
+  /** @var DealtCartService $cartService */
+  protected $cartService;
 
   public function __construct()
   {
@@ -61,10 +71,8 @@ class DealtModule extends Module
   {
     $installer = $this->getInstaller();
 
-    return parent::install()
-      && $installer->install()
-      && $this->installTabs()
-      && $this->registerHook(static::$DEALT_HOOKS);
+    return parent::install() && $this->installTabs() && $this->registerHook(static::$DEALT_HOOKS)
+      && $installer->install();
   }
 
   public function uninstall()
@@ -72,8 +80,8 @@ class DealtModule extends Module
     $installer = $this->getInstaller();
 
     return parent::uninstall()
-      && $installer->uninstall()
-      && $this->uninstallTabs();
+      && $this->uninstallTabs()
+      && $installer->uninstall();
   }
 
   public function getContent()
@@ -161,61 +169,48 @@ class DealtModule extends Module
     return true;
   }
 
+  public function hookActionFrontControllerSetMedia()
+  {
+    if ('product' === $this->context->controller->php_self) {
+      $jsModule = "/modules/" . $this->name . '/views/public/dealt.front.mission.product.bundle.js';
+      $this->context->controller->registerJavascript(sha1($jsModule), $jsModule);
+    }
+  }
+
   /**
-   * DisplayProductActions hook :
-   * - from the current product id -> check wether
+   * DisplayProductActions hook
+   * display hook data if current product matches a dealt mission
+   * via its category
    *
    * @return string|null
    */
   public function hookDisplayProductAdditionalInfo()
   {
-    $productId = Tools::getValue('id_product');
-    $product = new Product($productId);
-    $categories = $product->getCategories();
+    $productId = (int) Tools::getValue('id_product');
+    $data = $this->getCartService()->getMissionDataForProduct($productId);
+    if ($data == null) return;
 
-    /** @var DealtMissionCategoryRepository */
-    $repo = $this->get('dealtmodule.doctrine.dealt.mission.category.repository');
+    $this->smarty->assign($data);
+    return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayProductAdditionalInfo.tpl');
+  }
 
-    if (!empty($categories)) {
-      /**
-       * Find only first match - we may have multiple results
-       * but this can only be caused either by :
-       * - a category conflict due to a misconfiguration
-       * - matching a parent/child category
-       */
-      /** @var DealtMissionCategory|null */
-      $missionCategory = $repo->findOneBy(['categoryId' => $categories]);
+  /**
+   * @param array $data
+   * @return array
+   */
+  public function hookActionPresentCart($data)
+  {
+    $cartProducts =  &$data['presentedCart'];
+  }
 
-      if ($missionCategory != null) {
-        $mission = $missionCategory->getMission();
-        $missionProduct = $mission->getVirtualProduct();
+  /**
+   * @return DealtCartService
+   */
+  protected function getCartService()
+  {
+    if ($this->cartService instanceof DealtCartService) return $this->cartService;
+    $this->cartService = new DealtCartService($this);
 
-        /* retrieve the cover image */
-        $img = $missionProduct->getCover($missionProduct->id);
-
-        $missionImage = Context::getContext()->link->getImageLink(
-          $missionProduct->name[Context::getContext()->language->id],
-          (int)$img['id_image'],
-
-        );
-
-        $this->smarty->assign([
-          'missionProduct' => $missionProduct,
-          'missionImage' => $missionImage,
-          'availabilityUrl' => Context::getContext()->link->getModuleLink(
-            strtolower(DealtModule::class),
-            'api',
-            [
-              "ajax" => true,
-              "action" => DealtAction::$AVAILABILITY
-            ]
-          )
-        ]);
-
-        return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayProductAdditionalInfo.tpl');
-      }
-    }
-
-    return null;
+    return $this->cartService;
   }
 }
