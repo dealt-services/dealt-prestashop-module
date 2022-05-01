@@ -12,6 +12,7 @@ const config = {
     "dealt.admin.config.form": ["./js/admin/form/dealt.configuration.form.js"],
     "dealt.admin.mission.form": ["./js/admin/form/dealt.mission.form.js"],
     "dealt.admin.missions.list": ["./js/admin/grid/dealt.missions.list.js"],
+    "dealt.front.mission.product": ["./js/front/dealt.mission.product.js"],
   },
   output: {
     path: path.resolve(__dirname, "public"),
