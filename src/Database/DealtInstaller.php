@@ -17,7 +17,12 @@ use Configuration;
 final class DealtInstaller
 {
   static $DEALT_PRODUCT_CATEGORY_NAME = "__dealt__";
-  static $DEALT_SQL_TABLES = ["dealt_offer", "dealt_offer_category"];
+  static $DEALT_SQL_TABLES = [
+    "dealt_offer",
+    "dealt_offer_category",
+    "dealt_cart_product_offer",
+    "dealt_mission"
+  ];
 
   /**
    * @var Connection
