@@ -26,6 +26,14 @@ services:
     arguments:
       - DealtModule\Entity\DealtOfferCategory
   #######################################
+  ### DEALT OFFER CATEGORY REPO #########
+  #######################################
+  dealtmodule.doctrine.dealt.cart.product.offer.repository:
+    class: DealtModule\Repository\DealtCartProductOfferRepository
+    factory: ["@doctrine.orm.default_entity_manager", getRepository]
+    arguments:
+      - DealtModule\Entity\DealtCartProductOffer
+  #######################################
   ### DEALT VIRTUAL PRODUCT REPO ########
   #######################################
   dealtmodule.doctrine.dealt.virtual.product.repository:
