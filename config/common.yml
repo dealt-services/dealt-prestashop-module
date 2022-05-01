@@ -34,6 +34,14 @@ services:
     arguments:
       - DealtModule\Entity\DealtCartProductOffer
   #######################################
+  ### DEALT MISSION REPO ################
+  #######################################
+  dealtmodule.doctrine.dealt.mission.repository:
+    class: DealtModule\Repository\DealtMissionRepository
+    factory: ["@doctrine.orm.default_entity_manager", getRepository]
+    arguments:
+      - DealtModule\Entity\DealtMission
+  #######################################
   ### DEALT VIRTUAL PRODUCT REPO ########
   #######################################
   dealtmodule.doctrine.dealt.virtual.product.repository:
