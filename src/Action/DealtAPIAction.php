@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace DealtModule\Action;
 
-class DealtAction
+class DealtAPIAction implements ActionInterface
 {
-  static $AVAILABILITY = "DealtAPI_offerAvailability";
+  static $AVAILABILITY = "offerAvailability";
 
   static function cases()
   {
