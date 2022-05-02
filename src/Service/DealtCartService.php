@@ -13,6 +13,7 @@ use DealtModule\Entity\DealtOffer;
 use DealtModule;
 use Product;
 use Context;
+use DealtModule\Entity\DealtCartProduct;
 use DealtModule\Repository\DealtCartProductRepository;
 use Exception;
 
@@ -30,18 +31,18 @@ final class DealtCartService
   private $offerCategoryRepository;
 
   /** @var DealtCartProductRepository */
-  private $cartProductOfferRepository;
+  private $cartProductRepository;
 
   /**
    * @param DealtOfferRepository $offerRepository
    * @param DealtOfferCategoryRepository $offerCategoryRepository
-   * @param DealtCartProductRepository $cartProductOfferRepository
+   * @param DealtCartProductRepository $cartProductRepository
    */
-  public function __construct($offerRepository, $offerCategoryRepository, $cartProductOfferRepository)
+  public function __construct($offerRepository, $offerCategoryRepository, $cartProductRepository)
   {
     $this->offerRepository = $offerRepository;
     $this->offerCategoryRepository = $offerCategoryRepository;
-    $this->cartProductOfferRepository = $cartProductOfferRepository;
+    $this->cartProductRepository = $cartProductRepository;
   }
 
   /**
@@ -130,7 +131,7 @@ final class DealtCartService
       0
     );
 
-    $this->cartProductOfferRepository->create($cart->id, $productId, $offer);
+    $this->cartProductRepository->create($cart->id, $productId, $offer);
 
     /* the quantities of a product and its attached offer must always be in sync */
     return $cart->updateQty(
@@ -139,6 +140,31 @@ final class DealtCartService
       null,
       false
     );
+  }
+
+  /**
+   * Filters in place the presented cart data
+   *
+   * @param array $presentedCart
+   * @return void
+   */
+  public function filterDealtProductsFromCart(&$presentedCart)
+  {
+    $cart = Context::getContext()->cart;
+    /** @var DealtCartProduct[] */
+    $dealtCartProducts = $this->cartProductRepository->findBy(['cartId' => $cart->id]);
+    $dealtCartDealtProducts = array_map(function (DealtCartProduct $dealtCartProduct) {
+      return $dealtCartProduct
+        ->getOffer()
+        ->getDealtProductId();
+    }, $dealtCartProducts);
+
+    $presentedCart['products'] = array_filter($presentedCart['products'], function ($presentedCartProduct) use ($dealtCartDealtProducts) {
+      return !in_array(
+        $presentedCartProduct['id_product'],
+        $dealtCartDealtProducts
+      );
+    });
   }
 
   /**
