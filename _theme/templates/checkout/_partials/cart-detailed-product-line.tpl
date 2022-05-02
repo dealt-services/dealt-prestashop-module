@@ -169,4 +169,5 @@
   </div>
 
   <div class="clearfix"></div>
+  {hook h='displayDealtAssociatedOffer' product=$product}
 </div>

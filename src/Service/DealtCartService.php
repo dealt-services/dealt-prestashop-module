@@ -173,7 +173,7 @@ final class DealtCartService
           $offer = $dealtCartProduct->getOffer();
           $cartProduct['dealt'] = [
             'cartProduct' => $this->getProductFromCart($offer->getDealtProductId()),
-            'offer' => $offer
+            'offer' => $offer->toArray()
           ];
         }
       }

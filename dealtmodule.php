@@ -34,7 +34,8 @@ class DealtModule extends Module
   static $DEALT_HOOKS = [
     'actionFrontControllerSetMedia',
     'displayProductAdditionalInfo',
-    'actionPresentCart'
+    'actionPresentCart',
+    'displayDealtAssociatedOffer'
   ];
 
   public function __construct()
@@ -203,5 +204,12 @@ class DealtModule extends Module
     /* pass a pointer to the array as we want to mutate it */
     $presentedCart = &$data['presentedCart'];
     $cartService->sanitizeDealtCart($presentedCart);
+  }
+
+  public function hookDisplayDealtAssociatedOffer($params)
+  {
+    if (!isset($params['product']['dealt'])) return;
+    $this->smarty->assign($params['product']['dealt']);
+    return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayDealtAssociatedOffer.tpl');
   }
 }
