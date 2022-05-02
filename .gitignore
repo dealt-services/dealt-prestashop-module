@@ -5,6 +5,7 @@ node_modules
 ### ps_shoppingcart
 _theme/modules/ps_shoppingcart/**/*.tpl
 !_theme/modules/ps_shoppingcart/modal.tpl
+!_theme/modules/ps_shoppingcart/ps_shoppingcart.tpl
 ### checkout templates
 _theme/templates/checkout/**/*.tpl
 !_theme/templates/checkout/_partials/cart-summary-product-line.tpl
