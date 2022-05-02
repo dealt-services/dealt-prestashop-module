@@ -172,7 +172,7 @@ final class DealtCartService
         if ($dealtCartProduct->getProductId() == $cartProduct['id_product']) {
           $offer = $dealtCartProduct->getOffer();
           $cartProduct['dealt'] = [
-            'product' => $offer->getDealtProduct(),
+            'cartProduct' => $this->getProductFromCart($offer->getDealtProductId()),
             'offer' => $offer
           ];
         }
