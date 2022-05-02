@@ -18,21 +18,29 @@ class DealtCartProductRepository extends EntityRepository
    * 
    * @param int $cartId
    * @param int $productId
+   * @param int $productAttributeId
    * @param DealtOffer $dealtOffer
    * 
    * @return DealtCartProduct
    */
-  public function create($cartId, $productId, $dealtOffer)
+  public function create($cartId, $productId, $productAttributeId, $dealtOffer)
   {
     $em = $this->getEntityManager();
 
     /* ensure a combination of cartId x productId x dealtProductId does not already exist */
-    $match = $this->findOneBy(['cartId' => $cartId, 'productId' => $productId, 'offer' => $dealtOffer]);
+    $match = $this->findOneBy([
+      'cartId' => $cartId,
+      'productId' => $productId,
+      'productAttributeId' => $productAttributeId,
+      'offer' => $dealtOffer
+    ]);
+
     if ($match != null) return $match;
 
     $cartProductOffer = (new DealtCartProduct())
       ->setCartId($cartId)
       ->setProductId($productId)
+      ->setProductAttributeId($productAttributeId)
       ->setOffer($dealtOffer);
 
     $em->persist($cartProductOffer);

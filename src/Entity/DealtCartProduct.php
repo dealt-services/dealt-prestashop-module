@@ -42,6 +42,12 @@ class DealtCartProduct
   private $productId;
 
   /**
+   * @var int 
+   * @ORM\Column(name="id_product_attribute", type="integer")
+   */
+  private $productAttributeId;
+
+  /**
    * @return int
    */
   public function getId()
@@ -110,6 +116,25 @@ class DealtCartProduct
   public function setProductId($productId)
   {
     $this->productId = $productId;
+    return $this;
+  }
+
+  /**
+   * @return int
+   */
+  public function getProductAttributeId()
+  {
+    return $this->productAttributeId;
+  }
+
+  /**
+   * @param int
+   *
+   * @return DealtCartProduct
+   */
+  public function setProductAttributeId($productAttributeId)
+  {
+    $this->productAttributeId = $productAttributeId;
     return $this;
   }
 }
