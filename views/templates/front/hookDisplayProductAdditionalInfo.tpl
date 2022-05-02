@@ -2,14 +2,13 @@
 	<h4>Nouveau: Simplifiez-vous la vie!</h4>
 	<br />
 	<div style="display: flex; align-items: stretch;">
-		<div style="background-image: url('{$offerImage}'); background-size: cover; flex: 1; display: block"></div>
+		<div style="background-image: url('{$offer->getImage()}'); background-size: cover; flex: 1; display: block"></div>
 		<div style="padding: 0 0 0 15px; display: flex; justify-content: space-between; flex-direction: column; flex: 2">
-			<div>{($offerProduct->description_short[$language['id']])|strip_tags}</div>
+			<div>{($offer->getDealtProduct()->description_short[$language['id']])|strip_tags}</div>
 
 			<div
 				style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; margin-top: 20px">
-				<h1>+ {$currency['sign']}{$offerProduct->getPrice()}</h1>
-				<button class="btn btn-primary" data-button-action="add-to-cart">Ajouter le service</button>
+				<h1>+ <span id="dealt-offer-price">{$offer->getFormattedPrice(Tools::getValue('quantity_wanted'))}</span></h1>
 			</div>
 		</div>
 	</div>
@@ -19,20 +18,8 @@
 		{include file="modules/dealtmodule/views/templates/front/form/zipcode.autocomplete.tpl"}
 	</div>
 	<br />
-	{if $cartProduct != null}
-	{/if}
-</div>
+	{if ($cartProduct != null && $cartOffer != null)}
 
-<script>
-	window.__DEALT__ = {
-		cart: {
-			currentProduct: JSON.parse('{$cartProduct|@json_encode nofilter}'),
-			addToCartAction: {$addToCartAction|@json_encode nofilter}
-		},
-		offer: {
-			productId: parseInt('{$offerProduct->id}', 10),
-			offerId: '{$offer->getDealtOfferId()}',
-			offerAvailabilityAction: {$offerAvailabilityAction|@json_encode nofilter}
-		}
-	};
-</script>
+	{/if}
+
+</div>

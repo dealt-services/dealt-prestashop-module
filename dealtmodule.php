@@ -170,6 +170,22 @@ class DealtModule extends Module
       $jsModule = "/modules/" . $this->name . '/views/public/dealt.front.offer.product.bundle.js';
       $this->context->controller->registerJavascript(sha1($jsModule), $jsModule);
     }
+
+
+    Media::addJsDef(["DealtGlobals" => [
+      "actions" => [
+        "cart" => Context::getContext()->link->getModuleLink(
+          strtolower(DealtModule::class),
+          'cart',
+          ["ajax" => true],
+        ),
+        "api" => Context::getContext()->link->getModuleLink(
+          strtolower(DealtModule::class),
+          'api',
+          ["ajax" => true],
+        )
+      ]
+    ]]);
   }
 
   /**
@@ -184,8 +200,16 @@ class DealtModule extends Module
     /** @var DealtCartService */
     $cartService = $this->get('dealtmodule.dealt.cart.service');
     $productId = (int) Tools::getValue('id_product');
+    $groupValues = Tools::getValue('group'); /* available on product page ajax refresh */
 
-    $data = $cartService->getOfferDataForProduct($productId);
+    $productAttributeId = Tools::getValue('id_product_attribute');
+    $productAttributeId = $productAttributeId != false ?
+      $productAttributeId : (isset($groupValues) ?
+        $cartService->getProductAttributeIdFromGroup($productId, array_values($groupValues))
+        : null
+      );
+
+    $data = $cartService->getOfferDataForProduct($productId, $productAttributeId);
     if ($data == null) return;
 
     $this->smarty->assign($data);
@@ -203,7 +227,7 @@ class DealtModule extends Module
 
     /* pass a pointer to the array as we want to mutate it */
     $presentedCart = &$data['presentedCart'];
-    $cartService->sanitizeDealtCart($presentedCart);
+    // $cartService->sanitizeDealtCart($presentedCart);
   }
 
   public function hookDisplayDealtAssociatedOffer($params)

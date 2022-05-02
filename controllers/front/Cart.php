@@ -21,6 +21,8 @@ class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontContr
     switch ($action) {
       case DealtCartAction::$ADD_TO_CART:
         return $this->handleAddToCart();
+      case DealtCartAction::$GET_PRODUCT_ATTRIBUTE_ID:
+        return $this->handleGetProductAttributeId();
     }
   }
 
@@ -30,8 +32,19 @@ class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontContr
     $cartService = $this->get('dealtmodule.dealt.cart.service');
 
     return $cartService->addDealtOfferToCart(
-      Tools::getValue('dealtOfferId'),
-      (int) Tools::getValue('productId')
+      Tools::getValue('id_dealt_offer'),
+      (int) Tools::getValue('id_product'),
+      (int) Tools::getValue('id_product_attribute')
     );
+  }
+
+  protected function handleGetProductAttributeId()
+  {
+    return [
+      "productAttributeId" => (int) Product::getIdProductAttributeByIdAttributes(
+        Tools::getValue('id_product'),
+        Tools::getValue('group')
+      )
+    ];
   }
 }

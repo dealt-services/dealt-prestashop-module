@@ -1,5 +1,4 @@
 import zipcodes from '../../data/city-zipcodes.json';
-import debounce from '../../utils';
 
 const source = Object.entries(zipcodes).map(([zipCode, city]) => ({
   value: zipCode,
@@ -8,19 +7,22 @@ const source = Object.entries(zipcodes).map(([zipCode, city]) => ({
 }));
 
 export const zipcodeAutocomplete = ($input, $submit) => {
-  const toggleSubmit = () =>
-    $submit.prop(
-      "disabled",
-      !source.some(({ value }) => $input.val().trim() === value)
-    );
+  const onInputChange = (input) => {
+    const zipCode = input.trim();
+    const valid = source.some(({ value }) => zipCode === value);
 
-  const $autocomplete = $input.autocomplete({
+    if (valid) window.DealtGlobals.customer = { zipCode };
+    $submit.prop("disabled", !valid);
+  };
+
+  $input.autocomplete({
     source,
-    select: toggleSubmit,
-    change: toggleSubmit,
+    select: (_, { item }) => {
+      onInputChange(item.value);
+    },
   });
 
-  $input.on("input", debounce(toggleSubmit, 150));
+  $input.on("input", (e) => onInputChange(e.target.value));
 
-  return [$autocomplete, $input, $submit];
+  return () => $input.off();
 };

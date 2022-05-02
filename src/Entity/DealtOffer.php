@@ -7,8 +7,11 @@ namespace DealtModule\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use DateTime;
 use Product;
+use Tools;
+use Context;
 
 /**
  * @ORM\Table()
@@ -258,6 +261,46 @@ class DealtOffer
     if ($this->getDateAdd() == null) {
       $this->setDateAdd(new DateTime());
     }
+  }
+
+  /**
+   * @return string
+   */
+  public function getImage()
+  {
+    $dealtProduct = $this->getDealtProduct();
+    $img = $dealtProduct->getCover($dealtProduct->id);
+
+    return Context::getContext()->link->getImageLink(
+      $dealtProduct->name[Context::getContext()->language->id],
+      (int)$img['id_image'],
+    );
+  }
+
+  /**
+   * @param mixed $quantity
+   * @return string
+   */
+  public function getPrice($quantity = 1)
+  {
+    $quantity = (int) ($quantity == false ? 1 : $quantity);
+    return $this->getDealtProduct()->price * $quantity;
+  }
+
+  /**
+   * @param mixed $quantity
+   * @return string
+   */
+  public function getFormattedPrice($quantity = 1)
+  {
+    /** @var Locale */
+    $locale = Tools::getContextLocale(Context::getContext());
+    $quantity = (int) ($quantity == false ? 1 : $quantity);
+
+    return $locale->formatPrice(
+      $this->getPrice((int) $quantity),
+      Context::getContext()->currency->iso_code
+    );
   }
 
   /**

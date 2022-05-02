@@ -6,15 +6,12 @@ namespace DealtModule\Service;
 
 use DealtModule\Repository\DealtOfferCategoryRepository;
 use DealtModule\Repository\DealtOfferRepository;
-use DealtModule\Entity\DealtOfferCategory;
-use DealtModule\Action\DealtAPIAction;
-use DealtModule\Action\DealtCartAction;
+use DealtModule\Repository\DealtCartProductRepository;
 use DealtModule\Entity\DealtOffer;
-use DealtModule;
+use DealtModule\Entity\DealtCartProduct;
+use DealtModule\Entity\DealtOfferCategory;
 use Product;
 use Context;
-use DealtModule\Entity\DealtCartProduct;
-use DealtModule\Repository\DealtCartProductRepository;
 use Exception;
 
 /**
@@ -47,62 +44,32 @@ final class DealtCartService
 
   /**
    * @param int $productId
+   * @param array $groupValues
+   * @return int
+   */
+  public function getProductAttributeIdFromGroup($productId, $groupValues)
+  {
+    return Product::getIdProductAttributeByIdAttributes(
+      $productId,
+      $groupValues
+    );
+  }
+
+  /**
+   * @param int $productId
+   * @param int|null $productAttributeId
    * @return array|null
    */
-  public function getOfferDataForProduct($productId)
+  public function getOfferDataForProduct($productId, $productAttributeId = null)
   {
-    $product = new Product($productId);
-    $categories = $product->getCategories();
-
-    if (empty($categories)) return null;
-    /**
-     * Find only first match - we may have multiple results
-     * but this can only be caused either by :
-     * - a category conflict due to a misconfiguration
-     * - matching a parent/child category
-     */
-
-    /** @var DealtOfferCategory|null */
-    $offerCategory = $this
-      ->offerCategoryRepository
-      ->findOneBy(['categoryId' => $categories]);
-
-    if ($offerCategory == null) return null;
-    $offer = $offerCategory->getOffer();
-    $offerProduct = $offer->getDealtProduct();
-
-    /* retrieve the cover image */
-    $img = $offerProduct->getCover($offerProduct->id);
-    $offerImage = Context::getContext()->link->getImageLink(
-      $offerProduct->name[Context::getContext()->language->id],
-      (int)$img['id_image'],
-
-    );
+    $offer = $this->getOfferFromProductCategories($productId);
+    if ($offer == null) return null;
 
     return [
-      'cartProduct' => $this->getProductFromCart($productId),
+      'cartProduct' => $this->getProductFromCart($productId, $productAttributeId),
+      'cartOffer' => $this->getProductFromCart($offer->getDealtProductId()),
+      'productAttributeId' => $productAttributeId,
       'offer' => $offer,
-      'offerProduct' => $offerProduct,
-      'offerImage' => $offerImage,
-      'addToCartAction' => Context::getContext()->link->getModuleLink(
-        strtolower(DealtModule::class),
-        'cart',
-        [
-          "ajax" => true,
-          "action" => DealtCartAction::$ADD_TO_CART,
-          "dealtOfferId" => $offer->getDealtOfferId(),
-          "productId" => $productId
-        ]
-      ),
-      'offerAvailabilityAction' => Context::getContext()->link->getModuleLink(
-        strtolower(DealtModule::class),
-        'api',
-        [
-          "ajax" => true,
-          "action" => DealtAPIAction::$AVAILABILITY,
-          "dealtOfferId" => $offer->getDealtOfferId()
-        ]
-      )
     ];
   }
 
@@ -113,9 +80,10 @@ final class DealtCartService
    *
    * @param string $dealtOfferId
    * @param int $productId
+   * @param int $productAttributeId
    * @return bool
    */
-  public function addDealtOfferToCart($dealtOfferId, $productId)
+  public function addDealtOfferToCart($dealtOfferId, $productId, $productAttributeId)
   {
     /** @var DealtOffer|null */
     $offer = $this->offerRepository->findOneBy(['dealtOfferId' => $dealtOfferId]);
@@ -131,7 +99,7 @@ final class DealtCartService
       0
     );
 
-    $this->cartProductRepository->create($cart->id, $productId, $offer);
+    $this->cartProductRepository->create($cart->id, $productId, $productAttributeId, $offer);
 
     /* the quantities of a product and its attached offer must always be in sync */
     return $cart->updateQty(
@@ -181,17 +149,49 @@ final class DealtCartService
   }
 
   /**
+   * @param int $productId
+   * @return DealtOffer|null
+   */
+  protected function getOfferFromProductCategories($productId)
+  {
+    $product = new Product($productId);
+    $categories = $product->getCategories();
+
+    if (empty($categories)) return null;
+    /**
+     * Find only first match - we may have multiple results
+     * but this can only be caused either by :
+     * - a category conflict due to a misconfiguration
+     * - matching a parent/child category
+     */
+
+    /** @var DealtOfferCategory|null */
+    $offerCategory = $this
+      ->offerCategoryRepository
+      ->findOneBy(['categoryId' => $categories]);
+
+    if ($offerCategory == null) return null;
+
+    return $offerCategory->getOffer();
+  }
+
+  /**
    * Iterates over the products in the current context's
    * cart and returns the first match
    *
    * @param int $productId
+   * @param int $productAttributeId
    * @return array|null
    */
-  protected function getProductFromCart($productId)
+  protected function getProductFromCart($productId, $productAttributeId = null)
   {
     $cartProducts = Context::getContext()->cart->getProducts();
+
     foreach ($cartProducts as $cartProduct) {
-      if ((int) $cartProduct['id_product'] == $productId) {
+      if (
+        (int) $cartProduct['id_product'] == $productId &&
+        ($productAttributeId == null || ((int)$cartProduct['id_product_attribute'] == $productAttributeId))
+      ) {
         return $cartProduct;
       }
     }

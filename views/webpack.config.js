@@ -70,7 +70,7 @@ if (process.env.NODE_ENV === "production") {
         booleans: true,
         if_return: true,
         join_vars: true,
-        drop_console: true,
+        drop_console: false,
       },
       output: {
         comments: keepLicense,
