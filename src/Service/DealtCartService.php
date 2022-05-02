@@ -144,27 +144,40 @@ final class DealtCartService
 
   /**
    * Filters in place the presented cart data
+   * adds dealt specific data to products attached to a dealt offer
    *
    * @param array $presentedCart
    * @return void
    */
-  public function filterDealtProductsFromCart(&$presentedCart)
+  public function sanitizeDealtCart(&$presentedCart)
   {
     $cart = Context::getContext()->cart;
     /** @var DealtCartProduct[] */
     $dealtCartProducts = $this->cartProductRepository->findBy(['cartId' => $cart->id]);
-    $dealtCartDealtProducts = array_map(function (DealtCartProduct $dealtCartProduct) {
+    $dealtCartDealtProductIds = array_map(function (DealtCartProduct $dealtCartProduct) {
       return $dealtCartProduct
         ->getOffer()
         ->getDealtProductId();
     }, $dealtCartProducts);
 
-    $presentedCart['products'] = array_filter($presentedCart['products'], function ($presentedCartProduct) use ($dealtCartDealtProducts) {
+    $presentedCart['products'] = array_filter($presentedCart['products'], function ($presentedCartProduct) use ($dealtCartDealtProductIds) {
       return !in_array(
         $presentedCartProduct['id_product'],
-        $dealtCartDealtProducts
+        $dealtCartDealtProductIds
       );
     });
+
+    foreach ($presentedCart['products'] as &$cartProduct) {
+      foreach ($dealtCartProducts as $dealtCartProduct) {
+        if ($dealtCartProduct->getProductId() == $cartProduct['id_product']) {
+          $offer = $dealtCartProduct->getOffer();
+          $cartProduct['dealt'] = [
+            'product' => $offer->getDealtProduct(),
+            'offer' => $offer
+          ];
+        }
+      }
+    }
   }
 
   /**

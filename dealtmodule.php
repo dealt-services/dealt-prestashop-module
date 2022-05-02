@@ -202,6 +202,6 @@ class DealtModule extends Module
 
     /* pass a pointer to the array as we want to mutate it */
     $presentedCart = &$data['presentedCart'];
-    $cartService->filterDealtProductsFromCart($presentedCart);
+    $cartService->sanitizeDealtCart($presentedCart);
   }
 }
