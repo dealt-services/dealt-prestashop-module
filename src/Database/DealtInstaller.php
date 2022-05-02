@@ -20,7 +20,7 @@ final class DealtInstaller
   static $DEALT_SQL_TABLES = [
     "dealt_offer",
     "dealt_offer_category",
-    "dealt_cart_product_offer",
+    "dealt_cart_product",
     "dealt_mission"
   ];
 

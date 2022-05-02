@@ -17,6 +17,7 @@ services:
     arguments:
       - "@dealtmodule.doctrine.dealt.offer.repository"
       - "@dealtmodule.doctrine.dealt.offer.category.repository"
+      - "@dealtmodule.doctrine.dealt.cart.product.repository"
   #######################################
   ### DEALT OFFER REPO ##################
   #######################################
@@ -36,11 +37,11 @@ services:
   #######################################
   ### DEALT OFFER CATEGORY REPO #########
   #######################################
-  dealtmodule.doctrine.dealt.cart.product.offer.repository:
-    class: DealtModule\Repository\DealtCartProductOfferRepository
+  dealtmodule.doctrine.dealt.cart.product.repository:
+    class: DealtModule\Repository\DealtCartProductRepository
     factory: ["@doctrine.orm.default_entity_manager", getRepository]
     arguments:
-      - DealtModule\Entity\DealtCartProductOffer
+      - DealtModule\Entity\DealtCartProduct
   #######################################
   ### DEALT MISSION REPO ################
   #######################################

@@ -13,6 +13,7 @@ use DealtModule\Entity\DealtOffer;
 use DealtModule;
 use Product;
 use Context;
+use DealtModule\Repository\DealtCartProductRepository;
 use Exception;
 
 /**
@@ -28,14 +29,19 @@ final class DealtCartService
   /** @var DealtOfferCategoryRepository */
   private $offerCategoryRepository;
 
+  /** @var DealtCartProductRepository */
+  private $cartProductOfferRepository;
+
   /**
    * @param DealtOfferRepository $offerRepository
    * @param DealtOfferCategoryRepository $offerCategoryRepository
+   * @param DealtCartProductRepository $cartProductOfferRepository
    */
-  public function __construct($offerRepository, $offerCategoryRepository)
+  public function __construct($offerRepository, $offerCategoryRepository, $cartProductOfferRepository)
   {
     $this->offerRepository = $offerRepository;
     $this->offerCategoryRepository = $offerCategoryRepository;
+    $this->cartProductOfferRepository = $cartProductOfferRepository;
   }
 
   /**

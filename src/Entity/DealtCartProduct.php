@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="DealtModule\Repository\DealtCartProductOfferRepository")
+ * @ORM\Entity(repositoryClass="DealtModule\Repository\DealtCartProductRepository")
  */
-class DealtCartProductOffer
+class DealtCartProduct
 {
   /**
    * @var int
@@ -25,7 +25,7 @@ class DealtCartProductOffer
   /**
    * @var DealtOffer
    * @ORM\OneToOne(targetEntity="DealtModule\Entity\DealtOffer")
-   * @ORM\JoinColumn(name="id_dealt_product", referencedColumnName="id_dealt_product", nullable=false)
+   * @ORM\JoinColumn(name="id_offer", referencedColumnName="id_offer", nullable=false)
    */
   private $offer;
 
@@ -42,19 +42,12 @@ class DealtCartProductOffer
   private $productId;
 
   /**
-   * @var int 
-   * @ORM\Column(name="id_dealt_product", type="integer")
-   */
-  private $dealtProductId;
-
-  /**
    * @return int
    */
   public function getId()
   {
     return $this->id;
   }
-
 
   /**
    * @return DealtOffer
@@ -66,7 +59,7 @@ class DealtCartProductOffer
 
   /**
    * @param DealtOffer $offer
-   * @return DealtCartProductOffer
+   * @return DealtCartProduct
    */
   public function setOffer(DealtOffer $offer)
   {
@@ -93,7 +86,7 @@ class DealtCartProductOffer
   /**
    * @param int
    *
-   * @return DealtCartProductOffer
+   * @return DealtCartProduct
    */
   public function setCartId($cartId)
   {
@@ -112,31 +105,11 @@ class DealtCartProductOffer
   /**
    * @param int
    *
-   * @return DealtCartProductOffer
+   * @return DealtCartProduct
    */
   public function setProductId($productId)
   {
     $this->productId = $productId;
-    return $this;
-  }
-
-
-  /**
-   * @return int
-   */
-  public function getDealtProductId()
-  {
-    return $this->dealtProductId;
-  }
-
-  /**
-   * @param int
-   *
-   * @return DealtCartProductOffer
-   */
-  public function setDealtProductId($dealtProductId)
-  {
-    $this->dealtProductId = $dealtProductId;
     return $this;
   }
 }
