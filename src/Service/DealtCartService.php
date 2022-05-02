@@ -124,11 +124,13 @@ final class DealtCartService
     $cartProduct = $this->getProductFromCart($productId);
     if ($cartProduct == null) throw new Exception('Cannot attach dealt offer to a product which is not currently in the cart');
 
-    $dealtProduct = $this->getProductFromCart($offer->getDealtProductId());
-    $quantity = (int) $cartProduct['quantity'] - (isset($dealtProduct['quantity']) ?
-      (int) $dealtProduct['quantity'] :
+    $dealtCartProduct = $this->getProductFromCart($offer->getDealtProductId());
+    $quantity = (int) $cartProduct['quantity'] - (isset($dealtCartProduct['quantity']) ?
+      (int) $dealtCartProduct['quantity'] :
       0
     );
+
+    $this->cartProductOfferRepository->create($cart->id, $productId, $offer);
 
     /* the quantities of a product and its attached offer must always be in sync */
     return $cart->updateQty(
