@@ -9,3 +9,4 @@ _theme/modules/ps_shoppingcart/**/*.tpl
 ### checkout templates
 _theme/templates/checkout/**/*.tpl
 !_theme/templates/checkout/_partials/cart-summary-product-line.tpl
+!_theme/templates/checkout/_partials/cart-detailed-product-line.tpl
