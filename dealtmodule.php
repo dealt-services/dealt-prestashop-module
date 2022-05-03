@@ -225,10 +225,9 @@ class DealtModule extends Module
   {
     /** @var DealtCartService */
     $cartService = $this->get('dealtmodule.dealt.cart.service');
-
     /* pass a pointer to the array as we want to mutate it */
     $presentedCart = &$data['presentedCart'];
-    // $cartService->sanitizeDealtCart($presentedCart);
+    $cartService->sanitizeDealtCart($presentedCart);
   }
 
   public function hookDisplayDealtAssociatedOffer($params)

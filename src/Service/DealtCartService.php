@@ -68,6 +68,7 @@ final class DealtCartService
     return [
       'cartProduct' => $this->getProductFromCart($productId, $productAttributeId),
       'cartOffer' => $this->getProductFromCart($offer->getDealtProductId()),
+      'productId' => $productId,
       'productAttributeId' => $productAttributeId,
       'offer' => $offer,
     ];
@@ -90,24 +91,21 @@ final class DealtCartService
     if ($offer == null) throw new Exception('Unknown Dealt offer id');
 
     $cart = Context::getContext()->cart;
-    $cartProduct = $this->getProductFromCart($productId);
+    $cartProduct = $this->getProductFromCart($productId, $productAttributeId);
     if ($cartProduct == null) throw new Exception('Cannot attach dealt offer to a product which is not currently in the cart');
 
-    $dealtCartProduct = $this->getProductFromCart($offer->getDealtProductId());
-    $quantity = (int) $cartProduct['quantity'] - (isset($dealtCartProduct['quantity']) ?
-      (int) $dealtCartProduct['quantity'] :
-      0
-    );
-
-    $this->cartProductRepository->create($cart->id, $productId, $productAttributeId, $offer);
-
     /* the quantities of a product and its attached offer must always be in sync */
-    return $cart->updateQty(
-      $quantity,
+    $cartUpdated = $cart->updateQty(
+      (int) $cartProduct['quantity'],
       $offer->getDealtProductId(),
       null,
       false
     );
+
+    if (!$cartUpdated) return false;
+    $this->cartProductRepository->create($cart->id, $productId, $productAttributeId, $offer);
+
+    return true;
   }
 
   /**
@@ -122,6 +120,7 @@ final class DealtCartService
     $cart = Context::getContext()->cart;
     /** @var DealtCartProduct[] */
     $dealtCartProducts = $this->cartProductRepository->findBy(['cartId' => $cart->id]);
+
     $dealtCartDealtProductIds = array_map(function (DealtCartProduct $dealtCartProduct) {
       return $dealtCartProduct
         ->getOffer()
@@ -137,15 +136,26 @@ final class DealtCartService
 
     foreach ($presentedCart['products'] as &$cartProduct) {
       foreach ($dealtCartProducts as $dealtCartProduct) {
-        if ($dealtCartProduct->getProductId() == $cartProduct['id_product']) {
+        if (
+          $dealtCartProduct->getProductId() == $cartProduct['id_product'] &&
+          $dealtCartProduct->getProductAttributeId() == $cartProduct['id_product_attribute']
+        ) {
           $offer = $dealtCartProduct->getOffer();
           $cartProduct['dealt'] = [
             'cartProduct' => $this->getProductFromCart($offer->getDealtProductId()),
-            'offer' => $offer->toArray()
+            'offer' => $offer->toArray(),
+            'offerPrice' => $offer->getFormattedPrice($cartProduct['quantity'])
           ];
         }
       }
     }
+
+    $totalCount = 0;
+    foreach ($presentedCart['products'] as $product) {
+      $totalCount += (int) $product['quantity'];
+    }
+
+    $presentedCart['products_count'] = $totalCount;
   }
 
   /**
