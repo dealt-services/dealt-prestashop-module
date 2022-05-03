@@ -264,12 +264,14 @@ class DealtOffer
   }
 
   /**
-   * @return string
+   * @return string|null
    */
   public function getImage()
   {
     $dealtProduct = $this->getDealtProduct();
     $img = $dealtProduct->getCover($dealtProduct->id);
+
+    if ($img == false) return null;
 
     return Context::getContext()->link->getImageLink(
       $dealtProduct->name[Context::getContext()->language->id],
