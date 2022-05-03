@@ -131,7 +131,7 @@ class DealtOffer
    */
   public function getDealtProduct()
   {
-    return new Product($this->dealtProductId);
+    return new Product($this->dealtProductId, true);
   }
 
   /**
@@ -286,7 +286,7 @@ class DealtOffer
   public function getPrice($quantity = 1)
   {
     $quantity = (int) ($quantity == false ? 1 : $quantity);
-    return $this->getDealtProduct()->price * $quantity;
+    return $this->getDealtProduct()->getPrice() * $quantity;
   }
 
   /**
