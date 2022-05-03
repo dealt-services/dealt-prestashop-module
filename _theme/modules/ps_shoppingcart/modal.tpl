@@ -20,7 +20,6 @@
           <div class="col-md-5 divide-right">
             <div class="row">
               <div class="col-md-6">
-                override LOLOL
                 {if $product.default_image}
                   <img src="{$product.default_image.medium.url}"
                     data-full-size-image-url="{$product.default_image.large.url}" title="{$product.default_image.legend}"
@@ -42,6 +41,8 @@
                   class="product-quantity">{l s='Quantity:' d='Shop.Theme.Checkout'}&nbsp;<strong>{$product.cart_quantity}</strong></span>
               </div>
             </div>
+
+            {hook h='displayDealtAssociatedOffer' product=$product}
           </div>
           <div class="col-md-7">
             <div class="cart-content">
