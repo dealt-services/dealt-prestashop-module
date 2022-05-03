@@ -230,7 +230,7 @@ class DealtModule extends Module
 
     $productAttributeId = Tools::getValue('id_product_attribute');
     $productAttributeId = $productAttributeId != false ?
-      $productAttributeId : (isset($groupValues) ?
+      $productAttributeId : (isset($groupValues) && $groupValues != false ?
         $cartService->getProductAttributeIdFromGroup($productId, array_values($groupValues))
         : null
       );
@@ -258,7 +258,26 @@ class DealtModule extends Module
   {
     if (isset($this->cartService)) return $this->cartService;
     $this->cartService = $this->get('dealtmodule.dealt.cart.service');
+    $this->cartService->setModule($this);
+
     return $this->cartService;
+  }
+
+  /**
+   * Proxy private module translator function
+   * to access elsewhere
+   * /!\ only necessary because @translator service is not
+   * available in the front-end symfony container
+   *
+   * @param mixed $id
+   * @param array $parameters
+   * @param mixed $domain
+   * @param mixed $locale
+   * @return string
+   */
+  public function translate($id, $parameters = [], $domain = null, $locale = null)
+  {
+    return parent::trans($id, $parameters, $domain, $locale);
   }
 }
 

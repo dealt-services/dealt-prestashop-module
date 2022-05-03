@@ -11,9 +11,11 @@ use DealtModule\Repository\DealtCartProductRepository;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Entity\DealtCartProduct;
 use DealtModule\Entity\DealtOfferCategory;
+use DealtModule\Tools\Helpers;
 use Product;
 use Context;
 use Cart;
+use DealtModule;
 use Exception;
 
 /**
@@ -32,6 +34,9 @@ final class DealtCartService
   /** @var DealtCartProductRepository */
   private $cartProductRepository;
 
+  /** @var DealtModule */
+  private $module;
+
   /**
    * internal flag to avoid recursive loop on cart
    * sanitization triggering cascading cart updates
@@ -43,9 +48,13 @@ final class DealtCartService
    * @param DealtOfferRepository $offerRepository
    * @param DealtOfferCategoryRepository $offerCategoryRepository
    * @param DealtCartProductRepository $cartProductRepository
+   * @param TranslatorInterface $translator
    */
-  public function __construct($offerRepository, $offerCategoryRepository, $cartProductRepository)
-  {
+  public function __construct(
+    $offerRepository,
+    $offerCategoryRepository,
+    $cartProductRepository
+  ) {
     $this->offerRepository = $offerRepository;
     $this->offerCategoryRepository = $offerCategoryRepository;
     $this->cartProductRepository = $cartProductRepository;
@@ -167,6 +176,7 @@ final class DealtCartService
     }
 
     $presentedCart['products_count'] = $totalCount;
+    $presentedCart['subtotals'] = array_merge($presentedCart['subtotals'], $this->getSubTotals($cart));
   }
 
   /**
@@ -313,5 +323,24 @@ final class DealtCartService
     }
 
     return $cartProducts;
+  }
+
+  protected function getSubTotals(Cart $cart)
+  {
+    $subTotals = [];
+    $cartProductsIndexed = $this->indexCartProducts($cart);
+
+    $subTotals['products_without_dealt'] = [
+      'type' => 'products_without_dealt',
+      'label' => $this->module->translate('Subtotal without services', [], 'Modules.DealtModule.Front'),
+      'amount' => 0,
+      'value' => Helpers::formatPrice(0),
+    ];
+    return $subTotals;
+  }
+
+  public function setModule(DealtModule $module)
+  {
+    $this->module = $module;
   }
 }
