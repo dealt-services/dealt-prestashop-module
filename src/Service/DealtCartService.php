@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DealtModule\Service;
 
+
 use DealtModule\Repository\DealtOfferCategoryRepository;
 use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Repository\DealtCartProductRepository;
@@ -12,6 +13,7 @@ use DealtModule\Entity\DealtCartProduct;
 use DealtModule\Entity\DealtOfferCategory;
 use Product;
 use Context;
+use Cart;
 use Exception;
 
 /**
@@ -29,6 +31,13 @@ final class DealtCartService
 
   /** @var DealtCartProductRepository */
   private $cartProductRepository;
+
+  /**
+   * internal flag to avoid recursive loop on cart
+   * sanitization triggering cascading cart updates
+   * @var bool
+   */
+  private $cartSanitized = false;
 
   /**
    * @param DealtOfferRepository $offerRepository
@@ -67,7 +76,12 @@ final class DealtCartService
 
     return [
       'cartProduct' => $this->getProductFromCart($productId, $productAttributeId),
-      'cartOffer' => $this->getProductFromCart($offer->getDealtProductId()),
+      'cartOffer' => $this->cartProductRepository->findOneBy([
+        'cartId' => (int) Context::getContext()->cart->id,
+        'productId' => $productId,
+        'productAttributeId' => $productAttributeId,
+        'offer' => $offer
+      ]),
       'productId' => $productId,
       'productAttributeId' => $productAttributeId,
       'offer' => $offer,
@@ -94,18 +108,15 @@ final class DealtCartService
     $cartProduct = $this->getProductFromCart($productId, $productAttributeId);
     if ($cartProduct == null) throw new Exception('Cannot attach dealt offer to a product which is not currently in the cart');
 
-    /* the quantities of a product and its attached offer must always be in sync */
-    $cartUpdated = $cart->updateQty(
+    $this->cartProductRepository->create($cart->id, $productId, $productAttributeId, $offer);
+
+    /* this will trigger the dealt cart sanitization via PS hooks */
+    return $cart->updateQty(
       (int) $cartProduct['quantity'],
       $offer->getDealtProductId(),
       null,
       false
     );
-
-    if (!$cartUpdated) return false;
-    $this->cartProductRepository->create($cart->id, $productId, $productAttributeId, $offer);
-
-    return true;
   }
 
   /**
@@ -115,7 +126,7 @@ final class DealtCartService
    * @param array $presentedCart
    * @return void
    */
-  public function sanitizeDealtCart(&$presentedCart)
+  public function sanitizeCartPresenter(&$presentedCart)
   {
     $cart = Context::getContext()->cart;
     /** @var DealtCartProduct[] */
@@ -156,6 +167,61 @@ final class DealtCartService
     }
 
     $presentedCart['products_count'] = $totalCount;
+  }
+
+  /**
+   * Sanitization of prestashop cart against dealt constraints
+   * - get all dealt cart products
+   *
+   * @param int $cartId
+   * @return void
+   */
+  public function sanitizeDealtCart($cartId)
+  {
+    if ($this->cartSanitized) return;
+    $this->cartSanitized = true;
+
+    $cart = new Cart($cartId);
+    $offers = $this->getDealtOffersFromCart($cart);
+    $cartProductsIndex = $this->indexCartProducts($cart);
+
+    /**
+     * If we have dealt offers present in the cart
+     * we need to ensure their quantities match their 
+     * attached products
+     */
+    foreach ($offers as $offer) {
+      $quantity = 0;
+
+      /** @var DealtCartProduct[] */
+      $dealtCartProducts = $this->cartProductRepository->findBy(["cartId" => $cart->id, "offer" => $offer]);
+
+      /* iterate over dealt offers in cart */
+      foreach ($dealtCartProducts as $dealtCartProduct) {
+        $cartProductId = $dealtCartProduct->getProductId();
+        $cartProductAttributeId = $dealtCartProduct->getProductAttributeId();
+        if (isset($cartProductsIndex[$cartProductId][$cartProductAttributeId])) {
+          /* we have a match in the cart */
+          $cartProduct = $cartProductsIndex[$cartProductId][$cartProductAttributeId];
+          $quantity += $cartProduct['quantity'];
+        } else {
+          /**
+           * we should delete the DealtCartProduct reference as the product id/attribute_id pair could not be 
+           * found in the current cart
+           */
+          $this->cartProductRepository->delete($dealtCartProduct->getId());
+        }
+      }
+
+      $offerProductId = $offer->getDealtProductId();
+      $newQty = (int) $quantity;
+      $currentQty = (int) $cartProductsIndex[$offerProductId][0]['quantity'];
+
+      if ($newQty != $currentQty) {
+        $delta = $newQty - $currentQty;
+        $cart->updateQty(abs($delta), $offerProductId, null, false, $delta > 0 ? "up" : "down");
+      }
+    }
   }
 
   /**
@@ -207,5 +273,45 @@ final class DealtCartService
     }
 
     return null;
+  }
+
+  /**
+   * Resolves the dealt offers from the current
+   * cart products.
+   * 
+   * @param Cart
+   * @return DealtOffer[]
+   */
+  protected function getDealtOffersFromCart(Cart $cart)
+  {
+    $cartProducts = $cart->getProducts();
+    $cartProductIds = array_map(function ($cartProduct) {
+      return (int) $cartProduct['id_product'];
+    }, $cartProducts);
+
+    return $this->offerRepository->findBy(['dealtProductId' => $cartProductIds]);
+  }
+
+  /**
+   * Creates an indexed multi-dimensional array of the current cart
+   * [productId][attributeId] product
+   * Useful for quick lookup.
+   * 
+   * @param Cart $cart
+   * @return array
+   */
+  protected function indexCartProducts(Cart $cart)
+  {
+    /** @var array */
+    $cartProducts = [];
+    foreach ($cart->getProducts() as $cartProduct) {
+      $productId = $cartProduct['id_product'];
+      $productAttributeId = $cartProduct['id_product_attribute'];
+
+      if (!isset($cartProducts[$productId])) $cartProducts[$productId] = [];
+      $cartProducts[$productId][$productAttributeId] = $cartProduct;
+    }
+
+    return $cartProducts;
   }
 }
