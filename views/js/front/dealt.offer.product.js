@@ -14,6 +14,7 @@ const dealtProductPage = () => {
   const $price = $("#dealt-offer-price");
   const $input = $("#dealt-zipcode-autocomplete");
   const $submit = $("#dealt-offer-submit");
+  const $error = $("#dealt-offer-error");
   const $form = $submit.closest("form");
 
   /* data normalization */
@@ -22,10 +23,10 @@ const dealtProductPage = () => {
   const quantity = qty ? parseInt(qty.value, 10) : 1;
   const price = parseFloat($submit.attr("data-dealt-offer-unit-price"));
   $price.text(`${ps.currency.sign}${(quantity * price).toFixed(2)}`);
+  $error.hide();
 
   /* Attributes parsing */
   const offerId = $submit.attr("data-dealt-offer-id");
-  const cartOffer = Boolean($submit.attr("data-dealt-cart-offer"));
   const hasCartProduct = Boolean($submit.attr("data-dealt-cart-product"));
   const productId = parseInt($submit.attr("data-dealt-product-id"), 10);
   const productAttributeId = parseInt(
@@ -38,6 +39,7 @@ const dealtProductPage = () => {
 
   $submit.on("click", (e) => {
     e.preventDefault();
+    $error.hide();
     $submit.prop("disabled", true);
     const zipCode = $input.val();
 
@@ -54,14 +56,32 @@ const dealtProductPage = () => {
           ? hasCartProduct
             ? Promise.resolve({ ok: true })
             : cart.psAddToCart($form)
-          : Promise.reject(error)
+          : Promise.reject(ok && !result.available ? result.reason : error)
       )
       .then(({ ok, error }) =>
         ok
           ? cart.attachOfferToCart(productId, productAttributeId, offerId)
           : Promise.reject(error)
       )
-      .catch((e) => console.warn("*******", e))
+      .then(() =>
+        /**
+         * if ps_shoppingcart module is activated, this will
+         * trigger its ajax cart modal to appear
+         */
+        ps.emit("updateCart", {
+          reason: {
+            idCustomization: 0,
+            idProduct: productId,
+            idProductAttribute: productAttributeId,
+            linkAction: "add-to-cart",
+          },
+          resp: { success: true },
+        })
+      )
+      .catch((e) => {
+        $error.text(e);
+        $error.show();
+      })
       .finally(() => $submit.prop("disabled", false));
   });
 

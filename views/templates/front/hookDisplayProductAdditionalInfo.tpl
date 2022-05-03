@@ -2,6 +2,8 @@
 <div class="card card-block loading" id="dealt-offer-card">
 	<h4>Nouveau: Simplifiez-vous la vie!</h4>
 	<br />
+	<article id="dealt-offer-error" class="alert alert-danger" role="alert" data-alert="danger" style="display: none;">
+	</article>
 	<div style="display: flex; align-items: stretch;">
 		<div style="background-image: url('{$offer->getImage()}'); background-size: cover; flex: 1; display: block"></div>
 		<div style="padding: 0 0 0 15px; display: flex; justify-content: space-between; flex-direction: column; flex: 2">
