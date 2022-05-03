@@ -32,11 +32,16 @@ class DealtModule extends Module
   ];
 
   static $DEALT_HOOKS = [
-    'actionFrontControllerSetMedia',
     'displayProductAdditionalInfo',
+    'displayDealtAssociatedOffer',
+    'actionFrontControllerSetMedia',
     'actionPresentCart',
-    'displayDealtAssociatedOffer'
+    'actionCartUpdateQuantityBefore',
+    'actionCartSave'
   ];
+
+  /** @var DealtCartService */
+  protected $cartService;
 
   public function __construct()
   {
@@ -190,6 +195,27 @@ class DealtModule extends Module
   }
 
   /**
+   * @param array $data
+   * @return array
+   */
+  public function hookActionPresentCart($data)
+  {
+    $cartService = $this->getCartService();
+    $presentedCart = &$data['presentedCart']; /* pass a pointer to the array as we want to mutate it */
+    $cartService->sanitizeCartPresenter($presentedCart);
+  }
+
+  public function hookActionCartUpdateQuantityBefore($data)
+  {
+  }
+
+  public function hookActionCartSave($data)
+  {
+    $cartService = $this->getCartService();
+    $cartService->sanitizeDealtCart($data["cart"]->id);
+  }
+
+  /**
    * DisplayProductActions hook
    * display hook data if current product matches a dealt offer
    * via its category
@@ -198,8 +224,7 @@ class DealtModule extends Module
    */
   public function hookDisplayProductAdditionalInfo()
   {
-    /** @var DealtCartService */
-    $cartService = $this->get('dealtmodule.dealt.cart.service');
+    $cartService = $this->getCartService();
     $productId = (int) Tools::getValue('id_product');
     $groupValues = Tools::getValue('group'); /* available on product page ajax refresh */
 
@@ -217,23 +242,27 @@ class DealtModule extends Module
     return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayProductAdditionalInfo.tpl');
   }
 
-  /**
-   * @param array $data
-   * @return array
-   */
-  public function hookActionPresentCart($data)
-  {
-    /** @var DealtCartService */
-    $cartService = $this->get('dealtmodule.dealt.cart.service');
-    /* pass a pointer to the array as we want to mutate it */
-    $presentedCart = &$data['presentedCart'];
-    $cartService->sanitizeDealtCart($presentedCart);
-  }
 
   public function hookDisplayDealtAssociatedOffer($params)
   {
+
     if (!isset($params['product']['dealt'])) return;
     $this->smarty->assign($params['product']['dealt']);
     return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayDealtAssociatedOffer.tpl');
   }
+
+  /**
+   * @return DealtCartService
+   */
+  protected function getCartService()
+  {
+    if (isset($this->cartService)) return $this->cartService;
+    $this->cartService = $this->get('dealtmodule.dealt.cart.service');
+    return $this->cartService;
+  }
 }
+
+/**
+ * Registering a hook when module already installed : 
+ * ``ìf (!$this->isRegisteredInHook('')) $this->registerHook('');```
+ */
