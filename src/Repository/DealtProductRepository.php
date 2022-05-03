@@ -87,7 +87,7 @@ class DealtProductRepository
     $product->meta_description = '';
     $product->visibility = 'none'; // we want to hide from the public catalog
     $product->id_category_default = $categoryId;
-    $product->price = Helpers::formatPrice($offerPrice);
+    $product->price = Helpers::formatPriceForDB($offerPrice);
     $product->minimal_quantity = 1;
     $product->show_price = 1;
     $product->on_sale = 0;
@@ -118,7 +118,7 @@ class DealtProductRepository
   {
     $product = $this->findOneById($productId);
     $product->name  = Helpers::createMultiLangField($offerTitle);
-    $product->price = Helpers::formatPrice($offerPrice);
+    $product->price = Helpers::formatPriceForDB($offerPrice);
     $product->save();
 
     return $product;

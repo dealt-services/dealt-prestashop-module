@@ -45,7 +45,7 @@ class DealtOfferFormDataProvider implements FormDataProviderInterface
       $product = $this->dealtDealtProductRepository->findOneById($offer->getDealtProductId());
       $offerData['offer_price'] = $product->price;
     } catch (Exception $_) { /* associated product may have been deleted */
-      $offerData['offer_price'] = Helpers::formatPrice('0.00');
+      $offerData['offer_price'] = Helpers::formatPriceForDB('0.00');
     }
 
     return $offerData;

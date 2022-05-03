@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace DealtModule\Tools;
 
 use Language;
+use Tools;
+use Context;
 
 class Helpers
 {
@@ -31,7 +33,7 @@ class Helpers
    * @param string $priceString
    * @return string
    */
-  static function formatPrice(string $priceString)
+  static function formatPriceForDB(string $priceString)
   {
     return number_format(floatval($priceString), 6, '.', '');
   }
@@ -46,6 +48,16 @@ class Helpers
   {
     $UUIDv4 = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
     return (bool) preg_match($UUIDv4, $uuid);
+  }
+
+  static function formatPrice($price)
+  {
+    $locale = Tools::getContextLocale(Context::getContext());
+
+    return $locale->formatPrice(
+      $price,
+      Context::getContext()->currency->iso_code
+    );
   }
 
   static function externalDebug($data)
