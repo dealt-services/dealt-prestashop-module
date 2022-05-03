@@ -21,7 +21,10 @@ class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontContro
     switch ($action) {
       case DealtAPIAction::$AVAILABILITY:
         $available = $client->checkAvailability(Tools::getValue('id_dealt_offer'), Tools::getValue('zip_code'));
-        return ['available' => $available];
+        return array_merge(
+          ['available' => $available],
+          $available ? [] : ['reason' => $this->trans('Offer unavailable for the requested zip code')]
+        );
     }
   }
 }
