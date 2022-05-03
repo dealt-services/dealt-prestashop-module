@@ -48,4 +48,17 @@ class DealtCartProductRepository extends EntityRepository
 
     return $cartProductOffer;
   }
+
+  /**
+   * @param int $id
+   * @return void
+   */
+  public function delete($id)
+  {
+    $em = $this->getEntityManager();
+    $cartProduct = $em->getReference(DealtCartProduct::class, $id);
+
+    $em->remove($cartProduct);
+    $em->flush();
+  }
 }
