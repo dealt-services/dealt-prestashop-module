@@ -1,4 +1,4 @@
-<div class="card card-block">
+<div class="card card-block loading" id="dealt-offer-card">
 	<h4>Nouveau: Simplifiez-vous la vie!</h4>
 	<br />
 	<div style="display: flex; align-items: stretch;">

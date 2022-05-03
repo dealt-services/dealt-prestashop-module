@@ -8,7 +8,7 @@ const cart = new DealtCart();
 const ps = window.prestashop;
 
 const dealtProductPage = () => {
-  $("dealt-offer-card").removeClass("loading");
+  $("#dealt-offer-card").removeClass("loading");
 
   const $price = $("#dealt-offer-price");
   const $input = $("#dealt-zipcode-autocomplete");
@@ -56,7 +56,7 @@ window.$(() => {
   }, 1200);
 
   prestashop.on("updateProduct", () => {
-    $("dealt-offer-card").addClass("loading");
+    $("#dealt-offer-card").addClass("loading");
     onUpdateProduct();
   });
 });

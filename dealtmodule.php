@@ -167,10 +167,11 @@ class DealtModule extends Module
   public function hookActionFrontControllerSetMedia()
   {
     if ('product' === $this->context->controller->php_self) {
-      $jsModule = "/modules/" . $this->name . '/views/public/dealt.front.offer.product.bundle.js';
-      $this->context->controller->registerJavascript(sha1($jsModule), $jsModule);
+      $js = "/modules/" . $this->name . '/views/public/dealt.front.offer.product.bundle.js';
+      $css   = "/modules/" . $this->name . '/views/css/dealt.common.css';
+      $this->context->controller->registerJavascript(sha1($js), $js);
+      $this->context->controller->registerStylesheet(sha1($css), $css);
     }
-
 
     Media::addJsDef(["DealtGlobals" => [
       "actions" => [

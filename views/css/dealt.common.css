@@ -1,0 +1,10 @@
+#dealt-offer-card {
+  transition: .2s ease-in-out;
+}
+
+#dealt-offer-card.loading {
+  pointer-events: none;
+  position: relative;
+  opacity: 0.3;
+  filter: blur(2px);
+}
