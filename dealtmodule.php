@@ -42,10 +42,12 @@ class DealtModule extends Module
     public static $DEALT_HOOKS = [
     'displayProductAdditionalInfo',
     'displayDealtAssociatedOffer',
+    'displayDealtAssociatedOfferModal',
+    'displayDealtSubtotalModal',
     'actionFrontControllerSetMedia',
     'actionPresentCart',
-    'actionCartUpdateQuantityBefore',
     'actionCartSave',
+    'actionCartUpdateQuantityBefore',
   ];
 
     /** @var DealtCartService|null */
@@ -304,9 +306,42 @@ class DealtModule extends Module
         if (!isset($params['product']['dealt'])) {
             return null;
         }
+
         $this->smarty->assign($params['product']['dealt']);
 
         return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayDealtAssociatedOffer.tpl');
+    }
+
+    /**
+     * @param mixed $params
+     *
+     * @return string|null
+     */
+    public function hookDisplayDealtAssociatedOfferModal($params)
+    {
+        if (!isset($params['product']['dealt'])) {
+            return null;
+        }
+
+        $this->smarty->assign($params['product']['dealt']);
+
+        return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayDealtAssociatedOfferModal.tpl');
+    }
+
+    /**
+     * @param mixed $params
+     *
+     * @return string|null
+     */
+    public function hookDisplayDealtSubtotalModal($params)
+    {
+        if (!isset($params['cart'])) {
+            return null;
+        }
+
+        $this->smarty->assign($params['cart']);
+
+        return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayDealtSubtotalModal.tpl');
     }
 
     /**
@@ -346,5 +381,8 @@ class DealtModule extends Module
 
 /*
  * Registering a hook when module already installed :
- * ``ìf (!$this->isRegisteredInHook('')) $this->registerHook('');```
+ *
+ * if ($this->isRegisteredInHook('displayDealtSubtotalModal')) {
+      $this->registerHook('displayDealtSubtotalModal');
+    }
  */
