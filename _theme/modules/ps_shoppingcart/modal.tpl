@@ -41,8 +41,7 @@
                   class="product-quantity">{l s='Quantity:' d='Shop.Theme.Checkout'}&nbsp;<strong>{$product.cart_quantity}</strong></span>
               </div>
             </div>
-
-            {hook h='displayDealtAssociatedOffer' product=$product}
+            {hook h='displayDealtAssociatedOfferModal' product=$product}
           </div>
           <div class="col-md-7">
             <div class="cart-content">
@@ -64,11 +63,7 @@
                     {hook h='displayCheckoutSubtotalDetails' subtotal=$cart.subtotals.shipping}</span></p>
               {/if}
 
-              {if $cart.subtotals.dealt_total.value}
-                <p><span>{l s='Services:' d='Modules.DealtModule.Front'}</span>&nbsp;<span
-                    class="shipping value">{$cart.subtotals.dealt_total.value}
-                    {hook h='displayCheckoutSubtotalDetails' subtotal=$cart.subtotals.dealt_total}</span></p>
-              {/if}
+              {hook h='displayDealtSubtotalModal' cart=$cart}
 
               {if !$configuration.display_prices_tax_incl && $configuration.taxes_enabled}
                 <p>
