@@ -1,5 +1,6 @@
 /vendor
 node_modules
+.php-cs-fixer.cache
 
 ### Keep refence to overriden theme files
 ### ps_shoppingcart
