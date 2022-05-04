@@ -366,30 +366,12 @@ class DealtModule extends Module
 
         return $this->cartService;
     }
-
-    /**
-     * Proxy private module translator function
-     * to access elsewhere
-     * /!\ only necessary because @translator service is not
-     * available in the front-end symfony container
-     *
-     * @param mixed $id
-     * @param mixed $parameters
-     * @param mixed $domain
-     * @param mixed $locale
-     *
-     * @return string
-     */
-    public function translate($id, $parameters = [], $domain = null, $locale = null)
-    {
-        return parent::trans($id, $parameters, $domain, $locale);
-    }
 }
 
 /*
  * Registering a hook when module already installed :
  *
- * if ($this->isRegisteredInHook('displayDealtSubtotalModal')) {
-      $this->registerHook('displayDealtSubtotalModal');
+ * if ($this->isRegisteredInHook('actionValidateCustomerAddressForm')) {
+      $this->registerHook('actionCheckoutRender');
     }
  */
