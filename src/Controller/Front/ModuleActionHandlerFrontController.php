@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace DealtModule\Controller\Front;
 
+use DealtModule;
 use Exception;
 use ModuleFrontController;
 use Tools;
 
 abstract class ModuleActionHandlerFrontController extends ModuleFrontController
 {
+    /** @var DealtModule */
+    public $module;
+
     /**
      * @param string $action
      *
