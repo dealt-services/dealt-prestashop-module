@@ -14,6 +14,19 @@ export class DealtCart {
     );
   }
 
+  detachOfferFromCart(productId, productAttributeId, dealtOfferId) {
+    return new Promise((resolve, reject) =>
+      $.post(DealtGlobals.actions.cart, {
+        action: "detachOffer",
+        id_product: productId,
+        id_product_attribute: productAttributeId,
+        id_dealt_offer: dealtOfferId,
+      })
+        .then(resolve)
+        .catch(reject)
+    );
+  }
+
   psAddToCart($form) {
     const query = `${$form.serialize()}&add=1&action=update`;
     const actionURL = $form.attr("action");

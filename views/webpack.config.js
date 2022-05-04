@@ -13,6 +13,7 @@ const config = {
     "dealt.admin.offer.form": ["./js/admin/form/dealt.offer.form.js"],
     "dealt.admin.offer.list": ["./js/admin/grid/dealt.offer.list.js"],
     "dealt.front.offer.product": ["./js/front/dealt.offer.product.js"],
+    "dealt.front.offer.cart": ["./js/front/dealt.offer.cart.js"],
   },
   output: {
     path: path.resolve(__dirname, "public"),

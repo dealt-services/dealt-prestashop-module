@@ -4,7 +4,17 @@
 
 #dealt-offer-card.loading {
   pointer-events: none;
-  position: relative;
   opacity: 0.3;
   filter: blur(2px);
+  cursor: not-allowed;
+  cursor: -moz-not-allowed;
+  cursor: -webkit-not-allowed;
+}
+
+.dealt-offer-detach.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: not-allowed;
+  cursor: -moz-not-allowed;
+  cursor: -webkit-not-allowed;
 }

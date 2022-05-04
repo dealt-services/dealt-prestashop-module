@@ -12,4 +12,3 @@
 		<p class="product-price">{$offerPrice}</p>
 	</div>
 </div>
-<br />
