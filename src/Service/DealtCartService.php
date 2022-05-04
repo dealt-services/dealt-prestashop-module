@@ -173,6 +173,7 @@ final class DealtCartService
                         'cartProduct' => $this->getProductFromCart($offer->getDealtProductId()),
                         'offer' => $offer->toArray(),
                         'offerPrice' => $offer->getFormattedPrice($cartProduct['quantity']),
+                        'offerImage' => $offer->getImage(),
                     ];
                 }
             }
