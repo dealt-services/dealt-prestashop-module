@@ -1,14 +1,17 @@
 {assign var=attached value=($cartProduct != null && $cartOffer != null)}
+{assign var=offerImage value=$offer->getImage()}
+
 <div class="card card-block loading" id="dealt-offer-card">
 	<h4>Nouveau: Simplifiez-vous la vie!</h4>
-	<br />
+	<hr style="margin: 15px 0" />
 	<article id="dealt-offer-error" class="alert alert-danger" role="alert" data-alert="danger" style="display: none;">
 	</article>
 	<div style="display: flex; align-items: stretch;">
-		<div style="background-image: url('{$offer->getImage()}'); background-size: cover; flex: 1; display: block">
+		<div style="flex: 1; display: block;">
+			<img src="{if $offerImage}{$offerImage}{else}{$urls.no_picture_image.bySize.medium_default.url}{/if}"
+				style="max-width: 100%;" />
 		</div>
-		<div
-			style="padding: 0 0 0 15px; display: flex; justify-content: space-between; flex-direction: column; flex: 2">
+		<div style="padding: 0 0 0 15px; display: flex; justify-content: center; flex-direction: column; flex: 2">
 			<div>{($offer->getDealtProduct()->description_short[$language['id']])|strip_tags}</div>
 
 			<div
@@ -34,5 +37,4 @@
 		</div>
 	</div>
 	<br />
-
 </div>
