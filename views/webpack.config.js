@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const keepLicense = require("uglify-save-license");
 
-const psRootDir = process.env.PS_DIR;
+const psRootDir = process.env._PS_ROOT_DIR_;
 const psJsDir = path.resolve(psRootDir, "admin-dev/themes/new-theme/js");
 const psAppDir = path.resolve(psJsDir, "app");
 const psComponentsDir = path.resolve(psJsDir, "components");

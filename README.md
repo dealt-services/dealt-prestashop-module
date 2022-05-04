@@ -8,6 +8,8 @@
 
 ### Dev environment 🏗
 
+##### Prestashop
+
 Start the docker containers to launch the mysql service & the prestashop instances. The dealt module is automatically mounted in the containers.
 
 ```bash
@@ -24,6 +26,29 @@ password: prestashop_demo
 ```
 
 > You can override these settings in the .env file at the root of this project (full list of available PS environment variables available [🔗 here](https://hub.docker.com/r/prestashop/prestashop/))
+
+##### Build assets
+
+Trigger the webpack build
+
+```sh
+cd views/
+_PS_ROOT_DIR_="/your/prestashop/path" npm run build # or npm run watch
+```
+
+##### Dev tools
+
+Static code analysis using php-stan
+
+```sh
+_PS_ROOT_DIR_="/your/prestashop/path" vendor/bin/phpstan analyse --configuration=./phpstan.neon --memory-limit 512M
+```
+
+Code-style check/fix
+
+```sh
+php vendor/bin/php-cs-fixer fix
+```
 
 #### VSCode Setup
 
