@@ -7,7 +7,7 @@
 			<div class="row" style="display: flex; align-items: center;">
 				<div class="col col-md-8 col-xs-7">
 					<h4>{$offer.title_offer} <a href="#" class="dealt-offer-detach" rel="nofollow"
-							data-dealt-offer-id="{$offer.id_dealt_offer}"
+							data-dealt-offer-id="{$offer.dealt_id_offer}"
 							data-dealt-product-id="{$attachedTo.productId}"
 							data-dealt-product-attribute-id="{$attachedTo.productAttributeId}">
 							<i class="material-icons" style="margin-bottom: 2px;">delete</i>

@@ -3,7 +3,7 @@ export class DealtPSClient {
     return new Promise((resolve, reject) =>
       $.post(DealtGlobals.actions.api, {
         action: "offerAvailability",
-        id_dealt_offer: offerId,
+        dealt_id_offer: offerId,
         zip_code: zipCode,
       })
         .then(resolve)

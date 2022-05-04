@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace DealtModule\Repository;
 
-use DealtModule\Entity\DealtCartProduct;
+use DealtModule\Entity\DealtCartProductRef;
 use DealtModule\Entity\DealtOffer;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Doctrine DealtOfferCategory repository class
+ * Doctrine DealtCartProductRefRepository repository class
  */
-class DealtCartProductRepository extends EntityRepository
+class DealtCartProductRefRepository extends EntityRepository
 {
     /**
      * Creates a Dealt Cart Product Offer
@@ -21,7 +21,7 @@ class DealtCartProductRepository extends EntityRepository
      * @param int $productAttributeId
      * @param DealtOffer $dealtOffer
      *
-     * @return DealtCartProduct
+     * @return DealtCartProductRef
      */
     public function create($cartId, $productId, $productAttributeId, $dealtOffer)
     {
@@ -29,21 +29,21 @@ class DealtCartProductRepository extends EntityRepository
 
         /* ensure a combination of cartId x productId x dealtProductId does not already exist */
         $match = $this->findOneBy([
-      'cartId' => $cartId,
-      'productId' => $productId,
-      'productAttributeId' => $productAttributeId,
-      'offer' => $dealtOffer,
-    ]);
+            'cartId' => $cartId,
+            'productId' => $productId,
+            'productAttributeId' => $productAttributeId,
+            'offer' => $dealtOffer,
+        ]);
 
         if ($match != null) {
             return $match;
         }
 
-        $cartProductOffer = (new DealtCartProduct())
-      ->setCartId($cartId)
-      ->setProductId($productId)
-      ->setProductAttributeId($productAttributeId)
-      ->setOffer($dealtOffer);
+        $cartProductOffer = (new DealtCartProductRef())
+            ->setCartId($cartId)
+            ->setProductId($productId)
+            ->setProductAttributeId($productAttributeId)
+            ->setOffer($dealtOffer);
 
         $em->persist($cartProductOffer);
         $em->flush();
@@ -59,7 +59,7 @@ class DealtCartProductRepository extends EntityRepository
     public function delete($id)
     {
         $em = $this->getEntityManager();
-        $cartProduct = $em->getReference(DealtCartProduct::class, $id);
+        $cartProduct = $em->getReference(DealtCartProductRef::class, $id);
 
         $em->remove($cartProduct);
         $em->flush();

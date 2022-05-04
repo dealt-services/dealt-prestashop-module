@@ -21,7 +21,7 @@ final class DealtInstaller
     public static $DEALT_SQL_TABLES = [
         'dealt_offer',
         'dealt_offer_category',
-        'dealt_cart_product',
+        'dealt_cart_product_ref',
         'dealt_mission',
     ];
 

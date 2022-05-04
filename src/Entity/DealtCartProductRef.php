@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="DealtModule\Repository\DealtCartProductRepository")
+ * @ORM\Entity(repositoryClass="DealtModule\Repository\DealtCartProductRefRepository")
  */
-class DealtCartProduct
+class DealtCartProductRef
 {
     /**
      * @var int
@@ -76,7 +76,7 @@ class DealtCartProduct
     /**
      * @param DealtOffer $offer
      *
-     * @return DealtCartProduct
+     * @return DealtCartProductRef
      */
     public function setOffer(DealtOffer $offer)
     {
@@ -104,7 +104,7 @@ class DealtCartProduct
     /**
      * @param int $cartId
      *
-     * @return DealtCartProduct
+     * @return DealtCartProductRef
      */
     public function setCartId($cartId)
     {
@@ -124,7 +124,7 @@ class DealtCartProduct
     /**
      * @param int $productId
      *
-     * @return DealtCartProduct
+     * @return DealtCartProductRef
      */
     public function setProductId($productId)
     {
@@ -144,7 +144,7 @@ class DealtCartProduct
     /**
      * @param int $productAttributeId
      *
-     * @return DealtCartProduct
+     * @return DealtCartProductRef
      */
     public function setProductAttributeId($productAttributeId)
     {

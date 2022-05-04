@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `PREFIX_dealt_cart_product` (
+CREATE TABLE IF NOT EXISTS `PREFIX_dealt_cart_product_ref` (
   id INT AUTO_INCREMENT NOT NULL,
   id_cart INT NOT NULL,
   id_product INT NOT NULL,

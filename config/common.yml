@@ -38,10 +38,10 @@ services:
   ### DEALT OFFER CATEGORY REPO #########
   #######################################
   dealtmodule.doctrine.dealt.cart.product.repository:
-    class: DealtModule\Repository\DealtCartProductRepository
+    class: DealtModule\Repository\DealtCartProductRefRepository
     factory: ["@doctrine.orm.default_entity_manager", getRepository]
     arguments:
-      - DealtModule\Entity\DealtCartProduct
+      - DealtModule\Entity\DealtCartProductRef
   #######################################
   ### DEALT MISSION REPO ################
   #######################################

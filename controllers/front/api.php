@@ -8,19 +8,19 @@ use DealtModule\Service\DealtAPIService;
 
 class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontController
 {
-    public function getModuleActionsClass()
-    {
-        return get_class(new DealtAPIAction());
-    }
+  public function getModuleActionsClass()
+  {
+    return get_class(new DealtAPIAction());
+  }
 
-    public function handleAction($action)
-    {
-        /** @var DealtAPIService */
-        $client = $this->get('dealtmodule.dealt.api.service');
+  public function handleAction($action)
+  {
+    /** @var DealtAPIService */
+    $client = $this->get('dealtmodule.dealt.api.service');
 
-        switch ($action) {
+    switch ($action) {
       case DealtAPIAction::$AVAILABILITY:
-        $available = $client->checkAvailability(strval(Tools::getValue('id_dealt_offer')), strval(Tools::getValue('zip_code')));
+        $available = $client->checkAvailability(strval(Tools::getValue('dealt_id_offer')), strval(Tools::getValue('zip_code')));
 
         return array_merge(
           ['available' => $available],
@@ -28,6 +28,6 @@ class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontContro
         );
     }
 
-        throw new Exception('something went wrong while handling API action');
-    }
+    throw new Exception('something went wrong while handling API action');
+  }
 }

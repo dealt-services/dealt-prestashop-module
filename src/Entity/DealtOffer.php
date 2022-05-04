@@ -336,7 +336,7 @@ class DealtOffer
     {
         return [
             'id_offer' => $this->getId(),
-            'id_dealt_offer' => $this->getDealtOfferId(),
+            'dealt_id_offer' => $this->getDealtOfferId(),
             'title_offer' => $this->getOfferTitle(),
             'date_add' => $this->getDateAdd(),
             'date_upd' => $this->getDateUpd(),

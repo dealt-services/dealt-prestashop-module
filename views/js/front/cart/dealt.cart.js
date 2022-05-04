@@ -7,7 +7,7 @@ export class DealtCart {
         action: "addToCart",
         id_product: productId,
         id_product_attribute: productAttributeId,
-        id_dealt_offer: dealtOfferId,
+        dealt_id_offer: dealtOfferId,
       })
         .then(resolve)
         .catch(reject)
@@ -20,7 +20,7 @@ export class DealtCart {
         action: "detachOffer",
         id_product: productId,
         id_product_attribute: productAttributeId,
-        id_dealt_offer: dealtOfferId,
+        dealt_id_offer: dealtOfferId,
       })
         .then(resolve)
         .catch(reject)

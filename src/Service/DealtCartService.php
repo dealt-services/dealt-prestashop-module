@@ -7,10 +7,10 @@ namespace DealtModule\Service;
 use Cart;
 use Context;
 use DealtModule;
-use DealtModule\Entity\DealtCartProduct;
+use DealtModule\Entity\DealtCartProductRef;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Entity\DealtOfferCategory;
-use DealtModule\Repository\DealtCartProductRepository;
+use DealtModule\Repository\DealtCartProductRefRepository;
 use DealtModule\Repository\DealtOfferCategoryRepository;
 use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Tools\Helpers;
@@ -30,7 +30,7 @@ final class DealtCartService
     /** @var DealtOfferCategoryRepository */
     private $offerCategoryRepository;
 
-    /** @var DealtCartProductRepository */
+    /** @var DealtCartProductRefRepository */
     private $cartProductRepository;
 
     /** @var DealtModule */
@@ -47,7 +47,7 @@ final class DealtCartService
     /**
      * @param DealtOfferRepository $offerRepository
      * @param DealtOfferCategoryRepository $offerCategoryRepository
-     * @param DealtCartProductRepository $cartProductRepository
+     * @param DealtCartProductRefRepository $cartProductRepository
      */
     public function __construct(
         $offerRepository,
@@ -143,16 +143,12 @@ final class DealtCartService
         /** @var DealtOffer */
         $offer = $this->offerRepository->findOneBy(['dealtOfferId' => $dealtOfferId]);
 
-        if ($offer == null) {
-            throw new Exception('Unknown dealt offer id');
-        }
+        if ($offer == null) throw new Exception("Unknown dealt offer id");
 
-        /** @var DealtCartProduct|null */
+        /** @var DealtCartProductRef|null*/
         $dealtCartProduct = $this->cartProductRepository->findOneBy(['cartId' => $cart->id, 'productId' => $productId, 'productAttributeId' => $productAttributeId, 'offer' => $offer]);
 
-        if ($dealtCartProduct == null) {
-            throw new Exception('Cannot detach an unattached offer');
-        }
+        if ($dealtCartProduct == null) throw new Exception("Cannot detach an unattached offer");
 
         $offerProductId = $offer->getDealtProductId();
         $productQuantity = intval($cartProductsIndex[$productId][$productAttributeId]['quantity']);
@@ -160,7 +156,7 @@ final class DealtCartService
         $this->cartProductRepository->delete($dealtCartProduct->getId());
         $cart->updateQty($productQuantity, $offerProductId, null, false, 'down');
 
-        return ['deleted' => true];
+        return ["deleted" => true];
     }
 
     /**
@@ -174,10 +170,10 @@ final class DealtCartService
     public function sanitizeCartPresenter(&$presentedCart)
     {
         $cart = Context::getContext()->cart;
-        /** @var DealtCartProduct[] */
+        /** @var DealtCartProductRef[] */
         $dealtCartProducts = $this->cartProductRepository->findBy(['cartId' => $cart->id]);
 
-        $dealtCartDealtProductIds = array_map(function (DealtCartProduct $dealtCartProduct) {
+        $dealtCartDealtProductIds = array_map(function (DealtCartProductRef $dealtCartProduct) {
             return $dealtCartProduct
                 ->getOffer()
                 ->getDealtProductId();
@@ -203,9 +199,9 @@ final class DealtCartService
                         'offerPrice' => $offer->getFormattedPrice($cartProduct['quantity']),
                         'offerImage' => $offer->getImage(),
                         'attachedTo' => [
-                            'productId' => $cartProduct['id_product'],
-                            'productAttributeId' => $cartProduct['id_product_attribute'],
-                        ],
+                            "productId" => $cartProduct['id_product'],
+                            "productAttributeId" => $cartProduct['id_product_attribute']
+                        ]
                     ];
                 }
             }
@@ -253,7 +249,7 @@ final class DealtCartService
         foreach ($offers as $offer) {
             $quantity = 0;
 
-            /** @var DealtCartProduct[] */
+            /** @var DealtCartProductRef[] */
             $dealtCartProducts = $this->cartProductRepository->findBy(['cartId' => $cart->id, 'offer' => $offer]);
 
             /* iterate over dealt offers in cart */
@@ -266,7 +262,7 @@ final class DealtCartService
                     $quantity += $cartProduct['quantity'];
                 } else {
                     /*
-                                         * we should delete the DealtCartProduct reference as the product id/attribute_id pair could not be
+                                         * we should delete the DealtCartProductRef reference as the product id/attribute_id pair could not be
                                          * found in the current cart
                                          */
                     $this->cartProductRepository->delete($dealtCartProduct->getId());
