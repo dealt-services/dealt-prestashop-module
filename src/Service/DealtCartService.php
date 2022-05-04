@@ -88,12 +88,11 @@ final class DealtCartService
 
         return [
             'cartProduct' => $this->getProductFromCart($productId, $productAttributeId),
-            'cartOffer' => $this->cartProductRepository->findOneBy([
+            'cartOffer' => $this->cartProductRepository->findOneBy(array_merge([
                 'cartId' => (int) Context::getContext()->cart->id,
                 'productId' => $productId,
-                'productAttributeId' => $productAttributeId,
                 'offer' => $offer,
-            ]),
+            ], $productAttributeId != null ? ['productAttributeId' => $productAttributeId] : [])),
             'productId' => $productId,
             'productAttributeId' => $productAttributeId,
             'offer' => $offer,
