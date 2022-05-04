@@ -18,3 +18,7 @@
   cursor: -moz-not-allowed;
   cursor: -webkit-not-allowed;
 }
+
+section#dealt-module\\checkout\\dealt-checkout-step span.step-edit {
+  display: none!important;
+}
