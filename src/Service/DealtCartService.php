@@ -170,13 +170,19 @@ final class DealtCartService
       }
     }
 
+    /**
+     * sanitize total counts now that we 
+     * have filtered the dealt products
+     */
     $totalCount = 0;
     foreach ($presentedCart['products'] as $product) {
       $totalCount += (int) $product['quantity'];
     }
 
     $presentedCart['products_count'] = $totalCount;
-    $presentedCart['subtotals'] = array_merge($presentedCart['subtotals'], $this->getSubTotals($cart));
+
+    /* sanitize subtotals for cart summary */
+    $this->sanitizeSubTotals($cart, $presentedCart, $totalCount);
   }
 
   /**
@@ -325,18 +331,48 @@ final class DealtCartService
     return $cartProducts;
   }
 
-  protected function getSubTotals(Cart $cart)
-  {
-    $subTotals = [];
-    $cartProductsIndexed = $this->indexCartProducts($cart);
 
-    $subTotals['products_without_dealt'] = [
-      'type' => 'products_without_dealt',
-      'label' => $this->module->translate('Subtotal without services', [], 'Modules.DealtModule.Front'),
-      'amount' => 0,
-      'value' => Helpers::formatPrice(0),
-    ];
-    return $subTotals;
+  /**
+   * Computes new subtotals for the dealt cart
+   * by splitting the totals between actual products
+   * and dealt services in cart
+   *
+   * @param Cart $cart
+   * @param array $presentedCart
+   * @param int $products_count
+   * @return void
+   */
+  protected function sanitizeSubTotals(Cart $cart, &$presentedCart, $products_count)
+  {
+    $cartProductsIndex = $this->indexCartProducts($cart);
+    $offers = $this->getDealtOffersFromCart($cart);
+
+    $dealtTotal = 0;
+    foreach ($offers as $offer) {
+      $dealtProductId = $offer->getDealtProductId();
+      if (isset($cartProductsIndex[$dealtProductId])) {
+        $dealtTotal += $cartProductsIndex[$dealtProductId][0]['total'];
+      }
+    }
+
+    $total = $presentedCart["subtotals"]["products"]["amount"];
+    $total_without_services = $total - $dealtTotal;
+
+    if ($dealtTotal != 0) {
+      $presentedCart["subtotals"]['dealt_total'] = [
+        'type' => 'dealt_total',
+        'label' => $this->module->translate('Service(s)', [], 'Modules.DealtModule.Front'),
+        'amount' => $dealtTotal,
+        'value' => Helpers::formatPrice($dealtTotal),
+      ];
+
+      $presentedCart["subtotals"]['products']["amount"] = $total_without_services;
+      $presentedCart["subtotals"]['products']["value"] = Helpers::formatPrice($total_without_services);
+
+      $presentedCart["summary_string"] = $products_count === 1 ?
+        $this->module->translate('1 item', [], 'Shop.Theme.Checkout') :
+        $this->module->translate('%count% items', ['%count%' => $products_count], 'Shop.Theme.Checkout');
+    }
   }
 
   public function setModule(DealtModule $module)
