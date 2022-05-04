@@ -9,14 +9,14 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 
 abstract class AbstractAdminDealtController extends FrameworkBundleAdminController
 {
-  public function flashModuleWarnings()
-  {
-    if (!DealtInstaller::isModuleConfigured()) {
-      $this->addFlash('error', $this->trans('The API Key provided is invalid.', 'Modules.DealtModule.Admin'));
-    }
+    public function flashModuleWarnings()
+    {
+        if (!DealtInstaller::isModuleConfigured()) {
+            $this->addFlash('error', $this->trans('The API Key provided is invalid.', 'Modules.DealtModule.Admin'));
+        }
 
-    if (!DealtInstaller::isProduction()) {
-      $this->addFlash('warning', $this->trans('The module is currently running in Test mode', 'Modules.DealtModule.Admin'));
+        if (!DealtInstaller::isProduction()) {
+            $this->addFlash('warning', $this->trans('The module is currently running in Test mode', 'Modules.DealtModule.Admin'));
+        }
     }
-  }
 }

@@ -6,8 +6,8 @@ namespace DealtModule\Action;
 
 interface ActionInterface
 {
-  /**
-   * @return string[]
-   */
-  static function cases();
+    /**
+     * @return string[]
+     */
+    public static function cases();
 }

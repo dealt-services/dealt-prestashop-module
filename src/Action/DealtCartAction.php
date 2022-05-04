@@ -6,14 +6,14 @@ namespace DealtModule\Action;
 
 class DealtCartAction implements ActionInterface
 {
-  static $ADD_TO_CART = "addToCart";
-  static $GET_PRODUCT_ATTRIBUTE_ID = "getProductAttributeId";
+    public static $ADD_TO_CART = 'addToCart';
+    public static $GET_PRODUCT_ATTRIBUTE_ID = 'getProductAttributeId';
 
-  static function cases()
-  {
-    return [
+    public static function cases()
+    {
+        return [
       static::$ADD_TO_CART,
-      static::$GET_PRODUCT_ATTRIBUTE_ID
+      static::$GET_PRODUCT_ATTRIBUTE_ID,
     ];
-  }
+    }
 }

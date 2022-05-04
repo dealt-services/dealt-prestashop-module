@@ -5,29 +5,29 @@ namespace DealtModule\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractFilterableGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractFilterableGridDefinitionFactory;
 
 final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-  const GRID_ID = 'dealt_offer';
+    public const GRID_ID = 'dealt_offer';
 
-  protected function getId()
-  {
-    return self::GRID_ID;
-  }
+    protected function getId()
+    {
+        return self::GRID_ID;
+    }
 
-  protected function getName()
-  {
-    return $this->trans('Dealt offer', [], 'Modules.DealtModule.Admin');
-  }
+    protected function getName()
+    {
+        return $this->trans('Dealt offer', [], 'Modules.DealtModule.Admin');
+    }
 
-  protected function getColumns()
-  {
-    return (new ColumnCollection())
+    protected function getColumns()
+    {
+        return (new ColumnCollection())
       ->add((new DataColumn('id_offer'))
           ->setName($this->trans('ID', [], 'Admin.Global'))
           ->setOptions([
@@ -49,7 +49,7 @@ final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefini
       ->add((new DataColumn('total_categories'))
           ->setName($this->trans('Total categories', [], 'Modules.DealtModule.Admin'))
           ->setOptions([
-            'field' => 'total_categories'
+            'field' => 'total_categories',
           ])
       )
       ->add((new LinkColumn('product_link'))
@@ -90,8 +90,8 @@ final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefini
                       'Modules.DealtModule.Admin'
                     ),
                   ])
-              )
+              ),
           ])
       );
-  }
+    }
 }

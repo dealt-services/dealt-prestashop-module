@@ -1,3 +1,6 @@
 {
-  "intelephense.environment.includePaths": ["/Users/edvincandon/dev/PrestaShop"]
+  "intelephense.environment.includePaths": [
+    "/Users/edvincandon/dev/PrestaShop"
+  ],
+  "editor.tabSize": 2
 }

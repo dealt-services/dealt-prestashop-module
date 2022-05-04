@@ -10,70 +10,77 @@ use Tools;
 
 abstract class ModuleActionHandlerFrontController extends ModuleFrontController
 {
-  public $ssl = true;
-  public $json = true;
+    public $ssl = true;
+    public $json = true;
 
-  /**
-   * @param string $action
-   * @return void
-   */
-  abstract function handleAction($action);
+    /**
+     * @param string $action
+     *
+     * @return void
+     */
+    abstract public function handleAction($action);
 
-  /**
-   * resolves the actions class for the module
-   * @return string
-   */
-  abstract function getModuleActionsClass();
+    /**
+     * resolves the actions class for the module
+     *
+     * @return string
+     */
+    abstract public function getModuleActionsClass();
 
-  public function initContent()
-  {
-    $this->ajax = true;
-    parent::initContent();
-  }
-
-  public function postProcess()
-  {
-    $actionsClass = $this->getModuleActionsClass();
-    $action = Tools::getValue('action');
-
-    try {
-      if (!isset(class_implements($actionsClass)['DealtModule\Action\ActionInterface']))
-        throw new Exception('ModuleActionHandlerFrontController:getModuleActionsClass\'s resulting class must implement ActionInterface');
-
-      if ($action == false) throw new Exception("You must specify an action");
-      if (!in_array($action,  $actionsClass::cases())) throw new Exception("Unknown action");
-
-      $result = $this->handleAction($action);
-      $this->setResponseHeaders();
-      $this->ajaxRender(json_encode([
-        "ok" => true,
-        "action" => $action,
-        "result" => $result
-      ]));
-    } catch (Exception $e) {
-      $this->displayAjaxError($e->getMessage());
+    public function initContent()
+    {
+        $this->ajax = true;
+        parent::initContent();
     }
-  }
 
+    public function postProcess()
+    {
+        $actionsClass = $this->getModuleActionsClass();
+        $action = Tools::getValue('action');
 
-  protected function setResponseHeaders()
-  {
-    ob_end_clean();
-    header('Content-Type: application/json');
-  }
+        try {
+            if (!isset(class_implements($actionsClass)['DealtModule\Action\ActionInterface'])) {
+                throw new Exception('ModuleActionHandlerFrontController:getModuleActionsClass\'s resulting class must implement ActionInterface');
+            }
 
-  /**
-   * @param string $error
-   * @return void
-   */
-  public function displayAjaxError($error)
-  {
-    $this->setResponseHeaders();
-    $this->ajaxRender(json_encode([
-      "ok" => false,
-      "error" => $error
+            if ($action == false) {
+                throw new Exception('You must specify an action');
+            }
+            if (!in_array($action, $actionsClass::cases())) {
+                throw new Exception('Unknown action');
+            }
+
+            $result = $this->handleAction($action);
+            $this->setResponseHeaders();
+            $this->ajaxRender(json_encode([
+        'ok' => true,
+        'action' => $action,
+        'result' => $result,
+      ]));
+        } catch (Exception $e) {
+            $this->displayAjaxError($e->getMessage());
+        }
+    }
+
+    protected function setResponseHeaders()
+    {
+        ob_end_clean();
+        header('Content-Type: application/json');
+    }
+
+    /**
+     * @param string $error
+     *
+     * @return void
+     */
+    public function displayAjaxError($error)
+    {
+        $this->setResponseHeaders();
+        $this->ajaxRender(json_encode([
+      'ok' => false,
+      'error' => $error,
     ]));
 
-    exit;
-  }
+        exit;
+    }
 }

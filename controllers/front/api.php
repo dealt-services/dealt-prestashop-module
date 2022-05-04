@@ -8,23 +8,24 @@ use DealtModule\Service\DealtAPIService;
 
 class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontController
 {
-  public function getModuleActionsClass()
-  {
-    return get_class(new DealtAPIAction());
-  }
+    public function getModuleActionsClass()
+    {
+        return get_class(new DealtAPIAction());
+    }
 
-  public function handleAction($action)
-  {
-    /** @var DealtAPIService */
-    $client = $this->get('dealtmodule.dealt.api.service');
+    public function handleAction($action)
+    {
+        /** @var DealtAPIService */
+        $client = $this->get('dealtmodule.dealt.api.service');
 
-    switch ($action) {
+        switch ($action) {
       case DealtAPIAction::$AVAILABILITY:
         $available = $client->checkAvailability(Tools::getValue('id_dealt_offer'), Tools::getValue('zip_code'));
+
         return array_merge(
           ['available' => $available],
           $available ? [] : ['reason' => $this->trans('Offer unavailable for the requested zip code')]
         );
     }
-  }
+    }
 }

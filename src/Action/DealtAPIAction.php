@@ -6,12 +6,12 @@ namespace DealtModule\Action;
 
 class DealtAPIAction implements ActionInterface
 {
-  static $AVAILABILITY = "offerAvailability";
+    public static $AVAILABILITY = 'offerAvailability';
 
-  static function cases()
-  {
-    return [
-      static::$AVAILABILITY
+    public static function cases()
+    {
+        return [
+      static::$AVAILABILITY,
     ];
-  }
+    }
 }

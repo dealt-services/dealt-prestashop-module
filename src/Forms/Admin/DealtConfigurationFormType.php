@@ -2,17 +2,16 @@
 
 namespace DealtModule\Forms\Admin;
 
-use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class DealtConfigurationFormType extends AbstractType
 {
-
-  public function buildForm(FormBuilderInterface $builder, array $options)
-  {
-    $builder
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
       ->add('api_key', TextWithLengthCounterType::class, [
         'label' => 'API Key (uuid)',
         'translation_domain' => 'Modules.DealtModule.Admin',
@@ -26,5 +25,5 @@ class DealtConfigurationFormType extends AbstractType
           'Production' => true,
         ],
       ]);
-  }
+    }
 }
