@@ -12,7 +12,7 @@
 							data-dealt-product-attribute-id="{$attachedTo.productAttributeId}">
 							<i class="material-icons" style="margin-bottom: 2px;">delete</i>
 						</a></h4>
-					<blockquote style="margin: 0">{$cartProduct.description_short|strip_tags}</blockquote>
+					<blockquote style="margin: 0">{$cartOffer.description_short|strip_tags}</blockquote>
 				</div>
 				<div class="col col-md-4 col-xs-5" style="text-align: left">
 					<h5 style="margin: 0; margin-left: 4px">{$offerPrice}</h5>

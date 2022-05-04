@@ -1,4 +1,4 @@
-{assign var=attached value=($cartProduct != null && $cartOffer != null)}
+{assign var=attached value=($cartProduct != null && $cartRef != null)}
 {assign var=offerImage value=$offer->getImage()}
 
 <div class="card card-block loading" id="dealt-offer-card">

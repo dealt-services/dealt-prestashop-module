@@ -39,16 +39,16 @@ class DealtCartProductRefRepository extends EntityRepository
             return $match;
         }
 
-        $cartProductOffer = (new DealtCartProductRef())
+        $dealtCartRef = (new DealtCartProductRef())
             ->setCartId($cartId)
             ->setProductId($productId)
             ->setProductAttributeId($productAttributeId)
             ->setOffer($dealtOffer);
 
-        $em->persist($cartProductOffer);
+        $em->persist($dealtCartRef);
         $em->flush();
 
-        return $cartProductOffer;
+        return $dealtCartRef;
     }
 
     /**
@@ -59,9 +59,9 @@ class DealtCartProductRefRepository extends EntityRepository
     public function delete($id)
     {
         $em = $this->getEntityManager();
-        $cartProduct = $em->getReference(DealtCartProductRef::class, $id);
+        $dealtCartRef = $em->getReference(DealtCartProductRef::class, $id);
 
-        $em->remove($cartProduct);
+        $em->remove($dealtCartRef);
         $em->flush();
     }
 }

@@ -7,6 +7,6 @@
     data-dealt-offer-id={$offer->getDealtOfferId()} data-dealt-offer-unit-price={$offer->getPrice()}
     {if $productId != null}data-dealt-product-id={$productId} {/if}
     {if $productAttributeId != null}data-dealt-product-attribute-id={$productAttributeId} {/if}
-    {if $cartOffer != null}data-dealt-cart-offer="true" {/if} {if $cartProduct != null}data-dealt-cart-product="true"
-    {/if} disabled>
+    {if $cartRef != null}data-dealt-cart-ref="true" {/if} {if $cartProduct != null}data-dealt-cart-product="true" {/if}
+    disabled>
 </div>
