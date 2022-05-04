@@ -286,6 +286,24 @@ final class DealtCartService
     }
 
     /**
+     * Resolves the dealt offers from the current
+     * cart products.
+     *
+     * @param Cart $cart
+     *
+     * @return DealtOffer[]
+     */
+    public function getDealtOffersFromCart(Cart $cart)
+    {
+        $cartProducts = $cart->getProducts();
+        $cartProductIds = array_map(function ($cartProduct) {
+            return (int) $cartProduct['id_product'];
+        }, $cartProducts);
+
+        return $this->offerRepository->findBy(['dealtProductId' => $cartProductIds]);
+    }
+
+    /**
      * @param int $productId
      *
      * @return DealtOffer|null
@@ -340,24 +358,6 @@ final class DealtCartService
         }
 
         return null;
-    }
-
-    /**
-     * Resolves the dealt offers from the current
-     * cart products.
-     *
-     * @param Cart $cart
-     *
-     * @return DealtOffer[]
-     */
-    protected function getDealtOffersFromCart(Cart $cart)
-    {
-        $cartProducts = $cart->getProducts();
-        $cartProductIds = array_map(function ($cartProduct) {
-            return (int) $cartProduct['id_product'];
-        }, $cartProducts);
-
-        return $this->offerRepository->findBy(['dealtProductId' => $cartProductIds]);
     }
 
     /**

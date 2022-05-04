@@ -1,6 +1,8 @@
 <?php
 
+use DealtModule\Checkout\DealtCheckoutStep;
 use DealtModule\Database\DealtInstaller;
+use DealtModule\Service\DealtAPIService;
 use DealtModule\Service\DealtCartService;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 
@@ -48,10 +50,14 @@ class DealtModule extends Module
     'actionPresentCart',
     'actionCartSave',
     'actionCartUpdateQuantityBefore',
+    'actionCheckoutRender',
   ];
 
     /** @var DealtCartService|null */
     protected $cartService = null;
+
+    /** @var DealtApiService|null */
+    protected $apiService = null;
 
     public function __construct()
     {
@@ -242,24 +248,37 @@ class DealtModule extends Module
     }
 
     /**
-     * @param mixed $data
+     * @param mixed $params
      *
      * @return void
      */
-    public function hookActionPresentCart($data)
+    public function hookActionPresentCart($params)
     {
         $cartService = $this->getCartService();
-        $presentedCart = &$data['presentedCart']; /* pass a pointer to the array as we want to mutate it */
+        $presentedCart = &$params['presentedCart']; /* pass a pointer to the array as we want to mutate it */
         $cartService->sanitizeCartPresenter($presentedCart);
     }
 
     /**
-     * @param mixed $data
+     * @param mixed $params
      *
      * @return void
      */
-    public function hookActionCartUpdateQuantityBefore($data)
+    public function hookActionCheckoutRender($params)
     {
+        /** @var CheckoutProcess */
+        $checkoutProcess = $params['checkoutProcess'];
+
+        $steps = $checkoutProcess->getSteps();
+        $deliveryStepIdx = array_search('checkout-addresses-step', array_map(function (CheckoutStepInterface $step) {
+            return $step->getIdentifier();
+        }, $steps));
+
+        $dealtStep = new DealtCheckoutStep($this->context, $this->getTranslator(), $this->getAPIService(), $this->getCartService());
+        $dealtStep->setCheckoutProcess($checkoutProcess);
+
+        array_splice($steps, $deliveryStepIdx + 1, 0, [$dealtStep]);
+        $checkoutProcess->setSteps($steps);
     }
 
     /**
@@ -365,6 +384,21 @@ class DealtModule extends Module
         $this->cartService->setModule($this);
 
         return $this->cartService;
+    }
+
+    /**
+     * @return DealtAPIService
+     */
+    public function getAPIService()
+    {
+        if ($this->apiService instanceof DealtAPIService) {
+            return $this->apiService;
+        }
+        /** @var DealtAPIService */
+        $apiService = $this->get('dealtmodule.dealt.api.service');
+        $this->apiService = $apiService;
+
+        return $this->apiService;
     }
 }
 
