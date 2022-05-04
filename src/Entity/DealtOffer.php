@@ -219,9 +219,9 @@ class DealtOffer
         foreach ($categoryIds as $categoryId) {
             $offerCategory = new DealtOfferCategory();
             $offerCategory
-        ->setOffer($this)
-        ->setCategoryId(intval($categoryId))
-        ->setDealtProductId($this->getDealtProductId());
+                ->setOffer($this)
+                ->setCategoryId(intval($categoryId))
+                ->setDealtProductId($this->getDealtProductId());
 
             $this->addOfferCategory($offerCategory);
         }
@@ -295,9 +295,9 @@ class DealtOffer
         }
 
         return Context::getContext()->link->getImageLink(
-      $dealtProduct->name[Context::getContext()->language->id],
-      $img['id_image'],
-    );
+            $dealtProduct->name[Context::getContext()->language->id],
+            $img['id_image'],
+        );
     }
 
     /**
@@ -324,9 +324,9 @@ class DealtOffer
         $quantity = (int) ($quantity == false ? 1 : $quantity);
 
         return $locale->formatPrice(
-      $this->getPrice((int) $quantity),
-      Context::getContext()->currency->iso_code
-    );
+            $this->getPrice((int) $quantity),
+            Context::getContext()->currency->iso_code
+        );
     }
 
     /**
@@ -335,11 +335,11 @@ class DealtOffer
     public function toArray()
     {
         return [
-      'id_offer' => $this->getId(),
-      'dealt_id_offer' => $this->getDealtOfferId(),
-      'title_offer' => $this->getOfferTitle(),
-      'date_add' => $this->getDateAdd(),
-      'date_upd' => $this->getDateUpd(),
-    ];
+            'id_offer' => $this->getId(),
+            'id_dealt_offer' => $this->getDealtOfferId(),
+            'title_offer' => $this->getOfferTitle(),
+            'date_add' => $this->getDateAdd(),
+            'date_upd' => $this->getDateUpd(),
+        ];
     }
 }

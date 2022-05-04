@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use DealtModule\Action\DealtCartAction;
 use DealtModule\Controller\Front\ModuleActionHandlerFrontController;
-use DealtModule\Service\DealtCartService;
 
 class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontController
 {
@@ -18,6 +17,8 @@ class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontContr
         switch ($action) {
       case DealtCartAction::$ADD_TO_CART:
         return $this->handleAddToCart();
+      case DealtCartAction::$DETACH_OFFER:
+        return $this->handleDetachOffer();
       case DealtCartAction::$GET_PRODUCT_ATTRIBUTE_ID:
         return $this->handleGetProductAttributeId();
     }
@@ -30,10 +31,19 @@ class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontContr
      */
     protected function handleAddToCart()
     {
-        /** @var DealtCartService */
-        $cartService = $this->get('dealtmodule.dealt.cart.service');
+        return $this->module->getCartService()->addDealtOfferToCart(
+      strval(Tools::getValue('id_dealt_offer')),
+      intval(Tools::getValue('id_product')),
+      intval(Tools::getValue('id_product_attribute'))
+    );
+    }
 
-        return $cartService->addDealtOfferToCart(
+    /**
+     * @return array<string, int>
+     */
+    protected function handleDetachOffer()
+    {
+        return $this->module->getCartService()->detachDealtOffer(
       strval(Tools::getValue('id_dealt_offer')),
       intval(Tools::getValue('id_product')),
       intval(Tools::getValue('id_product_attribute'))

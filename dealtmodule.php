@@ -211,11 +211,18 @@ class DealtModule extends Module
      */
     public function hookActionFrontControllerSetMedia()
     {
+        /* register dealt stylesheets */
+        $css = '/modules/' . $this->name . '/views/css/dealt.common.css';
+        $this->context->controller->registerStylesheet(sha1($css), $css);
+
         if ('product' === $this->context->controller->php_self) {
             $js = '/modules/' . $this->name . '/views/public/dealt.front.offer.product.bundle.js';
-            $css = '/modules/' . $this->name . '/views/css/dealt.common.css';
             $this->context->controller->registerJavascript(sha1($js), $js);
-            $this->context->controller->registerStylesheet(sha1($css), $css);
+        }
+
+        if ('cart' === $this->context->controller->php_self) {
+            $js = '/modules/' . $this->name . '/views/public/dealt.front.offer.cart.bundle.js';
+            $this->context->controller->registerJavascript(sha1($js), $js);
         }
 
         Media::addJsDef(['DealtGlobals' => [
@@ -347,7 +354,7 @@ class DealtModule extends Module
     /**
      * @return DealtCartService
      */
-    protected function getCartService()
+    public function getCartService()
     {
         if ($this->cartService instanceof DealtCartService) {
             return $this->cartService;

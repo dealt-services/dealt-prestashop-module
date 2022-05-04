@@ -135,6 +135,34 @@ final class DealtCartService
         );
     }
 
+    public function detachDealtOffer($dealtOfferId, $productId, $productAttributeId)
+    {
+        $cart = Context::getContext()->cart;
+        $cartProductsIndex = $this->indexCartProducts($cart);
+
+        /** @var DealtOffer */
+        $offer = $this->offerRepository->findOneBy(['dealtOfferId' => $dealtOfferId]);
+
+        if ($offer == null) {
+            throw new Exception('Unknown dealt offer id');
+        }
+
+        /** @var DealtCartProduct|null */
+        $dealtCartProduct = $this->cartProductRepository->findOneBy(['cartId' => $cart->id, 'productId' => $productId, 'productAttributeId' => $productAttributeId, 'offer' => $offer]);
+
+        if ($dealtCartProduct == null) {
+            throw new Exception('Cannot detach an unattached offer');
+        }
+
+        $offerProductId = $offer->getDealtProductId();
+        $productQuantity = intval($cartProductsIndex[$productId][$productAttributeId]['quantity']);
+
+        $this->cartProductRepository->delete($dealtCartProduct->getId());
+        $cart->updateQty($productQuantity, $offerProductId, null, false, 'down');
+
+        return ['deleted' => true];
+    }
+
     /**
      * Filters in place the presented cart data
      * adds dealt specific data to products attached to a dealt offer
@@ -174,6 +202,10 @@ final class DealtCartService
                         'offer' => $offer->toArray(),
                         'offerPrice' => $offer->getFormattedPrice($cartProduct['quantity']),
                         'offerImage' => $offer->getImage(),
+                        'attachedTo' => [
+                            'productId' => $cartProduct['id_product'],
+                            'productAttributeId' => $cartProduct['id_product_attribute'],
+                        ],
                     ];
                 }
             }
@@ -373,7 +405,7 @@ final class DealtCartService
         foreach ($offers as $offer) {
             $dealtProductId = $offer->getDealtProductId();
             if (isset($cartProductsIndex[$dealtProductId])) {
-                $dealtTotal += $cartProductsIndex[$dealtProductId][0]['total'];
+                $dealtTotal += $cartProductsIndex[$dealtProductId][0]['total_wt'];
             }
         }
 
