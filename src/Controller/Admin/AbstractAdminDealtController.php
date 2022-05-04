@@ -9,6 +9,9 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 
 abstract class AbstractAdminDealtController extends FrameworkBundleAdminController
 {
+    /**
+     * @return void
+     */
     public function flashModuleWarnings()
     {
         if (!DealtInstaller::isModuleConfigured()) {

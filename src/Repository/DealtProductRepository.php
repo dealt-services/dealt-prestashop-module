@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace DealtModule\Repository;
 
 use Category;
+use Context;
 use DealtModule\Database\DealtInstaller;
 use DealtModule\Tools\Helpers;
-use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -24,16 +24,6 @@ use StockAvailable;
 class DealtProductRepository
 {
     /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
      * ⚠️ The ProductRepository is not available in the FRONT PS Service container
      *
      * @var ProductRepository|null
@@ -41,18 +31,11 @@ class DealtProductRepository
     private $psProductRepository;
 
     /**
-     * LinkBlockRepository constructor.
-     *
-     * @param Connection $connection
-     * @param string $dbPrefix
+     * @param ProductRepository $psProductRepository
      */
     public function __construct(
-    Connection $connection,
-    string $dbPrefix,
     $psProductRepository
   ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
         $this->psProductRepository = $psProductRepository;
     }
 
@@ -79,7 +62,7 @@ class DealtProductRepository
      */
     public function create(string $offerTitle, string $dealtOfferId, string $offerPrice)
     {
-        $category = Category::searchByName(null, DealtInstaller::$DEALT_PRODUCT_CATEGORY_NAME, true);
+        $category = Category::searchByName(Context::getContext()->language->id, DealtInstaller::$DEALT_PRODUCT_CATEGORY_NAME, true);
         $categoryId = $category['id_category'];
 
         $product = new Product();
@@ -90,10 +73,10 @@ class DealtProductRepository
         $product->id_category_default = $categoryId;
         $product->price = Helpers::formatPriceForDB($offerPrice);
         $product->minimal_quantity = 1;
-        $product->show_price = 1;
-        $product->on_sale = 0;
-        $product->online_only = 1;
-        $product->is_virtual = 1;
+        $product->show_price = true;
+        $product->on_sale = false;
+        $product->online_only = true;
+        $product->is_virtual = true;
 
         $product->add();
 

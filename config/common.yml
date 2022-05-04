@@ -56,8 +56,6 @@ services:
   dealtmodule.doctrine.dealt.product.repository:
     class: DealtModule\Repository\DealtProductRepository
     arguments:
-      - "@doctrine.dbal.default_connection"
-      - "%database_prefix%"
       - "@=container.has('prestashop.adapter.product.repository.product_repository') ? service('prestashop.adapter.product.repository.product_repository') : '~'"
   #######################################
   ### DEALT MODULE INSTALLER ############

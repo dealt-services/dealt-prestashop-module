@@ -37,7 +37,6 @@ services:
   dealtmodule.admin.form.offer.data.handler:
     class: 'DealtModule\Forms\Admin\DealtOfferFormDataHandler'
     arguments:
-      - "@doctrine.orm.default_entity_manager"
       - "@dealtmodule.doctrine.dealt.offer.repository"
       - "@dealtmodule.doctrine.dealt.product.repository"
   ### FORM HANDLER ######################

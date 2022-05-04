@@ -39,7 +39,7 @@ class DealtOfferFormDataProvider implements FormDataProviderInterface
     public function getData($offerId)
     {
         /** @var DealtOffer */
-        $offer = $this->dealtOfferRepository->findOneById($offerId);
+        $offer = $this->dealtOfferRepository->findOneBy(['id' => $offerId]);
         $offerData = $offer->toArray();
         $offerData['ids_category'] = $offer->getOfferCategoriesCategoryIds();
 

@@ -82,7 +82,17 @@ class DealtOffer
     }
 
     /**
+     * @param int $id
+     *
      * @return int
+     */
+    public function setId($id)
+    {
+        return $this->id = $id;
+    }
+
+    /**
+     * @return string
      */
     public function getOfferTitle()
     {
@@ -100,7 +110,7 @@ class DealtOffer
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getDealtOfferId()
     {
@@ -108,7 +118,7 @@ class DealtOffer
     }
 
     /**
-     * @param int
+     * @param string $dealtOfferId
      *
      * @return DealtOffer
      */
@@ -136,7 +146,7 @@ class DealtOffer
     }
 
     /**
-     * @param int
+     * @param int $dealtProductId
      *
      * @return DealtOffer
      */
@@ -176,7 +186,7 @@ class DealtOffer
     }
 
     /**
-     * @param DealtOfferCategory $quoteLang
+     * @param DealtOfferCategory $offerCategory
      *
      * @return DealtOffer
      */
@@ -286,14 +296,14 @@ class DealtOffer
 
         return Context::getContext()->link->getImageLink(
       $dealtProduct->name[Context::getContext()->language->id],
-      (int) $img['id_image'],
+      $img['id_image'],
     );
     }
 
     /**
      * @param mixed $quantity
      *
-     * @return string
+     * @return float
      */
     public function getPrice($quantity = 1)
     {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DealtModule\Controller\Admin;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,12 +26,14 @@ class AdminDealtConfigurationController extends AbstractAdminDealtController
      */
     public function indexAction(Request $request)
     {
-        $form = $this->get('dealtmodule.admin.form.configuration.handler')->getForm();
+        /** @var FormHandler */
+        $formHandler = $this->get('dealtmodule.admin.form.configuration.handler');
+        $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-            $errors = $this->get('dealtmodule.admin.form.configuration.handler')->save($data);
+            $errors = $formHandler->save($data);
 
             if (0 === count($errors)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
@@ -52,7 +55,7 @@ class AdminDealtConfigurationController extends AbstractAdminDealtController
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     private function getToolbarButtons()
     {

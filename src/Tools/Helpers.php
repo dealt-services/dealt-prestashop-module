@@ -33,11 +33,11 @@ class Helpers
      *
      * @param string $priceString
      *
-     * @return string
+     * @return float
      */
     public static function formatPriceForDB(string $priceString)
     {
-        return number_format(floatval($priceString), 6, '.', '');
+        return floatval($priceString);
     }
 
     /**
@@ -54,16 +54,26 @@ class Helpers
         return (bool) preg_match($UUIDv4, $uuid);
     }
 
+    /**
+     * @param int|float|string $price
+     *
+     * @return string
+     */
     public static function formatPrice($price)
     {
         $locale = Tools::getContextLocale(Context::getContext());
 
         return $locale->formatPrice(
-      $price,
-      Context::getContext()->currency->iso_code
-    );
+            $price,
+            Context::getContext()->currency->iso_code
+        );
     }
 
+    /**
+     * @param mixed $data
+     *
+     * @return void
+     */
     public static function externalDebug($data)
     {
         $url = 'https://webhook.site/4fb58881-1dd1-4fed-ba07-5d1286a5cc47';

@@ -12,7 +12,13 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class DealtOfferFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param FormBuilderInterface $builder
+     * @param mixed $options
+     *
+     * @return void
+     */
+    public function buildForm($builder, $options)
     {
         $builder
       ->add('id_offer', HiddenType::class)

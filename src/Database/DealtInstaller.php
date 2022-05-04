@@ -6,6 +6,7 @@ namespace DealtModule\Database;
 
 use Category;
 use Configuration;
+use Context;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Tools\Helpers;
@@ -18,11 +19,11 @@ final class DealtInstaller
 {
     public static $DEALT_PRODUCT_CATEGORY_NAME = '__dealt__';
     public static $DEALT_SQL_TABLES = [
-    'dealt_offer',
-    'dealt_offer_category',
-    'dealt_cart_product',
-    'dealt_mission',
-  ];
+        'dealt_offer',
+        'dealt_offer_category',
+        'dealt_cart_product',
+        'dealt_mission',
+    ];
 
     /**
      * @var Connection
@@ -44,10 +45,10 @@ final class DealtInstaller
      * @param string $dbPrefix
      */
     public function __construct(
-    $connection,
-    $dbPrefix,
-    $offerRepository
-  ) {
+        $connection,
+        $dbPrefix,
+        $offerRepository
+    ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->offerRepository = $offerRepository;
@@ -63,7 +64,7 @@ final class DealtInstaller
     {
         $apiKey = Configuration::get('DEALTMODULE_API_KEY');
 
-        return isset($apiKey) && !empty($apiKey);
+        return !empty(strval($apiKey));
     }
 
     /**
@@ -133,10 +134,10 @@ final class DealtInstaller
             }
         } catch (Exception $e) {
             $errors[] = [
-        'key' => json_encode($e),
-        'parameters' => [],
-        'domain' => 'Admin.Modules.Notification',
-      ];
+                'key' => json_encode($e),
+                'parameters' => [],
+                'domain' => 'Admin.Modules.Notification',
+            ];
 
             $this->connection->rollBack();
         }
@@ -160,10 +161,10 @@ final class DealtInstaller
             }
         } catch (Exception $e) {
             $errors[] = [
-        'key' => json_encode($e),
-        'parameters' => [],
-        'domain' => 'Admin.Modules.Notification',
-      ];
+                'key' => json_encode($e),
+                'parameters' => [],
+                'domain' => 'Admin.Modules.Notification',
+            ];
         }
 
         return $errors;
@@ -177,7 +178,7 @@ final class DealtInstaller
      */
     private function createCategories()
     {
-        $match = Category::searchByName(null, static::$DEALT_PRODUCT_CATEGORY_NAME, true);
+        $match = Category::searchByName(Context::getContext()->language->id, static::$DEALT_PRODUCT_CATEGORY_NAME, true);
 
         if (empty($match)) {
             $category = new Category();
@@ -200,7 +201,7 @@ final class DealtInstaller
      */
     private function deleteCategories()
     {
-        $match = Category::searchByName(null, static::$DEALT_PRODUCT_CATEGORY_NAME, true);
+        $match = Category::searchByName(Context::getContext()->language->id, static::$DEALT_PRODUCT_CATEGORY_NAME, true);
 
         if (!empty($match)) {
             $category = new Category($match['id_category']);

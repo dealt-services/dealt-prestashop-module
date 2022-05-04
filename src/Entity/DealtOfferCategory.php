@@ -49,6 +49,16 @@ class DealtOfferCategory
     }
 
     /**
+     * @param int $id
+     *
+     * @return int
+     */
+    public function setId($id)
+    {
+        return $this->id = $id;
+    }
+
+    /**
      * @return DealtOffer
      */
     public function getOffer()
@@ -77,7 +87,7 @@ class DealtOfferCategory
     }
 
     /**
-     * @param int
+     * @param int $dealtProductId
      *
      * @return DealtOfferCategory
      */
@@ -97,7 +107,7 @@ class DealtOfferCategory
     }
 
     /**
-     * @param int
+     * @param int $categoryId
      *
      * @return DealtOfferCategory
      */

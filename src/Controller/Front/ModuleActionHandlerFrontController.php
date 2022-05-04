@@ -10,13 +10,10 @@ use Tools;
 
 abstract class ModuleActionHandlerFrontController extends ModuleFrontController
 {
-    public $ssl = true;
-    public $json = true;
-
     /**
      * @param string $action
      *
-     * @return void
+     * @return mixed
      */
     abstract public function handleAction($action);
 
@@ -30,6 +27,8 @@ abstract class ModuleActionHandlerFrontController extends ModuleFrontController
     public function initContent()
     {
         $this->ajax = true;
+        $this->json = true;
+        $this->ssl = true;
         parent::initContent();
     }
 
@@ -53,10 +52,10 @@ abstract class ModuleActionHandlerFrontController extends ModuleFrontController
             $result = $this->handleAction($action);
             $this->setResponseHeaders();
             $this->ajaxRender(json_encode([
-        'ok' => true,
-        'action' => $action,
-        'result' => $result,
-      ]));
+                'ok' => true,
+                'action' => $action,
+                'result' => $result,
+            ]));
         } catch (Exception $e) {
             $this->displayAjaxError($e->getMessage());
         }
@@ -77,9 +76,9 @@ abstract class ModuleActionHandlerFrontController extends ModuleFrontController
     {
         $this->setResponseHeaders();
         $this->ajaxRender(json_encode([
-      'ok' => false,
-      'error' => $error,
-    ]));
+            'ok' => false,
+            'error' => $error,
+        ]));
 
         exit;
     }

@@ -31,7 +31,7 @@ final class DealtConfigurationFormDataProvider implements FormDataProviderInterf
         return [
       'configuration' => [
         'api_key' => $apiKey ?? '',
-        'prod_env' => $prodEnv || false,
+        'prod_env' => $prodEnv,
       ],
     ];
     }

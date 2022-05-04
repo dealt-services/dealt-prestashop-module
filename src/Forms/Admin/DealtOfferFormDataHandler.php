@@ -5,17 +5,11 @@ namespace DealtModule\Forms\Admin;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Repository\DealtProductRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 
 class DealtOfferFormDataHandler implements FormDataHandlerInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     /**
      * @var DealtOfferRepository
      */
@@ -27,16 +21,13 @@ class DealtOfferFormDataHandler implements FormDataHandlerInterface
     private $productRepository;
 
     /**
-     * @param EntityManagerInterface $entityManager
      * @param DealtOfferRepository $offerRepository
      * @param DealtProductRepository $productRepository
      */
     public function __construct(
-    $entityManager,
-    $offerRepository,
-    $productRepository
-  ) {
-        $this->entityManager = $entityManager;
+        $offerRepository,
+        $productRepository
+    ) {
         $this->offerRepository = $offerRepository;
         $this->productRepository = $productRepository;
     }
@@ -68,7 +59,7 @@ class DealtOfferFormDataHandler implements FormDataHandlerInterface
         $categoryIds = isset($data['ids_category']) ? $data['ids_category'] : [];
 
         /** @var DealtOffer */
-        $offer = $this->offerRepository->findOneById($offerId);
+        $offer = $this->offerRepository->findOneBy(['id' => $offerId]);
 
         try {
             $this->productRepository->update($offer->getDealtProductId(), $offerTitle, $offerPrice);

@@ -95,6 +95,16 @@ class DealtMission
     }
 
     /**
+     * @param int $id
+     *
+     * @return int
+     */
+    public function setId($id)
+    {
+        return $this->id = $id;
+    }
+
+    /**
      * @return string
      */
     public function getDealtOfferId()
@@ -103,7 +113,7 @@ class DealtMission
     }
 
     /**
-     * @param string
+     * @param string $dealtOfferId
      *
      * @return DealtMission
      */
@@ -123,7 +133,7 @@ class DealtMission
     }
 
     /**
-     * @param string
+     * @param string $dealtMissionId
      *
      * @return DealtMission
      */
@@ -143,7 +153,7 @@ class DealtMission
     }
 
     /**
-     * @param float
+     * @param float $dealtMissionGrossPrice
      *
      * @return DealtMission
      */
@@ -163,7 +173,7 @@ class DealtMission
     }
 
     /**
-     * @param float
+     * @param float $dealtMissionVatPrice
      *
      * @return DealtMission
      */
@@ -175,7 +185,7 @@ class DealtMission
     }
 
     /**
-     * @return float
+     * @return float $dealtMissionNetPrice
      */
     public function getDealtMissionNetPrice()
     {
@@ -183,7 +193,7 @@ class DealtMission
     }
 
     /**
-     * @param float
+     * @param float $dealtMissionNetPrice
      *
      * @return DealtMission
      */
@@ -211,7 +221,7 @@ class DealtMission
     }
 
     /**
-     * @param int
+     * @param int $productId
      *
      * @return DealtMission
      */
@@ -239,7 +249,7 @@ class DealtMission
     }
 
     /**
-     * @param int
+     * @param int $dealtProductId
      *
      * @return DealtMission
      */
@@ -267,7 +277,7 @@ class DealtMission
     }
 
     /**
-     * @param int
+     * @param int $orderId
      *
      * @return DealtMission
      */
@@ -289,7 +299,7 @@ class DealtMission
     /**
      * @param DateTime $dateAdd
      *
-     * @return DealtOffer
+     * @return DealtMission
      */
     public function setDateAdd(DateTime $dateAdd)
     {
@@ -309,7 +319,7 @@ class DealtMission
     /**
      * @param DateTime $dateUpd
      *
-     * @return DealtOffer
+     * @return DealtMission
      */
     public function setDateUpd(DateTime $dateUpd)
     {

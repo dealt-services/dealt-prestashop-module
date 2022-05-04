@@ -56,6 +56,16 @@ class DealtCartProduct
     }
 
     /**
+     * @param int $id
+     *
+     * @return int
+     */
+    public function setId($id)
+    {
+        return $this->id = $id;
+    }
+
+    /**
      * @return DealtOffer
      */
     public function getOffer()
@@ -92,7 +102,7 @@ class DealtCartProduct
     }
 
     /**
-     * @param int
+     * @param int $cartId
      *
      * @return DealtCartProduct
      */
@@ -112,7 +122,7 @@ class DealtCartProduct
     }
 
     /**
-     * @param int
+     * @param int $productId
      *
      * @return DealtCartProduct
      */
@@ -132,7 +142,7 @@ class DealtCartProduct
     }
 
     /**
-     * @param int
+     * @param int $productAttributeId
      *
      * @return DealtCartProduct
      */

@@ -6,8 +6,8 @@ namespace DealtModule\Action;
 
 class DealtCartAction implements ActionInterface
 {
-    public static $ADD_TO_CART = 'addToCart';
-    public static $GET_PRODUCT_ATTRIBUTE_ID = 'getProductAttributeId';
+    public static string $ADD_TO_CART = 'addToCart';
+    public static string $GET_PRODUCT_ATTRIBUTE_ID = 'getProductAttributeId';
 
     public static function cases()
     {

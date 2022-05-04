@@ -2,6 +2,7 @@
 
 use DealtModule\Database\DealtInstaller;
 use DealtModule\Service\DealtCartService;
+use PrestaShopBundle\Entity\Repository\TabRepository;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -12,8 +13,10 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 
 class DealtModule extends Module
 {
+    /** @var string */
     public static $DEALT_MAIN_TAB_NAME = 'DEALTMODULE';
 
+    /** @var array<string, string>[] */
     public static $DEALT_TABS = [
     [
       'class_name' => 'DEALTMODULE',
@@ -35,6 +38,7 @@ class DealtModule extends Module
     ],
   ];
 
+    /** @var string[] */
     public static $DEALT_HOOKS = [
     'displayProductAdditionalInfo',
     'displayDealtAssociatedOffer',
@@ -44,8 +48,8 @@ class DealtModule extends Module
     'actionCartSave',
   ];
 
-    /** @var DealtCartService */
-    protected $cartService;
+    /** @var DealtCartService|null */
+    protected $cartService = null;
 
     public function __construct()
     {
@@ -71,6 +75,9 @@ class DealtModule extends Module
         }
     }
 
+    /**
+     * @return bool
+     */
     public function install()
     {
         $installer = $this->getInstaller();
@@ -79,6 +86,9 @@ class DealtModule extends Module
       && $installer->install();
     }
 
+    /**
+     * @return bool
+     */
     public function uninstall()
     {
         $installer = $this->getInstaller();
@@ -88,6 +98,9 @@ class DealtModule extends Module
       && $installer->uninstall();
     }
 
+    /**
+     * @return void
+     */
     public function getContent()
     {
         // This uses the matching with the route ps_controller_tabs_configure via the _legacy_link property
@@ -123,8 +136,12 @@ class DealtModule extends Module
         return $installer;
     }
 
+    /**
+     * @return bool
+     */
     private function installTabs()
     {
+        /** @var TabRepository */
         $tabRepo = $this->get('prestashop.core.admin.tab.repository');
 
         foreach (static::$DEALT_TABS as $tabDefinition) {
@@ -134,7 +151,7 @@ class DealtModule extends Module
             }
 
             $tab = new Tab($tabId);
-            $tab->active = 1;
+            $tab->active = true;
             $tab->class_name = $tabDefinition['class_name'];
             if (isset($tabDefinition['route_name'])) {
                 $tab->route_name = $tabDefinition['route_name'];
@@ -147,7 +164,7 @@ class DealtModule extends Module
             foreach (Language::getLanguages() as $lang) {
                 $tab->name[$lang['id_lang']] = $this->trans($tabDefinition['name'], [], 'Modules.DealtModule.Admin', $lang['locale']);
             }
-            $tab->id_parent = (int) $tabRepo->findOneIdByClassName($tabDefinition['parent_class_name']);
+            $tab->id_parent = intval($tabRepo->findOneIdByClassName($tabDefinition['parent_class_name']));
             $tab->module = $this->name;
             $tab->wording_domain = 'Modules.DealtModule.Admin';
             $tab->wording = $tabDefinition['name'];
@@ -158,8 +175,12 @@ class DealtModule extends Module
         return true;
     }
 
+    /**
+     * @return bool
+     */
     private function uninstallTabs()
     {
+        /** @var TabRepository */
         $tabRepo = $this->get('prestashop.core.admin.tab.repository');
 
         foreach (static::$DEALT_TABS as $tabDefinition) {
@@ -175,11 +196,17 @@ class DealtModule extends Module
         return true;
     }
 
+    /**
+     * @return bool
+     */
     public function isUsingNewTranslationSystem()
     {
         return true;
     }
 
+    /**
+     * @return void
+     */
     public function hookActionFrontControllerSetMedia()
     {
         if ('product' === $this->context->controller->php_self) {
@@ -206,9 +233,9 @@ class DealtModule extends Module
     }
 
     /**
-     * @param array $data
+     * @param mixed $data
      *
-     * @return array
+     * @return void
      */
     public function hookActionPresentCart($data)
     {
@@ -217,10 +244,20 @@ class DealtModule extends Module
         $cartService->sanitizeCartPresenter($presentedCart);
     }
 
+    /**
+     * @param mixed $data
+     *
+     * @return void
+     */
     public function hookActionCartUpdateQuantityBefore($data)
     {
     }
 
+    /**
+     * @param mixed $data
+     *
+     * @return void
+     */
     public function hookActionCartSave($data)
     {
         $cartService = $this->getCartService();
@@ -249,7 +286,7 @@ class DealtModule extends Module
 
         $data = $cartService->getOfferDataForProduct($productId, $productAttributeId);
         if ($data == null) {
-            return;
+            return null;
         }
 
         $this->smarty->assign($data);
@@ -257,10 +294,15 @@ class DealtModule extends Module
         return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayProductAdditionalInfo.tpl');
     }
 
+    /**
+     * @param mixed $params
+     *
+     * @return string|null
+     */
     public function hookDisplayDealtAssociatedOffer($params)
     {
         if (!isset($params['product']['dealt'])) {
-            return;
+            return null;
         }
         $this->smarty->assign($params['product']['dealt']);
 
@@ -272,10 +314,12 @@ class DealtModule extends Module
      */
     protected function getCartService()
     {
-        if (isset($this->cartService)) {
+        if ($this->cartService instanceof DealtCartService) {
             return $this->cartService;
         }
-        $this->cartService = $this->get('dealtmodule.dealt.cart.service');
+        /** @var DealtCartService */
+        $cartService = $this->get('dealtmodule.dealt.cart.service');
+        $this->cartService = $cartService;
         $this->cartService->setModule($this);
 
         return $this->cartService;
@@ -288,7 +332,7 @@ class DealtModule extends Module
      * available in the front-end symfony container
      *
      * @param mixed $id
-     * @param array $parameters
+     * @param mixed $parameters
      * @param mixed $domain
      * @param mixed $locale
      *

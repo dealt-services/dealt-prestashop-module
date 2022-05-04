@@ -9,8 +9,6 @@ use DealtModule\Entity\DealtOfferCategory;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 
-// use Doctrine\ORM\QueryBuilder;
-
 /**
  * Doctrine DealtOffer repository class
  */
@@ -22,7 +20,7 @@ class DealtOfferRepository extends EntityRepository
      * @param string $offerTitle
      * @param string $dealtOfferId
      * @param int $dealtProductId
-     * @param array $categoryIds
+     * @param int[] $categoryIds
      *
      * @return DealtOffer
      */
@@ -31,10 +29,10 @@ class DealtOfferRepository extends EntityRepository
         $em = $this->getEntityManager();
 
         $offer = (new DealtOffer())
-      ->setOfferTitle($offerTitle)
-      ->setDealtOfferId($dealtOfferId)
-      ->setDealtProductId($dealtProductId)
-      ->setOfferCategoriesFromIds($categoryIds);
+            ->setOfferTitle($offerTitle)
+            ->setDealtOfferId($dealtOfferId)
+            ->setDealtProductId($dealtProductId)
+            ->setOfferCategoriesFromIds($categoryIds);
 
         $em->persist($offer);
         $em->flush();
@@ -53,7 +51,7 @@ class DealtOfferRepository extends EntityRepository
      * @param string $offerTitle
      * @param string $dealtOfferId
      * @param int|null $dealtProductId
-     * @param array $categoryIds
+     * @param int[] $categoryIds
      *
      * @return DealtOffer
      */
@@ -62,9 +60,9 @@ class DealtOfferRepository extends EntityRepository
         $em = $this->getEntityManager();
 
         /** @var DealtOffer */
-        $offer = ($this->findOneById($offerId))
-      ->setOfferTitle($offerTitle)
-      ->setDealtOfferId($dealtOfferId);
+        $offer = ($this->findOneBy(['id' => $offerId]))
+            ->setOfferTitle($offerTitle)
+            ->setDealtOfferId($dealtOfferId);
 
         if ($dealtProductId != null) {
             $offer->setDealtProductId($dealtProductId);
@@ -75,8 +73,8 @@ class DealtOfferRepository extends EntityRepository
         }
 
         $offer
-      ->clearOfferCategories()
-      ->setOfferCategoriesFromIds($categoryIds);
+            ->clearOfferCategories()
+            ->setOfferCategoriesFromIds($categoryIds);
 
         $em->persist($offer);
         $em->flush();
@@ -98,7 +96,7 @@ class DealtOfferRepository extends EntityRepository
         $em = $this->getEntityManager();
 
         /** @var DealtOffer */
-        $offer = ($this->findOneById($offerId));
+        $offer = ($this->findOneBy(['id' => $offerId]));
         $product = $offer->getDealtProduct();
 
         try {

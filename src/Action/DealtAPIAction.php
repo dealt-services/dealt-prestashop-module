@@ -6,7 +6,7 @@ namespace DealtModule\Action;
 
 class DealtAPIAction implements ActionInterface
 {
-    public static $AVAILABILITY = 'offerAvailability';
+    public static string $AVAILABILITY = 'offerAvailability';
 
     public static function cases()
     {

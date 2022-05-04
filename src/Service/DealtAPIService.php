@@ -13,8 +13,8 @@ use Dealt\DealtSDK\Exceptions\GraphQLFailureException;
  */
 final class DealtAPIService
 {
-    /** @var DealtClient */
-    protected $client;
+    /** @var DealtClient|null */
+    protected $client = null;
 
     /** @var string */
     protected $api_key;
@@ -40,14 +40,14 @@ final class DealtAPIService
      */
     public function getClient()
     {
-        if (isset($this->client) && $this->client instanceof DealtClient) {
+        if ($this->client instanceof DealtClient) {
             return $this->client;
         }
 
         return new DealtClient([
-      'api_key' => $this->api_key,
-      'env' => $this->production ? DealtEnvironment::PRODUCTION : DealtEnvironment::TEST,
-    ]);
+            'api_key' => $this->api_key,
+            'env' => $this->production ? DealtEnvironment::PRODUCTION : DealtEnvironment::TEST,
+        ]);
     }
 
     /**
@@ -62,12 +62,12 @@ final class DealtAPIService
     {
         try {
             $offer = $this->getClient()->offers->availability([
-        'offer_id' => $offer_id,
-        'address' => [
-          'country' => 'France', /* only France is supported for now */
-          'zip_code' => $zip_code,
-        ],
-      ]);
+                'offer_id' => $offer_id,
+                'address' => [
+                    'country' => 'France', /* only France is supported for now */
+                    'zip_code' => $zip_code,
+                ],
+            ]);
 
             return $offer->available;
         } catch (GraphQLFailureException $e) {

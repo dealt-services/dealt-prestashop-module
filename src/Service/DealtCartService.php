@@ -48,13 +48,12 @@ final class DealtCartService
      * @param DealtOfferRepository $offerRepository
      * @param DealtOfferCategoryRepository $offerCategoryRepository
      * @param DealtCartProductRepository $cartProductRepository
-     * @param TranslatorInterface $translator
      */
     public function __construct(
-    $offerRepository,
-    $offerCategoryRepository,
-    $cartProductRepository
-  ) {
+        $offerRepository,
+        $offerCategoryRepository,
+        $cartProductRepository
+    ) {
         $this->offerRepository = $offerRepository;
         $this->offerCategoryRepository = $offerCategoryRepository;
         $this->cartProductRepository = $cartProductRepository;
@@ -62,23 +61,23 @@ final class DealtCartService
 
     /**
      * @param int $productId
-     * @param array $groupValues
+     * @param int|int[] $groupValues
      *
      * @return int
      */
     public function getProductAttributeIdFromGroup($productId, $groupValues)
     {
         return Product::getIdProductAttributeByIdAttributes(
-      $productId,
-      $groupValues
-    );
+            $productId,
+            $groupValues
+        );
     }
 
     /**
      * @param int $productId
      * @param int|null $productAttributeId
      *
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     public function getOfferDataForProduct($productId, $productAttributeId = null)
     {
@@ -88,17 +87,17 @@ final class DealtCartService
         }
 
         return [
-      'cartProduct' => $this->getProductFromCart($productId, $productAttributeId),
-      'cartOffer' => $this->cartProductRepository->findOneBy([
-        'cartId' => (int) Context::getContext()->cart->id,
-        'productId' => $productId,
-        'productAttributeId' => $productAttributeId,
-        'offer' => $offer,
-      ]),
-      'productId' => $productId,
-      'productAttributeId' => $productAttributeId,
-      'offer' => $offer,
-    ];
+            'cartProduct' => $this->getProductFromCart($productId, $productAttributeId),
+            'cartOffer' => $this->cartProductRepository->findOneBy([
+                'cartId' => (int) Context::getContext()->cart->id,
+                'productId' => $productId,
+                'productAttributeId' => $productAttributeId,
+                'offer' => $offer,
+            ]),
+            'productId' => $productId,
+            'productAttributeId' => $productAttributeId,
+            'offer' => $offer,
+        ];
     }
 
     /**
@@ -130,18 +129,18 @@ final class DealtCartService
 
         /* this will trigger the dealt cart sanitization via PS hooks */
         return $cart->updateQty(
-      (int) $cartProduct['quantity'],
-      $offer->getDealtProductId(),
-      null,
-      false
-    );
+            (int) $cartProduct['quantity'],
+            $offer->getDealtProductId(),
+            null,
+            false
+        );
     }
 
     /**
      * Filters in place the presented cart data
      * adds dealt specific data to products attached to a dealt offer
      *
-     * @param array $presentedCart
+     * @param mixed $presentedCart
      *
      * @return void
      */
@@ -153,29 +152,29 @@ final class DealtCartService
 
         $dealtCartDealtProductIds = array_map(function (DealtCartProduct $dealtCartProduct) {
             return $dealtCartProduct
-        ->getOffer()
-        ->getDealtProductId();
+                ->getOffer()
+                ->getDealtProductId();
         }, $dealtCartProducts);
 
         $presentedCart['products'] = array_filter($presentedCart['products'], function ($presentedCartProduct) use ($dealtCartDealtProductIds) {
             return !in_array(
-        $presentedCartProduct['id_product'],
-        $dealtCartDealtProductIds
-      );
+                $presentedCartProduct['id_product'],
+                $dealtCartDealtProductIds
+            );
         });
 
         foreach ($presentedCart['products'] as &$cartProduct) {
             foreach ($dealtCartProducts as $dealtCartProduct) {
                 if (
-          $dealtCartProduct->getProductId() == $cartProduct['id_product'] &&
-          $dealtCartProduct->getProductAttributeId() == $cartProduct['id_product_attribute']
-        ) {
+                    $dealtCartProduct->getProductId() == $cartProduct['id_product'] &&
+                    $dealtCartProduct->getProductAttributeId() == $cartProduct['id_product_attribute']
+                ) {
                     $offer = $dealtCartProduct->getOffer();
                     $cartProduct['dealt'] = [
-            'cartProduct' => $this->getProductFromCart($offer->getDealtProductId()),
-            'offer' => $offer->toArray(),
-            'offerPrice' => $offer->getFormattedPrice($cartProduct['quantity']),
-          ];
+                        'cartProduct' => $this->getProductFromCart($offer->getDealtProductId()),
+                        'offer' => $offer->toArray(),
+                        'offerPrice' => $offer->getFormattedPrice($cartProduct['quantity']),
+                    ];
                 }
             }
         }
@@ -275,8 +274,8 @@ final class DealtCartService
 
         /** @var DealtOfferCategory|null */
         $offerCategory = $this
-      ->offerCategoryRepository
-      ->findOneBy(['categoryId' => $categories]);
+            ->offerCategoryRepository
+            ->findOneBy(['categoryId' => $categories]);
 
         if ($offerCategory == null) {
             return null;
@@ -292,7 +291,7 @@ final class DealtCartService
      * @param int $productId
      * @param int $productAttributeId
      *
-     * @return array|null
+     * @return mixed|null
      */
     protected function getProductFromCart($productId, $productAttributeId = null)
     {
@@ -300,9 +299,9 @@ final class DealtCartService
 
         foreach ($cartProducts as $cartProduct) {
             if (
-        (int) $cartProduct['id_product'] == $productId &&
-        ($productAttributeId == null || ((int) $cartProduct['id_product_attribute'] == $productAttributeId))
-      ) {
+                (int) $cartProduct['id_product'] == $productId &&
+                ($productAttributeId == null || ((int) $cartProduct['id_product_attribute'] == $productAttributeId))
+            ) {
                 return $cartProduct;
             }
         }
@@ -314,7 +313,7 @@ final class DealtCartService
      * Resolves the dealt offers from the current
      * cart products.
      *
-     * @param Cart
+     * @param Cart $cart
      *
      * @return DealtOffer[]
      */
@@ -335,12 +334,12 @@ final class DealtCartService
      *
      * @param Cart $cart
      *
-     * @return array
+     * @return array<int, array<int, mixed>>
      */
     protected function indexCartProducts(Cart $cart)
     {
-        /** @var array */
         $cartProducts = [];
+
         foreach ($cart->getProducts() as $cartProduct) {
             $productId = $cartProduct['id_product'];
             $productAttributeId = $cartProduct['id_product_attribute'];
@@ -360,7 +359,7 @@ final class DealtCartService
      * and dealt services in cart
      *
      * @param Cart $cart
-     * @param array $presentedCart
+     * @param mixed $presentedCart
      * @param int $products_count
      *
      * @return void
@@ -383,21 +382,26 @@ final class DealtCartService
 
         if ($dealtTotal != 0) {
             $presentedCart['subtotals']['dealt_total'] = [
-        'type' => 'dealt_total',
-        'label' => $this->module->translate('Service(s)', [], 'Modules.DealtModule.Front'),
-        'amount' => $dealtTotal,
-        'value' => Helpers::formatPrice($dealtTotal),
-      ];
+                'type' => 'dealt_total',
+                'label' => $this->module->translate('Service(s)', [], 'Modules.DealtModule.Front'),
+                'amount' => $dealtTotal,
+                'value' => Helpers::formatPrice($dealtTotal),
+            ];
 
             $presentedCart['subtotals']['products']['amount'] = $total_without_services;
             $presentedCart['subtotals']['products']['value'] = Helpers::formatPrice($total_without_services);
 
             $presentedCart['summary_string'] = $products_count === 1 ?
-        $this->module->translate('1 item', [], 'Shop.Theme.Checkout') :
-        $this->module->translate('%count% items', ['%count%' => $products_count], 'Shop.Theme.Checkout');
+                $this->module->translate('1 item', [], 'Shop.Theme.Checkout') :
+                $this->module->translate('%count% items', ['%count%' => $products_count], 'Shop.Theme.Checkout');
         }
     }
 
+    /**
+     * @param DealtModule $module
+     *
+     * @return void
+     */
     public function setModule(DealtModule $module)
     {
         $this->module = $module;

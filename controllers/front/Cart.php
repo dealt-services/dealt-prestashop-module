@@ -8,9 +8,6 @@ use DealtModule\Service\DealtCartService;
 
 class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontController
 {
-    public $ssl = true;
-    public $json = true;
-
     public function getModuleActionsClass()
     {
         return get_class(new DealtCartAction());
@@ -24,20 +21,28 @@ class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontContr
       case DealtCartAction::$GET_PRODUCT_ATTRIBUTE_ID:
         return $this->handleGetProductAttributeId();
     }
+
+        throw new Exception('something went wrong while handling Cart action');
     }
 
+    /**
+     * @return bool
+     */
     protected function handleAddToCart()
     {
         /** @var DealtCartService */
         $cartService = $this->get('dealtmodule.dealt.cart.service');
 
         return $cartService->addDealtOfferToCart(
-      Tools::getValue('id_dealt_offer'),
-      (int) Tools::getValue('id_product'),
-      (int) Tools::getValue('id_product_attribute')
+      strval(Tools::getValue('id_dealt_offer')),
+      intval(Tools::getValue('id_product')),
+      intval(Tools::getValue('id_product_attribute'))
     );
     }
 
+    /**
+     * @return array<string, int>
+     */
     protected function handleGetProductAttributeId()
     {
         return [
