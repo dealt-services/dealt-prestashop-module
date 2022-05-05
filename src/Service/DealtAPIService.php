@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DealtModule\Service;
 
 use Address;
-use Order;
 use Country;
 use Dealt\DealtSDK\DealtClient;
 use Dealt\DealtSDK\DealtEnvironment;
@@ -16,6 +15,7 @@ use Dealt\DealtSDK\GraphQL\Types\Object\OfferAvailabilityQuerySuccess;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Tools\Helpers;
 use Exception;
+use Order;
 
 /**
  * Dealt API class wrapping the DealtSDK library
@@ -66,11 +66,10 @@ final class DealtAPIService
      * @param string $zip_code
      * @param string $country
      *
-     * @return OfferAvailabilityQuerySuccess|false
+     * @return OfferAvailabilityQuerySuccess|null
      */
     public function checkAvailability($offer_id, $zip_code, $country = 'France')
     {
-
         try {
             $offer = $this->getClient()->offers->availability([
                 'offer_id' => $offer_id,
@@ -82,18 +81,19 @@ final class DealtAPIService
 
             return $offer;
         } catch (GraphQLFailureException $e) {
-            return false;
+            return null;
         } catch (GraphQLException $e) {
-            return false;
+            return null;
         }
 
-        return false;
+        return null;
     }
 
     /**
      * @param DealtOffer $offer
      * @param Order $order
-     * @return Mission|false
+     *
+     * @return Mission|null
      */
     public function submitMission(DealtOffer $offer, Order $order)
     {
@@ -104,10 +104,12 @@ final class DealtAPIService
         $phone = Helpers::formatPhoneNumberE164($address->phone, $countryCode);
         $phoneMobile = Helpers::formatPhoneNumberE164($address->phone_mobile, $countryCode);
 
-        if (!$phone && !$phoneMobile) throw new Exception("invalid phone number supplied");
+        if (!$phone && !$phoneMobile) {
+            throw new Exception('invalid phone number supplied');
+        }
 
         try {
-            $result = $this->client->missions->submit([
+            $result = $this->getClient()->missions->submit([
                 'offer_id' => $offer->getDealtOfferId(),
                 'address' => [
                     'country' => $address->postcode,
@@ -127,11 +129,11 @@ final class DealtAPIService
 
             return $result->mission;
         } catch (GraphQLFailureException $e) {
-            return false;
+            return null;
         } catch (GraphQLException $e) {
-            return false;
+            return null;
         }
 
-        return false;
+        return null;
     }
 }
