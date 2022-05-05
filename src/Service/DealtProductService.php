@@ -6,6 +6,7 @@ namespace DealtModule\Service;
 
 use DealtModule\Presenter\DealtOfferPresenter;
 use DealtModule\Repository\DealtOfferRepository;
+use Context;
 
 final class DealtProductService
 {
@@ -36,9 +37,10 @@ final class DealtProductService
     public function presentOfferForProduct($productId, $productAttributeId = null)
     {
         $offer = $this->offerRepository->getOfferFromProductCategories($productId);
+        $cart = Context::getContext()->cart;
 
         return $offer != null ?
-            $this->offerPresenter->present($offer, $productId, $productAttributeId)
+            $this->offerPresenter->present($offer, $cart, $productId, $productAttributeId)
             : null;
     }
 }

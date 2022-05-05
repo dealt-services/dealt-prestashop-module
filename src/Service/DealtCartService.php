@@ -66,9 +66,10 @@ final class DealtCartService
     public function getOfferDataForProduct($productId, $productAttributeId = null)
     {
         $offer = $this->offerRepository->getOfferFromProductCategories($productId);
+        $cart = Context::getContext()->cart;
 
         return $offer != null ?
-            $this->offerPresenter->present($offer, $productId, $productAttributeId)
+            $this->offerPresenter->present($offer, $cart, $productId, $productAttributeId)
             : null;
     }
 
@@ -92,7 +93,7 @@ final class DealtCartService
         }
 
         $cart = Context::getContext()->cart;
-        $cartProduct = Helpers::getProductFromCart($productId, $productAttributeId);
+        $cartProduct = Helpers::getProductFromCart($cart, $productId, $productAttributeId);
 
         if ($cartProduct == null) {
             throw new Exception('Cannot attach dealt offer to a product which is not currently in the cart');
@@ -174,6 +175,7 @@ final class DealtCartService
 
                     $cartProduct['dealt'] = $this->offerPresenter->present(
                         $offer,
+                        $cart,
                         $cartProduct['id_product'],
                         $cartProduct['id_product_attribute'],
                     );

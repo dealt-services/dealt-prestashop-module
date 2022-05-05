@@ -75,14 +75,15 @@ class Helpers
      * Iterates over the products in the current context's
      * cart and returns the first match
      *
+     * @param Cart $cart
      * @param int $productId
-     * @param int $productAttributeId
+     * @param int|null $productAttributeId
      *
      * @return mixed|null
      */
-    public static function getProductFromCart($productId, $productAttributeId = null)
+    public static function getProductFromCart(Cart $cart, $productId, $productAttributeId = null)
     {
-        $cartProducts = Context::getContext()->cart->getProducts();
+        $cartProducts = $cart->getProducts();
 
         foreach ($cartProducts as $cartProduct) {
             if (

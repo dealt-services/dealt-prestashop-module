@@ -18,6 +18,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class DealtCheckoutStep extends AbstractCheckoutStepCore
 {
+    protected $template = 'module:dealtmodule/views/templates/front/checkout/dealt-step.tpl';
+
     /** @var DealtAPIService */
     private $apiService;
 
@@ -41,6 +43,7 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
 
     /** @var string */
     private $country;
+
 
     /**
      * @param Context $context
@@ -69,18 +72,14 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         if (($this->isReachable() || intval($checkoutSession->getIdAddressDelivery()) != 0) && !$this->isComplete()) {
             $this->verifyOfferAvailabilityForSession();
             $this->setComplete($this->valid);
-            if ($this->isComplete()) {
-                $this->setNextStepAsCurrent();
-            } else {
-                $this->setCurrent(true);
-            }
+            if (!$this->isComplete()) $this->setCurrent(true);
         }
     }
 
     public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            'module:dealtmodule/views/templates/front/checkout/dealt-step.tpl',
+            $this->getTemplate(),
             $extraParams,
             ['offers' => $this->offers, 'valid' => $this->valid, 'zipCode' => $this->zipCode, 'country' => $this->country]
         );
@@ -115,7 +114,7 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
                     $productId = $dealtCartRef->getProductId();
                     $productAttributeId = $dealtCartRef->getProductAttributeId();
                     $this->offers[] = array_merge(
-                        $this->offerPresenter->present($offer, $productAttributeId, $productId),
+                        $this->offerPresenter->present($offer, $cart, $productId, $productAttributeId),
                         ["available" => $available]
                     );
                 }
