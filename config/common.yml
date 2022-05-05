@@ -36,6 +36,7 @@ services:
       - "@dealtmodule.doctrine.dealt.mission.repository"
       - "@dealtmodule.doctrine.dealt.offer.repository"
       - "@dealtmodule.doctrine.dealt.cart.product.ref.repository"
+      - "@dealtmodule.presenter.dealt.offer"
   #######################################
   ### DEALT OFFER PRESENTER #############
   #######################################
@@ -43,6 +44,7 @@ services:
     class: DealtModule\Presenter\DealtOfferPresenter
     arguments:
       - "@dealtmodule.doctrine.dealt.cart.product.ref.repository"
+      - "@dealtmodule.doctrine.dealt.mission.repository"
   #######################################
   ### DEALT OFFER REPO ##################
   #######################################

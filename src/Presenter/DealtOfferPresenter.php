@@ -7,6 +7,7 @@ namespace DealtModule\Presenter;
 use Cart;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Repository\DealtCartProductRefRepository;
+use DealtModule\Repository\DealtMissionRepository;
 use DealtModule\Tools\Helpers;
 use Tools;
 
@@ -15,12 +16,16 @@ class DealtOfferPresenter
     /** @var DealtCartProductRefRepository */
     private $dealtCartRefRepository;
 
+    /** @var DealtMissionRepository */
+    private $missionRepository;
+
     /**
      * @param DealtCartProductRefRepository $dealtCartRefRepository
      */
-    public function __construct(DealtCartProductRefRepository $dealtCartRefRepository)
+    public function __construct(DealtCartProductRefRepository $dealtCartRefRepository, DealtMissionRepository $missionRepository)
     {
         $this->dealtCartRefRepository = $dealtCartRefRepository;
+        $this->missionRepository = $missionRepository;
     }
 
     /**
@@ -31,24 +36,28 @@ class DealtOfferPresenter
      * @param Cart $cart
      * @param int $productId
      * @param int|null $productAttributeId
+     * @param int|null $orderId
      *
      * @return mixed
      */
-    public function present(DealtOffer $offer, Cart $cart, $productId, $productAttributeId)
+    public function present(DealtOffer $offer, Cart $cart, $productId, $productAttributeId, $orderId = null)
     {
         $cartProduct = Helpers::getProductFromCart($cart, $productId, $productAttributeId);
         $quantity = Tools::getValue('quantity_wanted', (isset($cartProduct['quantity']) ? $cartProduct['quantity'] : null));
 
         return [
-            'offer' => [
+            'offer' => array_merge([
                 'title' => $offer->getOfferTitle(),
                 'description' => $offer->getDealtProduct()->description_short,
                 'dealtOfferId' => $offer->getDealtOfferId(),
                 'price' => $offer->getFormattedPrice($quantity),
+                'unitPriceFormatted' => $offer->getFormattedPrice(),
                 'unitPrice' => $offer->getPrice(),
                 'image' => $offer->getImage(),
                 'product' => $offer->getDealtProduct(),
-            ],
+            ], $orderId != null ? [
+                'missions' => $this->missionRepository->getMissionsForOrderItem($orderId, $productId, $productAttributeId)
+            ] : []),
             'binding' => [
                 'productId' => $productId,
                 'productAttributeId' => $productAttributeId,
