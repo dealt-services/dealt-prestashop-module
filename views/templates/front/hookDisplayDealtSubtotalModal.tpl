@@ -1,4 +1,4 @@
-{if $cart.subtotals.dealt_total.value}
+{if isset($cart.subtotals.dealt_total)}
 	<p>
 		<span>
 			{l s='Services:' d='Modules.DealtModule.Front'} &nbsp;
