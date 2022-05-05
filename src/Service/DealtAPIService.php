@@ -136,4 +136,24 @@ final class DealtAPIService
 
         return null;
     }
+
+    /**
+     * @param string $missionId
+     *
+     * @return Mission|null
+     */
+    public function cancelMission($missionId)
+    {
+        try {
+            $result = $this->getClient()->missions->cancel($missionId);
+
+            return $result->mission;
+        } catch (GraphQLFailureException $e) {
+            return null;
+        } catch (GraphQLException $e) {
+            return null;
+        }
+
+        return null;
+    }
 }
