@@ -13,6 +13,7 @@ use Dealt\DealtSDK\Exceptions\GraphQLException;
 use Dealt\DealtSDK\Exceptions\GraphQLFailureException;
 use Dealt\DealtSDK\GraphQL\Types\Object\Mission;
 use Dealt\DealtSDK\GraphQL\Types\Object\OfferAvailabilityQuerySuccess;
+use DealtModule;
 use DealtModule\Action\DealtAPIAction;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Tools\Helpers;
@@ -87,8 +88,6 @@ final class DealtAPIService
         } catch (GraphQLException $e) {
             return null;
         }
-
-        return null;
     }
 
     /**
@@ -139,8 +138,6 @@ final class DealtAPIService
         } catch (GraphQLException $e) {
             return null;
         }
-
-        return null;
     }
 
     /**
@@ -159,7 +156,5 @@ final class DealtAPIService
         } catch (GraphQLException $e) {
             return null;
         }
-
-        return null;
     }
 }

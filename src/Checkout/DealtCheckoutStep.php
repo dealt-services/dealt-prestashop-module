@@ -61,10 +61,17 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         DealtOfferPresenter $offerPresenter
     ) {
         parent::__construct($context, $translator);
-        $this->apiService = $apiService;
-        $this->offerRepository = $em->getRepository(DealtOffer::class);
-        $this->dealtCartRefRepository = $em->getRepository(DealtCartProductRef::class);
+
         $this->offerPresenter = $offerPresenter;
+        $this->apiService = $apiService;
+
+        /** @var DealtOfferRepository */
+        $offerRepository = $em->getRepository(DealtOffer::class);
+        /** @var DealtCartProductRefRepository */
+        $dealtCartRefRepository = $em->getRepository(DealtCartProductRef::class);
+
+        $this->offerRepository = $offerRepository;
+        $this->dealtCartRefRepository = $dealtCartRefRepository;
     }
 
     public function handleRequest(array $requestParameters = [])

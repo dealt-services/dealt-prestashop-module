@@ -132,9 +132,9 @@ class Helpers
      * - on ajax refresh : we only have the group values
      *
      * @param int|false $productAttributeId
-     * @param int|int[]|false $groupValues
+     * @param int|int[]|false|null $groupValues
      *
-     * @return void
+     * @return int|null
      */
     public static function resolveProductAttributeId($productId, $productAttributeId, $groupValues)
     {

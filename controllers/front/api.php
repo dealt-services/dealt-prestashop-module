@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use DealtModule\Action\DealtAPIAction;
 use DealtModule\Controller\Front\ModuleActionHandlerFrontController;
+use DealtModule\Repository\DealtMissionRepository;
 
 class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontController
 {
@@ -46,7 +47,7 @@ class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontContro
      *
      * Content-Type:application/json
      *
-     * @return void
+     * @return mixed
      */
     protected function handleMissionWebhook()
     {
