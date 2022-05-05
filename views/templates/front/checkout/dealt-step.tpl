@@ -1,20 +1,27 @@
 {extends file='checkout/_partials/steps/checkout-step.tpl'}
 
 {block name='step_content'}
+    {if !($validPhone)}
+        <article id="dealt-offer-error" class="alert alert-danger" role="alert" data-alert="danger" style="margin-bottom: 10px">
+            {l s='You must specify at least one phone number in your delivery address in order to confirm your services' sprintf=['%zipCode%' => $zipCode, '%country%' => $country] d='Modules.DealtModule.Front'}
+            : <i>{l s='Update your delivery address in the previous steps' d='Modules.DealtModule.Front'}</i>
+        </article>
+    {/if}
+
     {if $valid}
         {l s='Services are available for <strong>%zipCode%, %country%</strong> and are awaiting order payment for confirmation' sprintf=['%zipCode%' => $zipCode, '%country%' => $country] d='Modules.DealtModule.Front'}
     {else}
-        <article id="dealt-offer-error" class="alert alert-danger" role="alert" data-alert="danger">
+        <article id="dealt-offer-error" class="alert alert-danger" role="alert" data-alert="danger" style="margin-bottom: 10px">
             {l s='Unfortunately, Certain attached services are unvailable for <strong>%zipCode%, %country%</strong>' sprintf=['%zipCode%' => $zipCode, '%country%' => $country] d='Modules.DealtModule.Front'}
             <br />
             <i>{l s='Try changing your delivery address or remove the service(s) from your cart' d='Modules.DealtModule.Front'}</i>
         </article>
     {/if}
-    <div style="margin-top: 20px">
+    <div>
         {foreach $offers as $data}
             {assign var=offerImage value=$data.offer.image}
             <div
-                style="border: 1px solid {if $data.available}#24b9d7{else}#a94442{/if}; border-radius: 5px; padding: 10px; margin-bottom: 15px;">
+                style="margin-top: 10px; border: 1px solid {if $data.available}#24b9d7{else}#a94442{/if}; border-radius: 5px; padding: 10px; margin-bottom: 15px;">
                 <div>
                     <div style="display: flex; align-items: stretch;">
                         <div
