@@ -172,11 +172,16 @@ class DealtOfferRepository extends EntityRepository
      */
     public function getDealtOffersFromCart(Cart $cart)
     {
-        $cartProducts = $cart->getProducts();
-        $cartProductIds = array_map(function ($cartProduct) {
-            return (int) $cartProduct['id_product'];
-        }, $cartProducts);
+        try {
+            $cartProducts = $cart->getProducts();
+            $cartProductIds = array_map(function ($cartProduct) {
+                return (int) $cartProduct['id_product'];
+            }, $cartProducts);
 
-        return $this->findBy(['dealtProductId' => $cartProductIds]);
+            return $this->findBy(['dealtProductId' => $cartProductIds]);
+        } catch (Exception $e) {
+            /* cart may not exist yet in DB and will make internal cart methods crash */
+            return [];
+        }
     }
 }
