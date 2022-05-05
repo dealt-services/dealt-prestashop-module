@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DealtModule\Service;
 
 use Context;
+use Product;
 use DealtModule\Presenter\DealtOfferPresenter;
 use DealtModule\Repository\DealtOfferRepository;
 
@@ -38,8 +39,10 @@ final class DealtProductService
     {
         $offer = $this->offerRepository->getOfferFromProductCategories($productId);
         $cart = Context::getContext()->cart;
+        $product = new Product($productId);
 
-        return $offer != null ?
+        /* disable dealt services on customizable products */
+        return !$product->customizable && $offer != null ?
             $this->offerPresenter->present($offer, $cart, $productId, $productAttributeId)
             : null;
     }
