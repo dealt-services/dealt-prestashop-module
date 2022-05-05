@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DealtModule\Service;
 
 use Address;
+use Context;
 use Country;
 use Dealt\DealtSDK\DealtClient;
 use Dealt\DealtSDK\DealtEnvironment;
@@ -12,6 +13,7 @@ use Dealt\DealtSDK\Exceptions\GraphQLException;
 use Dealt\DealtSDK\Exceptions\GraphQLFailureException;
 use Dealt\DealtSDK\GraphQL\Types\Object\Mission;
 use Dealt\DealtSDK\GraphQL\Types\Object\OfferAvailabilityQuerySuccess;
+use DealtModule\Action\DealtAPIAction;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Tools\Helpers;
 use Exception;
@@ -124,7 +126,11 @@ final class DealtAPIService
                     'email_address' => $customer->email,
                     'phone_number' => $phone != false ? $phone : $phoneMobile,
                 ],
-                /* "webhook" => "https://todo.url" */
+                'webhook' => Context::getContext()->link->getModuleLink(
+                    strtolower(DealtModule::class),
+                    'api',
+                    ['ajax' => true, 'action' => DealtAPIAction::$MISSION_WEBHOOK],
+                ),
             ]);
 
             return $result->mission;

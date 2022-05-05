@@ -40,10 +40,21 @@ class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontContro
         );
     }
 
+    /**
+     * Make sure the webhook is triggered with the
+     * appropriate header in order to read the JSON body :
+     *
+     * Content-Type:application/json
+     *
+     * @return void
+     */
     protected function handleMissionWebhook()
     {
-        $dealtMissionId = Tools::getValue('missionId');
-        $dealtMissionStatus = Tools::getValue('status');
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        $dealtMissionId = $data['missionId'] ?? false;
+        $dealtMissionStatus = $data['status'] ?? false;
 
         if ($dealtMissionId == false || $dealtMissionStatus == false) {
             throw new Exception('Dealt webhook failed parsing POST body');
