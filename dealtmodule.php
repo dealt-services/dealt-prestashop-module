@@ -4,6 +4,7 @@ use DealtModule\Checkout\DealtCheckoutStep;
 use DealtModule\Database\DealtInstaller;
 use DealtModule\Service\DealtAPIService;
 use DealtModule\Service\DealtCartService;
+use DealtModule\Service\DealtOrderService;
 use DealtModule\Service\DealtProductService;
 use DealtModule\Tools\Helpers;
 use PrestaShopBundle\Entity\Repository\TabRepository;
@@ -53,6 +54,8 @@ class DealtModule extends Module
         'actionCartSave',
         'actionCartUpdateQuantityBefore',
         'actionCheckoutRender',
+        'actionPaymentConfirmation',
+        'actionOrderStatusPostUpdate'
     ];
 
     /** @var DealtCartService|null */
@@ -63,6 +66,9 @@ class DealtModule extends Module
 
     /** @var DealtProductService|null */
     protected $productService = null;
+
+    /** @var DealtOrderService|null */
+    protected $orderService = null;
 
     public function __construct()
     {
@@ -273,6 +279,7 @@ class DealtModule extends Module
      */
     public function hookActionCheckoutRender($params)
     {
+
         /** @var CheckoutProcess */
         $checkoutProcess = $params['checkoutProcess'];
 
@@ -304,6 +311,16 @@ class DealtModule extends Module
     {
         $cartService = $this->getCartService();
         $cartService->sanitizeDealtCart($data['cart']->id);
+    }
+
+    public function hookActionPaymentConfirmation($data)
+    {
+        Helpers::externalDebug($data);
+    }
+
+    public function hookActionOrderStatusPostUpdate($data)
+    {
+        Helpers::externalDebug($data);
     }
 
     /**
@@ -426,5 +443,20 @@ class DealtModule extends Module
         $this->productService = $productService;
 
         return $this->productService;
+    }
+
+    /**
+     * @return DealtOrderService
+     */
+    public function getOrderService()
+    {
+        if ($this->orderService instanceof DealtOrderService) {
+            return $this->orderService;
+        }
+        /** @var DealtOrderService */
+        $orderService = $this->get('dealtmodule.dealt.order.service');
+        $this->orderService = $orderService;
+
+        return $this->orderService;
     }
 }

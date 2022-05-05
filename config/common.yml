@@ -27,6 +27,13 @@ services:
       - "@dealtmodule.doctrine.dealt.offer.repository"
       - "@dealtmodule.presenter.dealt.offer"
   #######################################
+  ### DEALT ORDER SERVICE ###############
+  #######################################
+  dealtmodule.dealt.offer.service:
+    class: DealtModule\Service\DealtOrderService
+    arguments:
+      - "@dealtmodule.doctrine.dealt.mission.repository"
+  #######################################
   ### DEALT OFFER PRESENTER #############
   #######################################
   dealtmodule.presenter.dealt.offer:
