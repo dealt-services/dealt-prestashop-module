@@ -7,12 +7,14 @@ namespace DealtModule\Checkout;
 use AbstractCheckoutStepCore;
 use Address;
 use Context;
+use Country;
 use DealtModule\Entity\DealtCartProductRef;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Presenter\DealtOfferPresenter;
 use DealtModule\Repository\DealtCartProductRefRepository;
 use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Service\DealtAPIService;
+use DealtModule\Tools\Helpers;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -35,8 +37,11 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
     /** @var array<mixed> */
     private $offers = [];
 
-    /** @var bool */
+    /** @var bool|null */
     private $valid = null;
+
+    /** @var bool|null */
+    private $validPhone = null;
 
     /** @var string */
     private $zipCode;
@@ -66,13 +71,15 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
     {
         $this->setTitle($this->getTranslator()->trans('Service availability'));
         $checkoutSession = $this->getCheckoutSession();
-        if ($this->valid == null) {
+        if ($this->valid == null || $this->validPhone == null) {
             $this->setComplete(false);
         }
 
         if (($this->isReachable() || intval($checkoutSession->getIdAddressDelivery()) != 0) && !$this->isComplete()) {
             $this->verifyOfferAvailabilityForSession();
-            $this->setComplete($this->valid);
+            $this->verifyPhoneNumberForSession();
+
+            $this->setComplete($this->valid && $this->validPhone);
         }
     }
 
@@ -81,14 +88,20 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         return $this->renderTemplate(
             $this->getTemplate(),
             $extraParams,
-            ['offers' => $this->offers, 'valid' => $this->valid, 'zipCode' => $this->zipCode, 'country' => $this->country]
+            [
+                'offers' => $this->offers,
+                'valid' => $this->valid,
+                'validPhone' => $this->validPhone,
+                'zipCode' => $this->zipCode,
+                'country' => $this->country
+            ]
         );
     }
 
     /**
      * @return bool
      */
-    public function verifyOfferAvailabilityForSession()
+    protected function verifyOfferAvailabilityForSession()
     {
         $checkoutSession = $this->getCheckoutSession();
 
@@ -124,5 +137,19 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         $this->valid = $valid;
 
         return $this->valid;
+    }
+
+    protected function verifyPhoneNumberForSession()
+    {
+        $checkoutSession = $this->getCheckoutSession();
+        $address = new Address($checkoutSession->getIdAddressDelivery());
+        $countryCode = (new Country($address->id_country))->iso_code;
+
+        $phone = Helpers::formatPhoneNumberE164($address->phone, $countryCode);;
+        $phoneMobile =  Helpers::formatPhoneNumberE164($address->phone_mobile, $countryCode);
+
+        $this->validPhone = (!$phone || !$phoneMobile);
+
+        return $this->validPhone;
     }
 }

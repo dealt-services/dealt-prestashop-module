@@ -9,6 +9,9 @@ use Context;
 use Language;
 use Product;
 use Tools;
+use libphonenumber\NumberParseException;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\PhoneNumberUtil;
 
 class Helpers
 {
@@ -146,6 +149,22 @@ class Helpers
             $productId,
             $groupValues
         );
+    }
+
+    /**
+     * @param string $phoneNumber
+     * @param string $countryCode
+     * @return string|false
+     */
+    public static function formatPhoneNumberE164($phoneNumber, $countryCode)
+    {
+        $phoneUtil = PhoneNumberUtil::getInstance();
+        try {
+            $proto = $phoneUtil->parse($phoneNumber);
+            return $phoneUtil->format($proto, PhoneNumberFormat::E164);
+        } catch (NumberParseException $e) {
+            return false;
+        }
     }
 
     /**
