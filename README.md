@@ -2,9 +2,16 @@
 
 ### Dealt Prestashop Module
 
-> Supported : prestashop@1.7.8
+> ps version : ^1.7.8
 
 ---
+
+##### Improvements
+
+- [ ] Improve css inline-styles in temmplates
+- [ ] Support customizable products
+- [ ] Order email templates
+- [ ] Handle cart/order duplication
 
 ### Dev environment 🏗
 
