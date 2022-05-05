@@ -7,11 +7,13 @@ namespace DealtModule\Service;
 use Address;
 use Cart;
 use DealtModule\Entity\DealtCartProductRef;
+use DealtModule\Presenter\DealtOfferPresenter;
 use DealtModule\Repository\DealtCartProductRefRepository;
 use DealtModule\Repository\DealtMissionRepository;
 use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Tools\Helpers;
 use Order;
+use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderLazyArray;
 
 final class DealtOrderService
 {
@@ -27,6 +29,9 @@ final class DealtOrderService
     /** @var DealtCartProductRefRepository */
     private $dealtCartRefRepository;
 
+    /** @var DealtOfferPresenter */
+    private $offerPresenter;
+
     /**
      * @param DealtAPIService $apiService
      * @param DealtMissionRepository $missionRepository
@@ -37,12 +42,14 @@ final class DealtOrderService
         DealtAPIService $apiService,
         DealtMissionRepository $missionRepository,
         DealtOfferRepository $offerRepository,
-        DealtCartProductRefRepository $dealtCartRefRepository
+        DealtCartProductRefRepository $dealtCartRefRepository,
+        DealtOfferPresenter $offerPresenter
     ) {
         $this->apiService = $apiService;
         $this->missionRepository = $missionRepository;
         $this->offerRepository = $offerRepository;
         $this->dealtCartRefRepository = $dealtCartRefRepository;
+        $this->offerPresenter = $offerPresenter;
     }
 
     /**
@@ -144,5 +151,62 @@ final class DealtOrderService
                 }
             }
         }
+    }
+
+    /**
+     * Filters in place the presented offer data
+     * adds dealt specific data to products attached to a dealt offer
+     *
+     * @param OrderLazyArray $presentedOffer
+     *
+     * @return void
+     */
+    public function sanitizeOrderPresenter(OrderLazyArray &$presentedOffer)
+    {
+        $orderRef = $presentedOffer['history']['current'];
+        $orderId = intval($orderRef['id_order']);
+        $order = new Order($orderId);
+
+        $cartId = Order::getCartIdStatic($order->id, $order->id_customer);
+        $cart = new Cart($cartId);
+
+
+
+        /** @var DealtCartProductRef[] */
+        $dealtCartRefs = $this->dealtCartRefRepository->findBy(['cartId' => $cart->id]);
+
+        $dealtCartDealtProductIds = array_map(function (DealtCartProductRef $dealtCartRef) {
+            return $dealtCartRef
+                ->getOffer()
+                ->getDealtProductId();
+        }, $dealtCartRefs);
+
+        $offerProducts = array_filter($presentedOffer['products'], function ($product) use ($dealtCartDealtProductIds) {
+            return !in_array(
+                $product['id_product'],
+                $dealtCartDealtProductIds
+            );
+        });
+
+        foreach ($offerProducts as &$offerProduct) {
+            foreach ($dealtCartRefs as $dealtCartRef) {
+                if (
+                    $dealtCartRef->getProductId() == $offerProduct['id_product'] &&
+                    $dealtCartRef->getProductAttributeId() == $offerProduct['id_product_attribute']
+                ) {
+                    $offer = $dealtCartRef->getOffer();
+
+                    $offerProduct['dealt'] = $this->offerPresenter->present(
+                        $offer,
+                        $cart,
+                        $offerProduct['id_product'],
+                        $offerProduct['id_product_attribute'],
+                        $orderId
+                    );
+                }
+            }
+        }
+
+        $presentedOffer->offsetSet('products', $offerProducts, true);
     }
 }

@@ -49,8 +49,11 @@ class DealtModule extends Module
         'displayDealtAssociatedOffer',
         'displayDealtAssociatedOfferModal',
         'displayDealtSubtotalModal',
+        'displayDealtOrderLine',
+        'displayDealtOrderConfirmation',
         'actionFrontControllerSetMedia',
         'actionPresentCart',
+        'actionPresentOrder',
         'actionCartSave',
         'actionCartUpdateQuantityBefore',
         'actionCheckoutRender',
@@ -267,9 +270,25 @@ class DealtModule extends Module
     public function hookActionPresentCart($params)
     {
         $cartService = $this->getCartService();
-        $presentedCart = &$params['presentedCart']; /* pass a pointer to the array as we want to mutate it */
+        $presentedCart = &$params['presentedCart'];
         $cartService->sanitizeCartPresenter($presentedCart);
     }
+
+    /**
+     * @param mixed $params
+     *
+     * @return void
+     */
+    public function hookActionPresentOrder($params)
+    {
+        /* we only want to affect the confirmation page */
+        if ('order-confirmation' !== $this->context->controller->php_self) return;
+
+        $orderService = $this->getOrderService();
+        $presentedOrder = &$params['presentedOrder'];
+        $orderService->sanitizeOrderPresenter($presentedOrder);
+    }
+
 
     /**
      * @param mixed $params
@@ -391,6 +410,31 @@ class DealtModule extends Module
         $this->smarty->assign($params['cart']);
 
         return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayDealtSubtotalModal.tpl');
+    }
+
+    /**
+     * @param mixed $params
+     *
+     * @return string|null
+     */
+    public function hookDisplayDealtOrderConfirmation($params)
+    {
+    }
+
+    /**
+     * @param mixed $params
+     *
+     * @return string|null
+     */
+    public function hookDisplayDealtOrderLine($params)
+    {
+        if (!isset($params['product']['dealt'])) {
+            return null;
+        }
+
+        $this->smarty->assign($params['product']['dealt']);
+
+        return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayDealtOrderLine.tpl');
     }
 
     /**

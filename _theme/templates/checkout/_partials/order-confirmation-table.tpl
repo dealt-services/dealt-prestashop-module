@@ -49,17 +49,20 @@
           <div class="col-sm-4 col-xs-9 details">
             {if $add_product_link}<a href="{$product.url}" target="_blank">{/if}
               <span>{$product.name}</span>
-            {if $add_product_link}</a>{/if}
+              {if $add_product_link}</a>{/if}
             {if is_array($product.customizations) && $product.customizations|count}
               {foreach from=$product.customizations item="customization"}
                 <div class="customizations">
-                  <a href="#" data-toggle="modal" data-target="#product-customizations-modal-{$customization.id_customization}">{l s='Product customization' d='Shop.Theme.Catalog'}</a>
+                  <a href="#" data-toggle="modal"
+                    data-target="#product-customizations-modal-{$customization.id_customization}">{l s='Product customization' d='Shop.Theme.Catalog'}</a>
                 </div>
-                <div class="modal fade customization-modal" id="product-customizations-modal-{$customization.id_customization}" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal fade customization-modal" id="product-customizations-modal-{$customization.id_customization}"
+                  tabindex="-1" role="dialog" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Shop.Theme.Global'}">
+                        <button type="button" class="close" data-dismiss="modal"
+                          aria-label="{l s='Close' d='Shop.Theme.Global'}">
                           <span aria-hidden="true">&times;</span>
                         </button>
                         <h4 class="modal-title">{l s='Product customization' d='Shop.Theme.Catalog'}</h4>
@@ -99,6 +102,7 @@
             </div>
           </div>
         </div>
+        {hook h='displayDealtOrderLine' product=$product}
       {/foreach}
 
       <hr>
@@ -124,13 +128,17 @@
           </tr>
         {else}
           <tr class="total-value font-weight-bold">
-            <td><span class="text-uppercase">{$totals.total.label}&nbsp;{if $configuration.taxes_enabled}{$labels.tax_short}{/if}</span></td>
+            <td><span
+                class="text-uppercase">{$totals.total.label}&nbsp;{if $configuration.taxes_enabled}{$labels.tax_short}{/if}</span>
+            </td>
             <td>{$totals.total.value}</td>
           </tr>
         {/if}
         {if $subtotals.tax !== null && $subtotals.tax.label !== null}
           <tr class="sub taxes">
-            <td colspan="2"><span class="label">{l s='%label%:' sprintf=['%label%' => $subtotals.tax.label] d='Shop.Theme.Global'}</span>&nbsp;<span class="value">{$subtotals.tax.value}</span></td>
+            <td colspan="2"><span
+                class="label">{l s='%label%:' sprintf=['%label%' => $subtotals.tax.label] d='Shop.Theme.Global'}</span>&nbsp;<span
+                class="value">{$subtotals.tax.value}</span></td>
           </tr>
         {/if}
       </table>
