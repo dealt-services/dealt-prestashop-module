@@ -31,10 +31,11 @@ class DealtMission
     private $dealtMissionId;
 
     /**
-     * @var string
-     * @ORM\Column(name="dealt_id_offer", type="string", length=36)
+     * @var DealtOffer
+     * @ORM\OneToOne(targetEntity="DealtModule\Entity\DealtOffer")
+     * @ORM\JoinColumn(name="id_offer", referencedColumnName="id_offer", nullable=false)
      */
-    private $dealtOfferId;
+    private $offer;
 
     /**
      * @var float
@@ -105,21 +106,21 @@ class DealtMission
     }
 
     /**
-     * @return string
+     * @return DealtOffer
      */
-    public function getDealtOfferId()
+    public function getOffer()
     {
-        return $this->dealtOfferId;
+        return $this->offer;
     }
 
     /**
-     * @param string $dealtOfferId
+     * @param DealtOffer $offer
      *
      * @return DealtMission
      */
-    public function setDealtOfferId($dealtOfferId)
+    public function setOffer(DealtOffer $offer)
     {
-        $this->dealtOfferId = $dealtOfferId;
+        $this->offer = $offer;
 
         return $this;
     }
