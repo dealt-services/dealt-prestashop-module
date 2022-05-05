@@ -126,7 +126,7 @@ final class DealtAPIService
                     'email_address' => $customer->email,
                     'phone_number' => $phone != false ? $phone : $phoneMobile,
                 ],
-                'webhook' => Context::getContext()->link->getModuleLink(
+                'webHookUrl' => Context::getContext()->link->getModuleLink(
                     strtolower(DealtModule::class),
                     'api',
                     ['ajax' => true, 'action' => DealtAPIAction::$MISSION_WEBHOOK],
