@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace DealtModule\Presenter;
 
-
+use Cart;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Repository\DealtCartProductRefRepository;
 use DealtModule\Tools\Helpers;
 use Tools;
-use Context;
-use Cart;
 
 class DealtOfferPresenter
 {
@@ -40,6 +38,7 @@ class DealtOfferPresenter
     {
         $cartProduct = Helpers::getProductFromCart($cart, $productId, $productAttributeId);
         $quantity = Tools::getValue('quantity_wanted', (isset($cartProduct['quantity']) ? $cartProduct['quantity'] : null));
+
         return [
             'offer' => [
                 'title' => $offer->getOfferTitle(),
@@ -55,7 +54,7 @@ class DealtOfferPresenter
                 'productAttributeId' => $productAttributeId,
                 'cartProduct' => Helpers::getProductFromCart($cart, $productId, $productAttributeId),
                 'cartOffer' => Helpers::getProductFromCart($cart, $offer->getDealtProductId()),
-                "data" =>  array_merge(
+                'data' => array_merge(
                     [
                         'cartId' => $cart->id,
                         'productId' => $productId,

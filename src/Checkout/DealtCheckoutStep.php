@@ -44,7 +44,6 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
     /** @var string */
     private $country;
 
-
     /**
      * @param Context $context
      * @param TranslatorInterface $translator
@@ -67,7 +66,9 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
     {
         $this->setTitle($this->getTranslator()->trans('Service availability'));
         $checkoutSession = $this->getCheckoutSession();
-        if ($this->valid == null) $this->setComplete(false);
+        if ($this->valid == null) {
+            $this->setComplete(false);
+        }
 
         if (($this->isReachable() || intval($checkoutSession->getIdAddressDelivery()) != 0) && !$this->isComplete()) {
             $this->verifyOfferAvailabilityForSession();
@@ -114,13 +115,14 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
                     $productAttributeId = $dealtCartRef->getProductAttributeId();
                     $this->offers[] = array_merge(
                         $this->offerPresenter->present($offer, $cart, $productId, $productAttributeId),
-                        ["available" => $available]
+                        ['available' => $available]
                     );
                 }
             }
         }
 
         $this->valid = $valid;
+
         return $this->valid;
     }
 }
