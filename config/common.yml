@@ -16,8 +16,23 @@ services:
     class: DealtModule\Service\DealtCartService
     arguments:
       - "@dealtmodule.doctrine.dealt.offer.repository"
-      - "@dealtmodule.doctrine.dealt.offer.category.repository"
-      - "@dealtmodule.doctrine.dealt.cart.product.repository"
+      - "@dealtmodule.doctrine.dealt.cart.product.ref.repository"
+      - "@dealtmodule.presenter.dealt.offer"
+  #######################################
+  ### DEALT PRODUCT SERVICE #############
+  #######################################
+  dealtmodule.dealt.product.service:
+    class: DealtModule\Service\DealtProductService
+    arguments:
+      - "@dealtmodule.doctrine.dealt.offer.repository"
+      - "@dealtmodule.presenter.dealt.offer"
+  #######################################
+  ### DEALT OFFER PRESENTER #############
+  #######################################
+  dealtmodule.presenter.dealt.offer:
+    class: DealtModule\Presenter\DealtOfferPresenter
+    arguments:
+      - "@dealtmodule.doctrine.dealt.cart.product.ref.repository"
   #######################################
   ### DEALT OFFER REPO ##################
   #######################################
@@ -37,7 +52,7 @@ services:
   #######################################
   ### DEALT OFFER CATEGORY REPO #########
   #######################################
-  dealtmodule.doctrine.dealt.cart.product.repository:
+  dealtmodule.doctrine.dealt.cart.product.ref.repository:
     class: DealtModule\Repository\DealtCartProductRefRepository
     factory: ["@doctrine.orm.default_entity_manager", getRepository]
     arguments:

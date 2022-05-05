@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace DealtModule\Tools;
 
+use Cart;
 use Context;
 use Language;
+use Product;
 use Tools;
 
 class Helpers
@@ -66,6 +68,82 @@ class Helpers
         return $locale->formatPrice(
             $price,
             Context::getContext()->currency->iso_code
+        );
+    }
+
+    /**
+     * Iterates over the products in the current context's
+     * cart and returns the first match
+     *
+     * @param int $productId
+     * @param int $productAttributeId
+     *
+     * @return mixed|null
+     */
+    public static function getProductFromCart($productId, $productAttributeId = null)
+    {
+        $cartProducts = Context::getContext()->cart->getProducts();
+
+        foreach ($cartProducts as $cartProduct) {
+            if (
+                (int) $cartProduct['id_product'] == $productId &&
+                ($productAttributeId == null || ((int) $cartProduct['id_product_attribute'] == $productAttributeId))
+            ) {
+                return $cartProduct;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Creates an indexed multi-dimensional array of the current cart
+     * [productId][attributeId] product
+     * Useful for quick lookup.
+     *
+     * @param Cart $cart
+     *
+     * @return array<int, array<int, mixed>>
+     */
+    public static function indexCartProducts(Cart $cart)
+    {
+        $cartProducts = [];
+
+        foreach ($cart->getProducts() as $cartProduct) {
+            $productId = $cartProduct['id_product'];
+            $productAttributeId = $cartProduct['id_product_attribute'];
+
+            if (!isset($cartProducts[$productId])) {
+                $cartProducts[$productId] = [];
+            }
+            $cartProducts[$productId][$productAttributeId] = $cartProduct;
+        }
+
+        return $cartProducts;
+    }
+
+    /**
+     * Based on the current context, we must resolve
+     * the product attribute id differently
+     * - on ajax refresh : we only have the group values
+     *
+     * @param int|false $productAttributeId
+     * @param int|int[]|false $groupValues
+     *
+     * @return void
+     */
+    public static function resolveProductAttributeId($productId, $productAttributeId, $groupValues)
+    {
+        if ($productAttributeId != false) {
+            return $productAttributeId;
+        }
+        if (!isset($groupValues) || $groupValues == false) {
+            return null;
+        }
+
+        return Product::getIdProductAttributeByIdAttributes(
+            $productId,
+            $groupValues
         );
     }
 

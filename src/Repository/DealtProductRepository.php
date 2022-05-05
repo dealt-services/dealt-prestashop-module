@@ -34,8 +34,8 @@ class DealtProductRepository
      * @param ProductRepository $psProductRepository
      */
     public function __construct(
-    $psProductRepository
-  ) {
+        $psProductRepository
+    ) {
         $this->psProductRepository = $psProductRepository;
     }
 
@@ -69,7 +69,7 @@ class DealtProductRepository
         $product->reference = $dealtOfferId . '-dealt-product';
         $product->name = Helpers::createMultiLangField($offerTitle);
         $product->meta_description = '';
-        $product->visibility = 'none'; // we want to hide from the public catalog
+        $product->visibility = 'none'; /* we want to hide from the public catalog */
         $product->id_category_default = $categoryId;
         $product->price = Helpers::formatPriceForDB($offerPrice);
         $product->minimal_quantity = 1;

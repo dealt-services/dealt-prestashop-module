@@ -7,17 +7,31 @@ namespace DealtModule\Checkout;
 use AbstractCheckoutStepCore;
 use Address;
 use Context;
+use DealtModule\Entity\DealtCartProductRef;
+use DealtModule\Entity\DealtOffer;
+use DealtModule\Presenter\DealtOfferPresenter;
+use DealtModule\Repository\DealtCartProductRefRepository;
+use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Service\DealtAPIService;
-use DealtModule\Service\DealtCartService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class DealtCheckoutStep extends AbstractCheckoutStepCore
 {
+    /** @var EntityManagerInterface */
+    private $em;
+
     /** @var DealtAPIService */
     private $apiService;
 
-    /** @var DealtCartService */
-    private $cartService;
+    /** @var DealtOfferRepository */
+    private $offerRepository;
+
+    /** @var DealtCartProductRefRepository */
+    private $dealtCartRefRepository;
+
+    /** @var DealtOfferPresenter */
+    private $offerPresenter;
 
     /** @var array<mixed> */
     private $dealtErrors = [];
@@ -26,11 +40,19 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
      * @param Context $context
      * @param TranslatorInterface $translator
      */
-    public function __construct(Context $context, TranslatorInterface $translator, DealtAPIService $apiService, DealtCartService $cartService)
-    {
+    public function __construct(
+        Context $context,
+        TranslatorInterface $translator,
+        DealtAPIService $apiService,
+        EntityManagerInterface $em,
+        DealtOfferPresenter $offerPresenter
+    ) {
         parent::__construct($context, $translator);
         $this->apiService = $apiService;
-        $this->cartService = $cartService;
+        $this->em = $em;
+        $this->offerRepository = $em->getRepository(DealtOffer::class);
+        $this->dealtCartRefRepository = $em->getRepository(DealtCartProductRef::class);
+        $this->offerPresenter = $offerPresenter;
     }
 
     public function handleRequest(array $requestParameters = [])
@@ -62,7 +84,10 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         $checkoutSession = $this->getCheckoutSession();
 
         $cart = $checkoutSession->getCart();
-        $offers = $this->cartService->getDealtOffersFromCart($cart);
+        $offers = $this->offerRepository->getDealtOffersFromCart($cart);
+
+        /** @var DealtCartProductRef[] */
+        $dealtCartRefs = $this->dealtCartRefRepository->findBy(['cartId' => $cart->id]);
 
         $address = new Address($checkoutSession->getIdAddressDelivery());
         $zipCode = $address->postcode;
@@ -71,8 +96,16 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         foreach ($offers as $offer) {
             $offerId = $offer->getDealtOfferId();
             $available = $this->apiService->checkAvailability($offerId, $zipCode, $country);
+
             if (!$available) {
-                $this->dealtErrors[] = ['offer' => $offer];
+                foreach ($dealtCartRefs as $dealtCartRef) {
+                    $offerRef = $dealtCartRef->getOffer();
+                    if ($offerRef->getId() == $offer->getId()) {
+                        $productId = $dealtCartRef->getProductId();
+                        $productAttributeId = $dealtCartRef->getProductAttributeId();
+                        $this->dealtErrors[] = $this->offerPresenter->present($offer, $productAttributeId, $productId);
+                    }
+                }
             }
         }
 

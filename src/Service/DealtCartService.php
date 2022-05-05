@@ -9,13 +9,11 @@ use Context;
 use DealtModule;
 use DealtModule\Entity\DealtCartProductRef;
 use DealtModule\Entity\DealtOffer;
-use DealtModule\Entity\DealtOfferCategory;
+use DealtModule\Presenter\DealtOfferPresenter;
 use DealtModule\Repository\DealtCartProductRefRepository;
-use DealtModule\Repository\DealtOfferCategoryRepository;
 use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Tools\Helpers;
 use Exception;
-use Product;
 
 /**
  * Dealt Cart class allows interacting with
@@ -27,11 +25,11 @@ final class DealtCartService
     /** @var DealtOfferRepository */
     private $offerRepository;
 
-    /** @var DealtOfferCategoryRepository */
-    private $offerCategoryRepository;
-
     /** @var DealtCartProductRefRepository */
     private $dealtCartRefRepository;
+
+    /** @var DealtOfferPresenter */
+    private $offerPresenter;
 
     /** @var DealtModule */
     private $module;
@@ -46,57 +44,32 @@ final class DealtCartService
 
     /**
      * @param DealtOfferRepository $offerRepository
-     * @param DealtOfferCategoryRepository $offerCategoryRepository
      * @param DealtCartProductRefRepository $dealtCartRefRepository
+     * @param DealtOfferPresenter $offerPresenter
      */
     public function __construct(
         $offerRepository,
-        $offerCategoryRepository,
-        $dealtCartRefRepository
+        $dealtCartRefRepository,
+        $offerPresenter
     ) {
         $this->offerRepository = $offerRepository;
-        $this->offerCategoryRepository = $offerCategoryRepository;
         $this->dealtCartRefRepository = $dealtCartRefRepository;
-    }
-
-    /**
-     * @param int $productId
-     * @param int|int[] $groupValues
-     *
-     * @return int
-     */
-    public function getProductAttributeIdFromGroup($productId, $groupValues)
-    {
-        return Product::getIdProductAttributeByIdAttributes(
-            $productId,
-            $groupValues
-        );
+        $this->offerPresenter = $offerPresenter;
     }
 
     /**
      * @param int $productId
      * @param int|null $productAttributeId
      *
-     * @return array<string, mixed>|null
+     * @return mixed
      */
     public function getOfferDataForProduct($productId, $productAttributeId = null)
     {
-        $offer = $this->getOfferFromProductCategories($productId);
-        if ($offer == null) {
-            return null;
-        }
+        $offer = $this->offerRepository->getOfferFromProductCategories($productId);
 
-        return [
-            'offer' => $offer,
-            'cartProduct' => $this->getProductFromCart($productId, $productAttributeId),
-            'cartRef' => $this->dealtCartRefRepository->findOneBy(array_merge([
-                'cartId' => (int) Context::getContext()->cart->id,
-                'productId' => $productId,
-                'offer' => $offer,
-            ], $productAttributeId != null ? ['productAttributeId' => $productAttributeId] : [])),
-            'productId' => $productId,
-            'productAttributeId' => $productAttributeId,
-        ];
+        return $offer != null ?
+            $this->offerPresenter->present($offer, $productId, $productAttributeId)
+            : null;
     }
 
     /**
@@ -119,7 +92,7 @@ final class DealtCartService
         }
 
         $cart = Context::getContext()->cart;
-        $cartProduct = $this->getProductFromCart($productId, $productAttributeId);
+        $cartProduct = Helpers::getProductFromCart($productId, $productAttributeId);
 
         if ($cartProduct == null) {
             throw new Exception('Cannot attach dealt offer to a product which is not currently in the cart');
@@ -139,7 +112,7 @@ final class DealtCartService
     public function detachDealtOffer($dealtOfferId, $productId, $productAttributeId)
     {
         $cart = Context::getContext()->cart;
-        $cartProductsIndex = $this->indexCartProducts($cart);
+        $cartProductsIndex = Helpers::indexCartProducts($cart);
 
         /** @var DealtOffer */
         $offer = $this->offerRepository->findOneBy(['dealtOfferId' => $dealtOfferId]);
@@ -198,16 +171,12 @@ final class DealtCartService
                     $dealtCartRef->getProductAttributeId() == $cartProduct['id_product_attribute']
                 ) {
                     $offer = $dealtCartRef->getOffer();
-                    $cartProduct['dealt'] = [
-                        'offer' => $offer->toArray(),
-                        'offerPrice' => $offer->getFormattedPrice($cartProduct['quantity']),
-                        'offerImage' => $offer->getImage(),
-                        'cartOffer' => $this->getProductFromCart($offer->getDealtProductId()),
-                        'attachedTo' => [
-                            'productId' => $cartProduct['id_product'],
-                            'productAttributeId' => $cartProduct['id_product_attribute'],
-                        ],
-                    ];
+
+                    $cartProduct['dealt'] = $this->offerPresenter->present(
+                        $offer,
+                        $cartProduct['id_product'],
+                        $cartProduct['id_product_attribute'],
+                    );
                 }
             }
         }
@@ -243,8 +212,8 @@ final class DealtCartService
         $this->cartSanitized = true;
 
         $cart = new Cart($cartId);
-        $offers = $this->getDealtOffersFromCart($cart);
-        $cartProductsIndex = $this->indexCartProducts($cart);
+        $offers = $this->offerRepository->getDealtOffersFromCart($cart);
+        $cartProductsIndex = Helpers::indexCartProducts($cart);
 
         /*
                  * If we have dealt offers present in the cart
@@ -286,107 +255,6 @@ final class DealtCartService
     }
 
     /**
-     * Resolves the dealt offers from the current
-     * cart products.
-     *
-     * @param Cart $cart
-     *
-     * @return DealtOffer[]
-     */
-    public function getDealtOffersFromCart(Cart $cart)
-    {
-        $cartProducts = $cart->getProducts();
-        $cartProductIds = array_map(function ($cartProduct) {
-            return (int) $cartProduct['id_product'];
-        }, $cartProducts);
-
-        return $this->offerRepository->findBy(['dealtProductId' => $cartProductIds]);
-    }
-
-    /**
-     * @param int $productId
-     *
-     * @return DealtOffer|null
-     */
-    protected function getOfferFromProductCategories($productId)
-    {
-        $product = new Product($productId);
-        $categories = $product->getCategories();
-
-        if (empty($categories)) {
-            return null;
-        }
-        /**
-         * Find only first match - we may have multiple results
-         * but this can only be caused either by :
-         * - a category conflict due to a misconfiguration
-         * - matching a parent/child category
-         */
-
-        /** @var DealtOfferCategory|null */
-        $offerCategory = $this
-            ->offerCategoryRepository
-            ->findOneBy(['categoryId' => $categories]);
-
-        if ($offerCategory == null) {
-            return null;
-        }
-
-        return $offerCategory->getOffer();
-    }
-
-    /**
-     * Iterates over the products in the current context's
-     * cart and returns the first match
-     *
-     * @param int $productId
-     * @param int $productAttributeId
-     *
-     * @return mixed|null
-     */
-    protected function getProductFromCart($productId, $productAttributeId = null)
-    {
-        $cartProducts = Context::getContext()->cart->getProducts();
-
-        foreach ($cartProducts as $cartProduct) {
-            if (
-                (int) $cartProduct['id_product'] == $productId &&
-                ($productAttributeId == null || ((int) $cartProduct['id_product_attribute'] == $productAttributeId))
-            ) {
-                return $cartProduct;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Creates an indexed multi-dimensional array of the current cart
-     * [productId][attributeId] product
-     * Useful for quick lookup.
-     *
-     * @param Cart $cart
-     *
-     * @return array<int, array<int, mixed>>
-     */
-    protected function indexCartProducts(Cart $cart)
-    {
-        $cartProducts = [];
-
-        foreach ($cart->getProducts() as $cartProduct) {
-            $productId = $cartProduct['id_product'];
-            $productAttributeId = $cartProduct['id_product_attribute'];
-
-            if (!isset($cartProducts[$productId])) {
-                $cartProducts[$productId] = [];
-            }
-            $cartProducts[$productId][$productAttributeId] = $cartProduct;
-        }
-
-        return $cartProducts;
-    }
-
-    /**
      * Computes new subtotals for the dealt cart
      * by splitting the totals between actual products
      * and dealt services in cart
@@ -399,8 +267,8 @@ final class DealtCartService
      */
     protected function sanitizeSubTotals(Cart $cart, &$presentedCart, $products_count)
     {
-        $cartProductsIndex = $this->indexCartProducts($cart);
-        $offers = $this->getDealtOffersFromCart($cart);
+        $cartProductsIndex = Helpers::indexCartProducts($cart);
+        $offers = $this->offerRepository->getDealtOffersFromCart($cart);
 
         $dealtTotal = 0;
         foreach ($offers as $offer) {

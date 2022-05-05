@@ -4,6 +4,8 @@ use DealtModule\Checkout\DealtCheckoutStep;
 use DealtModule\Database\DealtInstaller;
 use DealtModule\Service\DealtAPIService;
 use DealtModule\Service\DealtCartService;
+use DealtModule\Service\DealtProductService;
+use DealtModule\Tools\Helpers;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 
 if (!defined('_PS_VERSION_')) {
@@ -20,44 +22,47 @@ class DealtModule extends Module
 
     /** @var array<string, string>[] */
     public static $DEALT_TABS = [
-    [
-      'class_name' => 'DEALTMODULE',
-      'icon' => 'settings',
-      'parent_class_name' => 'IMPROVE',
-      'name' => 'Dealt',
-    ],
-    [
-      'route_name' => 'admin_dealt_configure',
-      'class_name' => 'AdminDealtConfigurationController',
-      'parent_class_name' => 'DEALTMODULE',
-      'name' => 'Configure',
-    ],
-    [
-      'route_name' => 'admin_dealt_offer_list',
-      'class_name' => 'AdminDealtOfferController',
-      'parent_class_name' => 'DEALTMODULE',
-      'name' => 'Offers configuration',
-    ],
-  ];
+        [
+            'class_name' => 'DEALTMODULE',
+            'icon' => 'settings',
+            'parent_class_name' => 'IMPROVE',
+            'name' => 'Dealt',
+        ],
+        [
+            'route_name' => 'admin_dealt_configure',
+            'class_name' => 'AdminDealtConfigurationController',
+            'parent_class_name' => 'DEALTMODULE',
+            'name' => 'Configure',
+        ],
+        [
+            'route_name' => 'admin_dealt_offer_list',
+            'class_name' => 'AdminDealtOfferController',
+            'parent_class_name' => 'DEALTMODULE',
+            'name' => 'Offers configuration',
+        ],
+    ];
 
     /** @var string[] */
     public static $DEALT_HOOKS = [
-    'displayProductAdditionalInfo',
-    'displayDealtAssociatedOffer',
-    'displayDealtAssociatedOfferModal',
-    'displayDealtSubtotalModal',
-    'actionFrontControllerSetMedia',
-    'actionPresentCart',
-    'actionCartSave',
-    'actionCartUpdateQuantityBefore',
-    'actionCheckoutRender',
-  ];
+        'displayProductAdditionalInfo',
+        'displayDealtAssociatedOffer',
+        'displayDealtAssociatedOfferModal',
+        'displayDealtSubtotalModal',
+        'actionFrontControllerSetMedia',
+        'actionPresentCart',
+        'actionCartSave',
+        'actionCartUpdateQuantityBefore',
+        'actionCheckoutRender',
+    ];
 
     /** @var DealtCartService|null */
     protected $cartService = null;
 
     /** @var DealtApiService|null */
     protected $apiService = null;
+
+    /** @var DealtProductService|null */
+    protected $productService = null;
 
     public function __construct()
     {
@@ -67,9 +72,9 @@ class DealtModule extends Module
         $this->author = 'Dealt Developers';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
-      'min' => '1.7.8',
-      'max' => '1.7.99',
-    ];
+            'min' => '1.7.8',
+            'max' => '1.7.99',
+        ];
         $this->bootstrap = false;
 
         parent::__construct();
@@ -91,7 +96,7 @@ class DealtModule extends Module
         $installer = $this->getInstaller();
 
         return parent::install() && $this->installTabs() && $this->registerHook(static::$DEALT_HOOKS)
-      && $installer->install();
+            && $installer->install();
     }
 
     /**
@@ -102,8 +107,8 @@ class DealtModule extends Module
         $installer = $this->getInstaller();
 
         return parent::uninstall()
-      && $this->uninstallTabs()
-      && $installer->uninstall();
+            && $this->uninstallTabs()
+            && $installer->uninstall();
     }
 
     /**
@@ -111,11 +116,13 @@ class DealtModule extends Module
      */
     public function getContent()
     {
-        // This uses the matching with the route ps_controller_tabs_configure via the _legacy_link property
-        // See https://devdocs.prestashop.com/1.7/development/architecture/migration-guide/controller-routing
+        /*
+         * This uses the matching with the route ps_controller_tabs_configure via the _legacy_link property
+         * See https://devdocs.prestashop.com/1.7/development/architecture/migration-guide/controller-routing
+         */
         Tools::redirectAdmin(
-      $this->context->link->getAdminLink('AdminDealtConfigurationController')
-    );
+            $this->context->link->getAdminLink('AdminDealtConfigurationController')
+        );
     }
 
     /**
@@ -135,10 +142,10 @@ class DealtModule extends Module
 
         if (!$installer) {
             $installer = new DealtInstaller(
-        $this->get('doctrine.dbal.default_connection'),
-        $this->getContainer()->getParameter('database_prefix'),
-        null /* repository not available yet ! */
-      );
+                $this->get('doctrine.dbal.default_connection'),
+                $this->getContainer()->getParameter('database_prefix'),
+                null /* repository not available yet ! */
+            );
         }
 
         return $installer;
@@ -232,19 +239,19 @@ class DealtModule extends Module
         }
 
         Media::addJsDef(['DealtGlobals' => [
-      'actions' => [
-        'cart' => Context::getContext()->link->getModuleLink(
-          strtolower(DealtModule::class),
-          'cart',
-          ['ajax' => true],
-        ),
-        'api' => Context::getContext()->link->getModuleLink(
-          strtolower(DealtModule::class),
-          'api',
-          ['ajax' => true],
-        ),
-      ],
-    ]]);
+            'actions' => [
+                'cart' => Context::getContext()->link->getModuleLink(
+                    strtolower(DealtModule::class),
+                    'cart',
+                    ['ajax' => true],
+                ),
+                'api' => Context::getContext()->link->getModuleLink(
+                    strtolower(DealtModule::class),
+                    'api',
+                    ['ajax' => true],
+                ),
+            ],
+        ]]);
     }
 
     /**
@@ -274,7 +281,14 @@ class DealtModule extends Module
             return $step->getIdentifier();
         }, $steps));
 
-        $dealtStep = new DealtCheckoutStep($this->context, $this->getTranslator(), $this->getAPIService(), $this->getCartService());
+        $dealtStep = new DealtCheckoutStep(
+            $this->context,
+            $this->getTranslator(),
+            $this->getAPIService(),
+            $this->get('doctrine.orm.entity_manager'),
+            $this->get('dealtmodule.presenter.dealt.offer')
+        );
+
         $dealtStep->setCheckoutProcess($checkoutProcess);
 
         array_splice($steps, $deliveryStepIdx + 1, 0, [$dealtStep]);
@@ -301,18 +315,16 @@ class DealtModule extends Module
      */
     public function hookDisplayProductAdditionalInfo()
     {
-        $cartService = $this->getCartService();
         $productId = (int) Tools::getValue('id_product');
-        $groupValues = Tools::getValue('group'); /* available on product page ajax refresh */
+        $productAttributeId = Helpers::resolveProductAttributeId(
+            $productId,
+            Tools::getValue('id_product_attribute'),
+            Tools::getValue('group')
+        );
 
-        $productAttributeId = Tools::getValue('id_product_attribute');
-        $productAttributeId = $productAttributeId != false ?
-      $productAttributeId : (isset($groupValues) && $groupValues != false ?
-        $cartService->getProductAttributeIdFromGroup($productId, array_values($groupValues))
-        : null
-      );
+        $productService = $this->getProductService();
+        $data = $productService->presentOfferForProduct($productId, $productAttributeId);
 
-        $data = $cartService->getOfferDataForProduct($productId, $productAttributeId);
         if ($data == null) {
             return null;
         }
@@ -400,12 +412,19 @@ class DealtModule extends Module
 
         return $this->apiService;
     }
-}
 
-/*
- * Registering a hook when module already installed :
- *
- * if ($this->isRegisteredInHook('actionValidateCustomerAddressForm')) {
-      $this->registerHook('actionCheckoutRender');
+    /**
+     * @return DealtProductService
+     */
+    public function getProductService()
+    {
+        if ($this->productService instanceof DealtProductService) {
+            return $this->productService;
+        }
+        /** @var DealtProductService */
+        $productService = $this->get('dealtmodule.dealt.product.service');
+        $this->productService = $productService;
+
+        return $this->productService;
     }
- */
+}

@@ -47,7 +47,7 @@ class DealtOfferFormType extends AbstractType
         'multiple' => true,
         'required' => false,
         'label' => 'Categories',
-        'disabled_values' => [], // __dealt__ internal category not visible by default
+        'disabled_values' => [], /* __dealt__ internal category not visible by default */
         'translation_domain' => 'Modules.DealtModule.Admin',
       ]);
     }

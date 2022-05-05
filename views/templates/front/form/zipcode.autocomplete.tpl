@@ -4,9 +4,8 @@
       placeholder="Code postal">
   </div>
   <input class="btn btn-primary" id="dealt-offer-submit" type="submit" value="Add service"
-    data-dealt-offer-id={$offer->getDealtOfferId()} data-dealt-offer-unit-price={$offer->getPrice()}
-    {if $productId != null}data-dealt-product-id={$productId} {/if}
-    {if $productAttributeId != null}data-dealt-product-attribute-id={$productAttributeId} {/if}
-    {if $cartRef != null}data-dealt-cart-ref="true" {/if} {if $cartProduct != null}data-dealt-cart-product="true" {/if}
-    disabled>
+    data-dealt-offer-id={$offer.dealtOfferId} data-dealt-offer-unit-price={$offer.unitPrice}
+    data-dealt-product-id={$binding.productId} data-dealt-product-attribute-id={$binding.productAttributeId}
+    {if $binding.cartRef != null}data-dealt-cart-ref="true" {/if}
+    {if $binding.cartProduct != null}data-dealt-cart-product="true" {/if} disabled>
 </div>

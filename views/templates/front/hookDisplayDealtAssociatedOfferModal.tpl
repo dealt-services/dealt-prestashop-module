@@ -1,3 +1,5 @@
+{assign var=offerImage value=$offer.image}
+
 <hr style="margin: 25px 0" />
 <div class="row">
 	<div class="col-md-6">
@@ -8,7 +10,7 @@
 		{/if}
 	</div>
 	<div class="col-md-6">
-		<h6 class="h6 product-name">{$offer.title_offer}</h6>
-		<p class="product-price">{$offerPrice}</p>
+		<h6 class="h6 product-name">{$offer.title}</h6>
+		<p class="product-price">{$offer.price}</p>
 	</div>
 </div>

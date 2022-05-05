@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace DealtModule\Repository;
 
+use Cart;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Entity\DealtOfferCategory;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use Product;
 
 /**
  * Doctrine DealtOffer repository class
@@ -123,5 +125,58 @@ class DealtOfferRepository extends EntityRepository
         $dealtOfferCategory = $em->getPartialReference(DealtOfferCategory::class, $dealtOfferCategoryId);
 
         $em->remove($dealtOfferCategory);
+    }
+
+    /**
+     * Resolves an offer for a product based on its categories
+     *
+     * @param int $productId
+     *
+     * @return DealtOffer|null
+     */
+    public function getOfferFromProductCategories($productId)
+    {
+        $product = new Product($productId);
+        $categories = $product->getCategories();
+
+        if (empty($categories)) {
+            return null;
+        }
+        /**
+         * Find only first match - we may have multiple results
+         * but this can only be caused either by :
+         * - a category conflict due to a misconfiguration
+         * - matching a parent/child category
+         */
+        $em = $this->getEntityManager();
+
+        /** @var DealtOfferCategoryRepository */
+        $offerCategoryRepository = $em->getRepository(DealtOfferCategory::class);
+        /** @var DealtOfferCategory|null */
+        $offerCategory = $offerCategoryRepository->findOneBy(['categoryId' => $categories]);
+
+        if ($offerCategory == null) {
+            return null;
+        }
+
+        return $offerCategory->getOffer();
+    }
+
+    /**
+     * Resolves the dealt offers from the current
+     * cart products.
+     *
+     * @param Cart $cart
+     *
+     * @return DealtOffer[]
+     */
+    public function getDealtOffersFromCart(Cart $cart)
+    {
+        $cartProducts = $cart->getProducts();
+        $cartProductIds = array_map(function ($cartProduct) {
+            return (int) $cartProduct['id_product'];
+        }, $cartProducts);
+
+        return $this->findBy(['dealtProductId' => $cartProductIds]);
     }
 }
