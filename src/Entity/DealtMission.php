@@ -25,17 +25,23 @@ class DealtMission
     private $id;
 
     /**
+     * @var DealtOffer
+     * @ORM\OneToOne(targetEntity="DealtModule\Entity\DealtOffer")
+     * @ORM\JoinColumn(name="id_offer", referencedColumnName="id_offer", nullable=false)
+     */
+    private $offer;
+
+    /**
      * @var string
      * @ORM\Column(name="dealt_id_mission", type="string", length=36)
      */
     private $dealtMissionId;
 
     /**
-     * @var DealtOffer
-     * @ORM\OneToOne(targetEntity="DealtModule\Entity\DealtOffer")
-     * @ORM\JoinColumn(name="id_offer", referencedColumnName="id_offer", nullable=false)
+     * @var string
+     * @ORM\Column(name="dealt_status_mission", type="string", length=36)
      */
-    private $offer;
+    private $dealtMissionStatus;
 
     /**
      * @var float
@@ -60,6 +66,12 @@ class DealtMission
      * @ORM\Column(name="id_product", type="integer")
      */
     private $productId;
+
+    /**
+     * @var int
+     * @ORM\Column(name="id_product_attribute", type="integer")
+     */
+    private $productAttributeId;
 
     /**
      * @var int
@@ -141,6 +153,27 @@ class DealtMission
     public function setDealtMissionId($dealtMissionId)
     {
         $this->dealtMissionId = $dealtMissionId;
+
+        return $this;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getDealtMissionStatus()
+    {
+        return $this->dealtMissionStatus;
+    }
+
+    /**
+     * @param string $dealtMissionStatus
+     *
+     * @return DealtMission
+     */
+    public function setDealtMissionStatus($dealtMissionStatus)
+    {
+        $this->dealtMissionStatus = $dealtMissionStatus;
 
         return $this;
     }
@@ -232,6 +265,27 @@ class DealtMission
 
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getProductAttributeId()
+    {
+        return $this->productAttributeId;
+    }
+
+    /**
+     * @param int $productAttributeId
+     *
+     * @return DealtMission
+     */
+    public function setProductAttributeId($productAttributeId)
+    {
+        $this->productAttributeId = $productAttributeId;
+
+        return $this;
+    }
+
 
     /**
      * @return int
