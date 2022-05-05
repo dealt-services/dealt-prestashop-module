@@ -56,4 +56,23 @@ class DealtMissionRepository extends EntityRepository
 
         return $mission;
     }
+
+    /**
+     * @param string $dealtMissionId
+     * @param string $status
+     *
+     * @return DealtMission
+     */
+    public function updateStatusByDealtMissionId($dealtMissionId, $status)
+    {
+        $em = $this->getEntityManager();
+        /** @var DealtMission */
+        $mission = ($this->findOneBy(['dealtMissionId' => $dealtMissionId]));
+
+        $mission->setDealtMissionStatus($status);
+        $em->persist($mission);
+        $em->flush();
+
+        return $mission;
+    }
 }
