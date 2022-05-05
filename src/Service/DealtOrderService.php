@@ -170,8 +170,6 @@ final class DealtOrderService
         $cartId = Order::getCartIdStatic($order->id, $order->id_customer);
         $cart = new Cart($cartId);
 
-
-
         /** @var DealtCartProductRef[] */
         $dealtCartRefs = $this->dealtCartRefRepository->findBy(['cartId' => $cart->id]);
         $presentedOffer->offsetSet('hasDealtServices', !empty($dealtCartRefs), true);

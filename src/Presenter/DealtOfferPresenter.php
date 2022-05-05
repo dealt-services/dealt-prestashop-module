@@ -56,7 +56,7 @@ class DealtOfferPresenter
                 'image' => $offer->getImage(),
                 'product' => $offer->getDealtProduct(),
             ], $orderId != null ? [
-                'missions' => $this->missionRepository->getMissionsForOrderItem($orderId, $productId, $productAttributeId)
+                'missions' => $this->missionRepository->getMissionsForOrderItem($orderId, $productId, $productAttributeId),
             ] : []),
             'binding' => [
                 'productId' => $productId,

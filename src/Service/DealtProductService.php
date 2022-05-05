@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace DealtModule\Service;
 
 use Context;
-use Product;
 use DealtModule\Presenter\DealtOfferPresenter;
 use DealtModule\Repository\DealtOfferRepository;
+use Product;
 
 final class DealtProductService
 {

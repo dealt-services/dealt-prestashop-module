@@ -282,13 +282,14 @@ class DealtModule extends Module
     public function hookActionPresentOrder($params)
     {
         /* we only want to affect the confirmation page */
-        if ('order-confirmation' !== $this->context->controller->php_self) return;
+        if ('order-confirmation' !== $this->context->controller->php_self) {
+            return;
+        }
 
         $orderService = $this->getOrderService();
         $presentedOrder = &$params['presentedOrder'];
         $orderService->sanitizeOrderPresenter($presentedOrder);
     }
-
 
     /**
      * @param mixed $params

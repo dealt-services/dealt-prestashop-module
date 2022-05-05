@@ -76,11 +76,11 @@ class DealtMissionRepository extends EntityRepository
         return $mission;
     }
 
-
     /**
      * @param int $orderId
      * @param int $productId
      * @param int $productAttributeId
+     *
      * @return DealtMission[]
      */
     public function getMissionsForOrderItem($orderId, $productId, $productAttributeId)
@@ -89,7 +89,7 @@ class DealtMissionRepository extends EntityRepository
         $missions = $this->findBy([
             'orderId' => $orderId,
             'productId' => $productId,
-            'productAttributeId' => $productAttributeId
+            'productAttributeId' => $productAttributeId,
         ]);
 
         return $missions;

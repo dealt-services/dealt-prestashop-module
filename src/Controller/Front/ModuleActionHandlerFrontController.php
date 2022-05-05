@@ -67,7 +67,8 @@ abstract class ModuleActionHandlerFrontController extends ModuleFrontController
     }
 
     /**
-     * @param boolean $ok
+     * @param bool $ok
+     *
      * @return void
      */
     protected function setResponseHeaders($ok = true)
@@ -75,7 +76,9 @@ abstract class ModuleActionHandlerFrontController extends ModuleFrontController
         ob_get_clean();
         ob_end_clean();
         header('Content-Type: application/json');
-        if ($ok) header("HTTP/1.1 200 OK");
+        if ($ok) {
+            header('HTTP/1.1 200 OK');
+        }
     }
 
     /**
