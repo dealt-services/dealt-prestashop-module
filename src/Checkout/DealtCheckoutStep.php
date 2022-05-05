@@ -150,7 +150,7 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         $phone = Helpers::formatPhoneNumberE164($address->phone, $countryCode);
         $phoneMobile = Helpers::formatPhoneNumberE164($address->phone_mobile, $countryCode);
 
-        $this->validPhone = (!$phone || !$phoneMobile);
+        $this->validPhone = ($phone  != false || $phoneMobile != false);
 
         return $this->validPhone;
     }
