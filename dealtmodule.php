@@ -419,6 +419,11 @@ class DealtModule extends Module
      */
     public function hookDisplayDealtOrderConfirmation($params)
     {
+        if (!isset($params['hasDealtServices'])) {
+            return null;
+        }
+
+        return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayDealtOrderConfirmation.tpl');
     }
 
     /**

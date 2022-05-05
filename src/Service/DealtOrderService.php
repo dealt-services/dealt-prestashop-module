@@ -174,6 +174,7 @@ final class DealtOrderService
 
         /** @var DealtCartProductRef[] */
         $dealtCartRefs = $this->dealtCartRefRepository->findBy(['cartId' => $cart->id]);
+        $presentedOffer->offsetSet('hasDealtServices', !empty($dealtCartRefs), true);
 
         $dealtCartDealtProductIds = array_map(function (DealtCartProductRef $dealtCartRef) {
             return $dealtCartRef
