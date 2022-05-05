@@ -12,6 +12,7 @@ use Dealt\DealtSDK\DealtEnvironment;
 use Dealt\DealtSDK\Exceptions\GraphQLException;
 use Dealt\DealtSDK\Exceptions\GraphQLFailureException;
 use Dealt\DealtSDK\GraphQL\Types\Object\Mission;
+use Dealt\DealtSDK\GraphQL\Types\Object\OfferAvailabilityQuerySuccess;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Tools\Helpers;
 use Exception;
@@ -65,10 +66,11 @@ final class DealtAPIService
      * @param string $zip_code
      * @param string $country
      *
-     * @return bool
+     * @return OfferAvailabilityQuerySuccess|false
      */
     public function checkAvailability($offer_id, $zip_code, $country = 'France')
     {
+
         try {
             $offer = $this->getClient()->offers->availability([
                 'offer_id' => $offer_id,
@@ -78,7 +80,7 @@ final class DealtAPIService
                 ],
             ]);
 
-            return $offer->available;
+            return $offer;
         } catch (GraphQLFailureException $e) {
             return false;
         } catch (GraphQLException $e) {
@@ -103,7 +105,6 @@ final class DealtAPIService
         $phoneMobile = Helpers::formatPhoneNumberE164($address->phone_mobile, $countryCode);
 
         if (!$phone && !$phoneMobile) throw new Exception("invalid phone number supplied");
-
 
         try {
             $result = $this->client->missions->submit([

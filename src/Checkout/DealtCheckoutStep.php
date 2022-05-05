@@ -118,7 +118,9 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         $valid = true;
         foreach ($offers as $offer) {
             $offerId = $offer->getDealtOfferId();
-            $available = $this->apiService->checkAvailability($offerId, $this->zipCode, $this->country);
+            $dealtOffer = $this->apiService->checkAvailability($offerId, $this->zipCode, $this->country);
+
+            $available = ($dealtOffer != false ? $dealtOffer->available : false);
             $valid = $valid && $available;
 
             foreach ($dealtCartRefs as $dealtCartRef) {
