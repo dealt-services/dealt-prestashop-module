@@ -45,19 +45,19 @@ class DealtMission
 
     /**
      * @var float
-     * @ORM\Column(name="dealt_gross_price_mission, type="decimal", precision=20, scale=6)
+     * @ORM\Column(name="dealt_gross_price_mission", type="decimal", precision=20, scale=6)
      */
     private $dealtMissionGrossPrice;
 
     /**
      * @var float
-     * @ORM\Column(name="dealt_vat_price_mission, type="decimal", precision=20, scale=6)
+     * @ORM\Column(name="dealt_vat_price_mission", type="decimal", precision=20, scale=6)
      */
     private $dealtMissionVatPrice;
 
     /**
      * @var float
-     * @ORM\Column(name="dealt_net_price_mission, type="decimal", precision=20, scale=6)
+     * @ORM\Column(name="dealt_net_price_mission", type="decimal", precision=20, scale=6)
      */
     private $dealtMissionNetPrice;
 
@@ -156,7 +156,6 @@ class DealtMission
 
         return $this;
     }
-
 
     /**
      * @return string
@@ -285,7 +284,6 @@ class DealtMission
 
         return $this;
     }
-
 
     /**
      * @return int
