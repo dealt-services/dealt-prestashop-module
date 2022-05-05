@@ -12,7 +12,8 @@
 							<i class="material-icons" style="margin-bottom: 2px;">delete</i>
 						</a></h5>
 					<p style="font-size: 12px; margin: 0; line-height: 1.2;">
-						{$offer.description[$language['id']]|strip_tags}</p>
+						{$offer.description[$language['id']]|strip_tags}
+					</p>
 				</div>
 				<div class="col col-md-4 col-xs-5" style="text-align: left">
 					<h5 style="margin: 0; margin-left: 4px">{$offer.price}</h5>

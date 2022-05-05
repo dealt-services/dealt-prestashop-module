@@ -3,17 +3,19 @@
 
 <div class="card card-block loading" id="dealt-offer-card">
 	<h4>Nouveau: Simplifiez-vous la vie!</h4>
-	<hr style="margin: 15px 0" />
+	<br />
 	<article id="dealt-offer-error" class="alert alert-danger" role="alert" data-alert="danger" style="display: none;">
 	</article>
 	<div style="display: flex; align-items: stretch;">
-		<div style="flex: 1; display: block;">
-			<img src="{if $offerImage}{$offerImage}{else}{$urls.no_picture_image.bySize.medium_default.url}{/if}"
-				style="max-width: 100%;" />
+		<div
+			style="flex: 1; display: block; border-radius: 5px; background-size: cover; background-image: url('{if $offerImage}{$offerImage}{else}{$urls.no_picture_image.bySize.medium_default.url}{/if}')">
 		</div>
-		<div style="padding: 0 0 0 15px; display: flex; justify-content: center; flex-direction: column; flex: 2">
-			<div>{($offer.description[$language['id']])|strip_tags}</div>
 
+		<div style="padding: 0 0 0 15px; display: flex; justify-content: center; flex-direction: column; flex: 2">
+			<h5 style="margin: 0; margin-bottom: 5px;">
+				{$offer.title}
+			</h5>
+			<p>{($offer.description[$language['id']])|strip_tags}</p>
 			<div
 				style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; margin-top: 20px">
 				<h1>+ <span id="dealt-offer-price">{$offer.price}</span>
