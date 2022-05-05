@@ -55,7 +55,7 @@ class DealtModule extends Module
         'actionCartUpdateQuantityBefore',
         'actionCheckoutRender',
         'actionPaymentConfirmation',
-        'actionOrderStatusPostUpdate'
+        'actionOrderStatusPostUpdate',
     ];
 
     /** @var DealtCartService|null */
@@ -279,7 +279,6 @@ class DealtModule extends Module
      */
     public function hookActionCheckoutRender($params)
     {
-
         /** @var CheckoutProcess */
         $checkoutProcess = $params['checkoutProcess'];
 
