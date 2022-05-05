@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DealtModule\Repository;
 
-use Dealt\DealtSDK\GraphQL\Types\Object\OfferAvailabilityQuerySuccess;
 use DealtModule\Entity\DealtMission;
 use DealtModule\Entity\DealtOffer;
 use Doctrine\ORM\EntityRepository;
@@ -15,27 +14,41 @@ use Doctrine\ORM\EntityRepository;
 class DealtMissionRepository extends EntityRepository
 {
     /**
+     * @param int $orderId
      * @param int $productId
      * @param int $productAttributeId
      * @param DealtOffer $offer
-     * @param OfferAvailabilityQuerySuccess $dealtOffer
+     * @param string $dealtMissionId
+     * @param float $grossPrice
+     * @param float $vatPrice
+     * @param float $netPrice
      * @param string $status
-     * 
+     *
      * @return DealtMission
      */
-    public function create($productId, $productAttributeId, DealtOffer $offer, OfferAvailabilityQuerySuccess $dealtOffer, $status)
-    {
+    public function create(
+        $orderId,
+        $productId,
+        $productAttributeId,
+        $offer,
+        $dealtMissionId,
+        $grossPrice,
+        $vatPrice,
+        $netPrice,
+        $status
+    ) {
         $em = $this->getEntityManager();
 
         $mission = (new DealtMission())
             ->setOffer($offer)
+            ->setOrderId($orderId)
             ->setProductId($productId)
             ->setProductAttributeId($productAttributeId)
-            ->setDealtMissionId($offer->getDealtOfferId())
+            ->setDealtMissionId($dealtMissionId)
             ->setDealtProductId($offer->getDealtProductId())
-            ->setDealtMissionGrossPrice($dealtOffer->gross_price->amount)
-            ->setDealtMissionVatPrice($dealtOffer->vat_price->amount)
-            ->setDealtMissionNetPrice($dealtOffer->net_price->amount)
+            ->setDealtMissionGrossPrice($grossPrice)
+            ->setDealtMissionVatPrice($vatPrice)
+            ->setDealtMissionNetPrice($netPrice)
             ->setDealtMissionStatus($status);
 
         $em->persist($mission);
