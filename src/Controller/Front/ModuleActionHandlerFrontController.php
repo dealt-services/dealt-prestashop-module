@@ -54,7 +54,8 @@ abstract class ModuleActionHandlerFrontController extends ModuleFrontController
             }
 
             $result = $this->handleAction($action);
-            $this->setResponseHeaders();
+
+            $this->setResponseHeaders(true);
             $this->ajaxRender(json_encode([
                 'ok' => true,
                 'action' => $action,
@@ -65,10 +66,16 @@ abstract class ModuleActionHandlerFrontController extends ModuleFrontController
         }
     }
 
-    protected function setResponseHeaders()
+    /**
+     * @param boolean $ok
+     * @return void
+     */
+    protected function setResponseHeaders($ok = true)
     {
+        ob_get_clean();
         ob_end_clean();
         header('Content-Type: application/json');
+        if ($ok) header("HTTP/1.1 200 OK");
     }
 
     /**
@@ -78,7 +85,7 @@ abstract class ModuleActionHandlerFrontController extends ModuleFrontController
      */
     public function displayAjaxError($error)
     {
-        $this->setResponseHeaders();
+        $this->setResponseHeaders(false);
         $this->ajaxRender(json_encode([
             'ok' => false,
             'error' => $error,
