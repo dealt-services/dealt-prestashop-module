@@ -67,12 +67,31 @@ class DealtMissionRepository extends EntityRepository
     {
         $em = $this->getEntityManager();
         /** @var DealtMission */
-        $mission = ($this->findOneBy(['dealtMissionId' => $dealtMissionId]));
+        $mission = $this->findOneBy(['dealtMissionId' => $dealtMissionId]);
 
         $mission->setDealtMissionStatus($status);
         $em->persist($mission);
         $em->flush();
 
         return $mission;
+    }
+
+
+    /**
+     * @param int $orderId
+     * @param int $productId
+     * @param int $productAttributeId
+     * @return DealtMission[]
+     */
+    public function getMissionsForOrderItem($orderId, $productId, $productAttributeId)
+    {
+        /** @var DealtMission[] */
+        $missions = $this->findBy([
+            'orderId' => $orderId,
+            'productId' => $productId,
+            'productAttributeId' => $productAttributeId
+        ]);
+
+        return $missions;
     }
 }
