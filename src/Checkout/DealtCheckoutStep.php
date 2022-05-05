@@ -72,7 +72,6 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         if (($this->isReachable() || intval($checkoutSession->getIdAddressDelivery()) != 0) && !$this->isComplete()) {
             $this->verifyOfferAvailabilityForSession();
             $this->setComplete($this->valid);
-            if ($this->isComplete()) $this->setNextStepAsCurrent();
         }
     }
 
