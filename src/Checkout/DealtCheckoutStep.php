@@ -18,9 +18,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class DealtCheckoutStep extends AbstractCheckoutStepCore
 {
-    /** @var EntityManagerInterface */
-    private $em;
-
     /** @var DealtAPIService */
     private $apiService;
 
@@ -34,7 +31,16 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
     private $offerPresenter;
 
     /** @var array<mixed> */
-    private $dealtErrors = [];
+    private $offers = [];
+
+    /** @var bool */
+    private $valid = null;
+
+    /** @var string */
+    private $zipCode;
+
+    /** @var string */
+    private $country;
 
     /**
      * @param Context $context
@@ -49,7 +55,6 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
     ) {
         parent::__construct($context, $translator);
         $this->apiService = $apiService;
-        $this->em = $em;
         $this->offerRepository = $em->getRepository(DealtOffer::class);
         $this->dealtCartRefRepository = $em->getRepository(DealtCartProductRef::class);
         $this->offerPresenter = $offerPresenter;
@@ -59,11 +64,16 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
     {
         $this->setTitle($this->getTranslator()->trans('Service availability'));
         $checkoutSession = $this->getCheckoutSession();
+        if ($this->valid == null) $this->setComplete(false);
 
         if (($this->isReachable() || intval($checkoutSession->getIdAddressDelivery()) != 0) && !$this->isComplete()) {
-            $this->setCurrent(true);
-            $valid = $this->verifyOfferAvailabilityForSession();
-            $this->setComplete($valid);
+            $this->verifyOfferAvailabilityForSession();
+            $this->setComplete($this->valid);
+            if ($this->isComplete()) {
+                $this->setNextStepAsCurrent();
+            } else {
+                $this->setCurrent(true);
+            }
         }
     }
 
@@ -72,7 +82,7 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         return $this->renderTemplate(
             'module:dealtmodule/views/templates/front/checkout/dealt-step.tpl',
             $extraParams,
-            ['errors' => $this->dealtErrors]
+            ['offers' => $this->offers, 'valid' => $this->valid, 'zipCode' => $this->zipCode, 'country' => $this->country]
         );
     }
 
@@ -90,25 +100,29 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         $dealtCartRefs = $this->dealtCartRefRepository->findBy(['cartId' => $cart->id]);
 
         $address = new Address($checkoutSession->getIdAddressDelivery());
-        $zipCode = $address->postcode;
-        $country = $address->country;
+        $this->zipCode = $address->postcode;
+        $this->country = $address->country;
 
+        $valid = true;
         foreach ($offers as $offer) {
             $offerId = $offer->getDealtOfferId();
-            $available = $this->apiService->checkAvailability($offerId, $zipCode, $country);
+            $available = $this->apiService->checkAvailability($offerId, $this->zipCode, $this->country);
+            $valid = $valid && $available;
 
-            if (!$available) {
-                foreach ($dealtCartRefs as $dealtCartRef) {
-                    $offerRef = $dealtCartRef->getOffer();
-                    if ($offerRef->getId() == $offer->getId()) {
-                        $productId = $dealtCartRef->getProductId();
-                        $productAttributeId = $dealtCartRef->getProductAttributeId();
-                        $this->dealtErrors[] = $this->offerPresenter->present($offer, $productAttributeId, $productId);
-                    }
+            foreach ($dealtCartRefs as $dealtCartRef) {
+                $offerRef = $dealtCartRef->getOffer();
+                if ($offerRef->getId() == $offer->getId()) {
+                    $productId = $dealtCartRef->getProductId();
+                    $productAttributeId = $dealtCartRef->getProductAttributeId();
+                    $this->offers[] = array_merge(
+                        $this->offerPresenter->present($offer, $productAttributeId, $productId),
+                        ["available" => $available]
+                    );
                 }
             }
         }
 
-        return empty($this->dealtErrors);
+        $this->valid = $valid;
+        return $this->valid;
     }
 }

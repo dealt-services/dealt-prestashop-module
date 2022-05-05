@@ -70,9 +70,6 @@ final class DealtAPIService
                     'zip_code' => $zip_code,
                 ],
             ]);
-
-            return false;
-
             return $offer->available;
         } catch (GraphQLFailureException $e) {
             return false;

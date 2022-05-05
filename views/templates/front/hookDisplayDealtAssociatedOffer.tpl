@@ -3,7 +3,7 @@
 	<div class="col col-md-3 col-xs-7">
 	</div>
 	<div class="col col-md-9 col-xs-7">
-		<div class="card card-block" style="border: 1px solid #24b9d7">
+		<div class="card card-block" style="border: 1px solid #24b9d7; border-radius: 5px;">
 			<div class="row" style="display: flex; align-items: center;">
 				<div class="col col-md-8 col-xs-7">
 					<h4>{$offer.title} <a href="#" class="dealt-offer-detach" rel="nofollow"
