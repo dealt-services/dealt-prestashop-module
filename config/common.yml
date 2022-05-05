@@ -29,10 +29,13 @@ services:
   #######################################
   ### DEALT ORDER SERVICE ###############
   #######################################
-  dealtmodule.dealt.offer.service:
+  dealtmodule.dealt.order.service:
     class: DealtModule\Service\DealtOrderService
     arguments:
+      - "@dealtmodule.dealt.api.service"
       - "@dealtmodule.doctrine.dealt.mission.repository"
+      - "@dealtmodule.doctrine.dealt.offer.repository"
+      - "@dealtmodule.doctrine.dealt.cart.product.ref.repository"
   #######################################
   ### DEALT OFFER PRESENTER #############
   #######################################

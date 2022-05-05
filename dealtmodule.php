@@ -55,7 +55,6 @@ class DealtModule extends Module
         'actionCartUpdateQuantityBefore',
         'actionCheckoutRender',
         'actionPaymentConfirmation',
-        'actionOrderStatusPostUpdate',
     ];
 
     /** @var DealtCartService|null */
@@ -314,12 +313,8 @@ class DealtModule extends Module
 
     public function hookActionPaymentConfirmation($data)
     {
-        Helpers::externalDebug($data);
-    }
-
-    public function hookActionOrderStatusPostUpdate($data)
-    {
-        Helpers::externalDebug($data);
+        $orderId = intval($data['id_order']);
+        $this->getOrderService()->handleOrderPayment($orderId);
     }
 
     /**
