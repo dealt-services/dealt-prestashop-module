@@ -58,22 +58,6 @@ final class DealtCartService
     }
 
     /**
-     * @param int $productId
-     * @param int|null $productAttributeId
-     *
-     * @return mixed
-     */
-    public function getOfferDataForProduct($productId, $productAttributeId = null)
-    {
-        $offer = $this->offerRepository->getOfferFromProductCategories($productId);
-        $cart = Context::getContext()->cart;
-
-        return $offer != null ?
-            $this->offerPresenter->present($offer, $cart, $productId, $productAttributeId)
-            : null;
-    }
-
-    /**
      * Attaches a dealt product to a product
      * currently in the prestashop cart and syncs
      * their quantities
