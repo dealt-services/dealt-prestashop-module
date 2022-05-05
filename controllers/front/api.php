@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use DealtModule\Action\DealtAPIAction;
 use DealtModule\Controller\Front\ModuleActionHandlerFrontController;
-use DealtModule\Service\DealtAPIService;
 
 class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontController
 {
@@ -15,22 +14,48 @@ class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontContro
 
     public function handleAction($action)
     {
-        /** @var DealtAPIService */
-        $client = $this->get('dealtmodule.dealt.api.service');
-
         switch ($action) {
-      case DealtAPIAction::$AVAILABILITY:
+            case DealtAPIAction::$OFFER_AVAILABILITY:
+                return $this->handleOfferAvailability();
+
+            case DealtAPIAction::$MISSION_WEBHOOK:
+                return $this->handleMissionWebhook();
+        }
+
+        throw new Exception('something went wrong while handling API action');
+    }
+
+    protected function handleOfferAvailability()
+    {
+        $client = $this->module->getAPIService();
         $dealtOffer = $client->checkAvailability(strval(Tools::getValue('dealt_id_offer')), strval(Tools::getValue('zip_code')));
+
         if ($dealtOffer == null) {
             throw new Exception('Unable to check offer availability');
         }
 
         return array_merge(
-          ['available' => $dealtOffer->available],
-          $dealtOffer->available ? [] : ['reason' => $this->trans('Offer unavailable for the requested zip code')]
+            ['available' => $dealtOffer->available],
+            $dealtOffer->available ? [] : ['reason' => $this->trans('Offer unavailable for the requested zip code')]
         );
     }
 
-        throw new Exception('something went wrong while handling API action');
+    protected function handleMissionWebhook()
+    {
+        $dealtMissionId = Tools::getValue('missionId');
+        $dealtMissionStatus = Tools::getValue('status');
+
+        if ($dealtMissionId == false || $dealtMissionStatus == false) {
+            throw new Exception('Dealt webhook failed parsing POST body');
+        }
+
+        /** @var DealtMissionRepository */
+        $missionRepo = $this->module->get('dealtmodule.doctrine.dealt.mission.repository');
+        $missionRepo->updateStatusByDealtMissionId($dealtMissionId, $dealtMissionStatus);
+
+        return [
+            'dealtMissionId' => $dealtMissionId,
+            'dealtMissionStatus' => $dealtMissionStatus,
+        ];
     }
 }
