@@ -93,7 +93,7 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
                 'valid' => $this->valid,
                 'validPhone' => $this->validPhone,
                 'zipCode' => $this->zipCode,
-                'country' => $this->country
+                'country' => $this->country,
             ]
         );
     }
@@ -145,8 +145,8 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         $address = new Address($checkoutSession->getIdAddressDelivery());
         $countryCode = (new Country($address->id_country))->iso_code;
 
-        $phone = Helpers::formatPhoneNumberE164($address->phone, $countryCode);;
-        $phoneMobile =  Helpers::formatPhoneNumberE164($address->phone_mobile, $countryCode);
+        $phone = Helpers::formatPhoneNumberE164($address->phone, $countryCode);
+        $phoneMobile = Helpers::formatPhoneNumberE164($address->phone_mobile, $countryCode);
 
         $this->validPhone = (!$phone || !$phoneMobile);
 
