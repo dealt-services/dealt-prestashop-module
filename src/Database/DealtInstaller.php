@@ -181,7 +181,6 @@ final class DealtInstaller
         $match = Category::searchByName(Context::getContext()->language->id, static::$DEALT_PRODUCT_CATEGORY_NAME, true, true);
 
         if (empty($match) || is_null($match)) {
-            Helpers::externalDebug(["gothere" => true]);
             $category = new Category();
             $category->name = Helpers::createMultiLangField(static::$DEALT_PRODUCT_CATEGORY_NAME);
             $category->link_rewrite = Helpers::createMultiLangField(Tools::link_rewrite(static::$DEALT_PRODUCT_CATEGORY_NAME));
