@@ -8,7 +8,6 @@ use DealtModule\Repository\DealtMissionRepository;
 use DealtModule\Repository\DealtOfferRepository;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PDO;
-use Product;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
@@ -16,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Product;
 use Symfony\Component\DependencyInjection\Container;
 
 final class DealtMissionGridDataFactory implements GridDataFactoryInterface
@@ -96,10 +96,9 @@ final class DealtMissionGridDataFactory implements GridDataFactoryInterface
         }, $records));
 
         $offers = [];
-        foreach ($this->offerRepository->findBy(["id" => $offerIds]) as $offer) {
+        foreach ($this->offerRepository->findBy(['id' => $offerIds]) as $offer) {
             $offers[$offer->getId()] = $offer->toArray();
         }
-
 
         $missionsByOrderId = [];
 
@@ -107,20 +106,21 @@ final class DealtMissionGridDataFactory implements GridDataFactoryInterface
             $orderId = (int) $record['id_order'];
 
             /** @var DealtMission[] */
-            $missions = $this->missionRepository->findBy(["orderId" => $orderId]);
+            $missions = $this->missionRepository->findBy(['orderId' => $orderId]);
 
             $missionsByOrderId[$orderId] = [
-                "id_order" => $orderId,
-                "date_add" => $record['date_add'],
-                "missions" =>  array_map(function (DealtMission $mission) {
+                'id_order' => $orderId,
+                'date_add' => $record['date_add'],
+                'missions' => array_map(function (DealtMission $mission) {
                     $status = $mission->getDealtMissionStatus();
+
                     return array_merge($mission->toArray(), [
-                        "offer" => $mission->getOffer()->toArray(),
-                        "product" => new Product($mission->getProductId(), false, Context::getContext()->language->id),
-                        "canResubmit" => $status == "DRAFT" || $status == "CANCELLED",
-                        "canCancel" => $status == "DRAFT" || $status == "SUBMITTED"
+                        'offer' => $mission->getOffer()->toArray(),
+                        'product' => new Product($mission->getProductId(), false, Context::getContext()->language->id),
+                        'canResubmit' => $status == 'DRAFT' || $status == 'CANCELLED',
+                        'canCancel' => $status == 'DRAFT' || $status == 'SUBMITTED',
                     ]);
-                }, $missions)
+                }, $missions),
             ];
         }
 

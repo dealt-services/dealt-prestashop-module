@@ -9,21 +9,21 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractFilterableGridDef
 
 final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-  public const GRID_ID = 'dealt_mission';
+    public const GRID_ID = 'dealt_mission';
 
-  protected function getId()
-  {
-    return self::GRID_ID;
-  }
+    protected function getId()
+    {
+        return self::GRID_ID;
+    }
 
-  protected function getName()
-  {
-    return $this->trans('Dealt missions by orders', [], 'Modules.DealtModule.Admin');
-  }
+    protected function getName()
+    {
+        return $this->trans('Dealt missions by orders', [], 'Modules.DealtModule.Admin');
+    }
 
-  protected function getColumns()
-  {
-    return (new ColumnCollection())
+    protected function getColumns()
+    {
+        return (new ColumnCollection())
       ->add((new DataColumn('id_order'))
           ->setName($this->trans('Order ID', [], 'Modules.DealtModule.Admin'))
           ->setOptions([
@@ -33,7 +33,6 @@ final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefi
       ->add((new DealtMissionColumn('missions'))
           ->setName($this->trans('Missions', [], 'Modules.DealtModule.Admin'))
           ->setOptions(['field' => 'missions'])
-
       );
-  }
+    }
 }

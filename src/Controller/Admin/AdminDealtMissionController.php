@@ -22,105 +22,115 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AdminDealtMissionController extends AbstractAdminDealtController
 {
-  /**
-   * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-   *
-   * @param Request $request
-   * @param DealtMissionFilters $filters
-   *
-   * @return Response
-   */
-  public function indexAction(Request $request, DealtMissionFilters $filters)
-  {
-    $this->handleMissionAction($request);
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
+     * @param Request $request
+     * @param DealtMissionFilters $filters
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request, DealtMissionFilters $filters)
+    {
+        $this->handleMissionAction($request);
 
-    /** @var GridFactory */
-    $missionGridFactory = $this->get('dealtmodule.admin.grid.mission.factory');
-    $missionGrid = $missionGridFactory->getGrid($filters);
-    $grid = $this->presentGrid($missionGrid);
+        /** @var GridFactory */
+        $missionGridFactory = $this->get('dealtmodule.admin.grid.mission.factory');
+        $missionGrid = $missionGridFactory->getGrid($filters);
+        $grid = $this->presentGrid($missionGrid);
 
-    $this->flashModuleWarnings();
+        $this->flashModuleWarnings();
 
-
-    return $this->render('@Modules/dealtmodule/views/templates/admin/mission.list.html.twig', [
+        return $this->render('@Modules/dealtmodule/views/templates/admin/mission.list.html.twig', [
       'enableSidebar' => true,
       'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
       'grid' => $grid,
       'layoutHeaderToolbarBtn' => [],
     ]);
-  }
+    }
 
-  /**
-   * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-   *
-   * @param Request $request
-   *
-   * @return Response
-   */
-  protected function handleMissionAction(Request $request)
-  {
-    $action = $request->get('action');
-    $missionId = $request->get('missionId');
-    if ($action == null || $missionId == null) return;
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    protected function handleMissionAction(Request $request)
+    {
+        $action = $request->get('action');
+        $missionId = $request->get('missionId');
+        if ($action == null || $missionId == null) {
+            return;
+        }
 
-    switch ($action) {
-      case "resubmit":
+        switch ($action) {
+      case 'resubmit':
         return $this->handleResubmit($missionId);
-      case "cancel":
+      case 'cancel':
         return $this->handleCancel($missionId);
     }
-  }
+    }
 
-  /**
-   * @param string $missionId
-   * @return void
-   */
-  protected function handleResubmit($missionId)
-  {
-    /** @var EntityManager */
-    $em =  $this->get('doctrine.orm.entity_manager');
-    /** @var DealtMissionRepository */
-    $missionRepository = $this->get('dealtmodule.doctrine.dealt.mission.repository');
-    /** @var DealtAPIService */
-    $apiService = $this->get('dealtmodule.dealt.api.service');
+    /**
+     * @param string $missionId
+     *
+     * @return void
+     */
+    protected function handleResubmit($missionId)
+    {
+        /** @var EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+        /** @var DealtMissionRepository */
+        $missionRepository = $this->get('dealtmodule.doctrine.dealt.mission.repository');
+        /** @var DealtAPIService */
+        $apiService = $this->get('dealtmodule.dealt.api.service');
 
-    /** @var DealtMission|null */
-    $mission = $missionRepository->findOneBy(['id' => $missionId]);
-    /* can only resubmit if mission was canceled */
-    if ($mission == null || ($mission->getDealtMissionStatus() != "CANCELLED")) return;
+        /** @var DealtMission|null */
+        $mission = $missionRepository->findOneBy(['id' => $missionId]);
+        /* can only resubmit if mission was canceled */
+        if ($mission == null || ($mission->getDealtMissionStatus() != 'CANCELLED')) {
+            return;
+        }
 
-    $order = $mission->getOrder();
-    $offer = $mission->getOffer();
+        $order = $mission->getOrder();
+        $offer = $mission->getOffer();
 
-    $result = $apiService->submitMission($offer, $order);
-    if ($result == null) return;
+        $result = $apiService->submitMission($offer, $order);
+        if ($result == null) {
+            return;
+        }
 
-    $mission->setDealtMissionId($result->id);
-    $mission->setDealtMissionStatus($result->status);
+        $mission->setDealtMissionId($result->id);
+        $mission->setDealtMissionStatus($result->status);
 
-    $em->persist($mission);
-    $em->flush();
-  }
+        $em->persist($mission);
+        $em->flush();
+    }
 
-  protected function handleCancel($missionId)
-  {
-    /** @var EntityManager */
-    $em =  $this->get('doctrine.orm.entity_manager');
-    /** @var DealtMissionRepository */
-    $missionRepository = $this->get('dealtmodule.doctrine.dealt.mission.repository');
-    /** @var DealtAPIService */
-    $apiService = $this->get('dealtmodule.dealt.api.service');
+    protected function handleCancel($missionId)
+    {
+        /** @var EntityManager */
+        $em = $this->get('doctrine.orm.entity_manager');
+        /** @var DealtMissionRepository */
+        $missionRepository = $this->get('dealtmodule.doctrine.dealt.mission.repository');
+        /** @var DealtAPIService */
+        $apiService = $this->get('dealtmodule.dealt.api.service');
 
-    /** @var DealtMission|null */
-    $mission = $missionRepository->findOneBy(['id' => $missionId]);
-    /* can only resubmit if mission was canceled */
-    if ($mission == null || ($mission->getDealtMissionStatus() != "SUBMITTED")) return;
+        /** @var DealtMission|null */
+        $mission = $missionRepository->findOneBy(['id' => $missionId]);
+        /* can only resubmit if mission was canceled */
+        if ($mission == null || ($mission->getDealtMissionStatus() != 'SUBMITTED')) {
+            return;
+        }
 
-    $result = $apiService->cancelMission($mission->getDealtMissionId());
-    if ($result == null) return;
+        $result = $apiService->cancelMission($mission->getDealtMissionId());
+        if ($result == null) {
+            return;
+        }
 
-    $mission->setDealtMissionStatus($result->status);
-    $em->persist($mission);
-    $em->flush();
-  }
+        $mission->setDealtMissionStatus($result->status);
+        $em->persist($mission);
+        $em->flush();
+    }
 }

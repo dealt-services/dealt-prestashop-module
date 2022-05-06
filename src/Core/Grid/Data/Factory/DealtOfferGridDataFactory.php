@@ -42,11 +42,11 @@ final class DealtOfferGridDataFactory implements GridDataFactoryInterface
      * @param string $gridId
      */
     public function __construct(
-    DoctrineQueryBuilderInterface $gridQueryBuilder,
-    HookDispatcherInterface $hookDispatcher,
-    QueryParserInterface $queryParser,
-    $gridId
-  ) {
+        DoctrineQueryBuilderInterface $gridQueryBuilder,
+        HookDispatcherInterface $hookDispatcher,
+        QueryParserInterface $queryParser,
+        $gridId
+    ) {
         $this->gridQueryBuilder = $gridQueryBuilder;
         $this->hookDispatcher = $hookDispatcher;
         $this->queryParser = $queryParser;
@@ -62,10 +62,10 @@ final class DealtOfferGridDataFactory implements GridDataFactoryInterface
         $countQueryBuilder = $this->gridQueryBuilder->getCountQueryBuilder($searchCriteria);
 
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($this->gridId) . 'GridQueryBuilderModifier', [
-      'search_query_builder' => $searchQueryBuilder,
-      'count_query_builder' => $countQueryBuilder,
-      'search_criteria' => $searchCriteria,
-    ]);
+            'search_query_builder' => $searchQueryBuilder,
+            'count_query_builder' => $countQueryBuilder,
+            'search_criteria' => $searchCriteria,
+        ]);
 
         $records = $searchQueryBuilder->execute()->fetchAll();
         $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
@@ -93,10 +93,10 @@ final class DealtOfferGridDataFactory implements GridDataFactoryInterface
         $records = new RecordCollection($offers);
 
         return new GridData(
-      $records,
-      $recordsTotal,
-      $this->getRawQuery($searchQueryBuilder)
-    );
+            $records,
+            $recordsTotal,
+            $this->getRawQuery($searchQueryBuilder)
+        );
     }
 
     /**

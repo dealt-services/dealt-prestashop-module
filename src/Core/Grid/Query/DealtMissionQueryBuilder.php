@@ -18,6 +18,7 @@ class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+
         $qb->select('dm.id_mission, 
             dm.id_order,
             dm.id_offer,
@@ -29,7 +30,7 @@ class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
             dm.date_add,
             dm.id_product, 
             dm.id_product_attribute')
-            ->groupBy('dm.id_offer')
+            ->groupBy('dm.id_order')
             ->orderBy(
                 $searchCriteria->getOrderBy(),
                 $searchCriteria->getOrderWay()
@@ -52,7 +53,7 @@ class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(DISTINCT dm.id_offer)');
+        $qb->select('COUNT(DISTINCT dm.id_order)');
 
         return $qb;
     }
@@ -65,7 +66,6 @@ class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getQueryBuilder(array $filters)
     {
         $allowedFilters = [
-            'id_order',
             'dealt_id_mission',
             'dealt_status_mission',
         ];

@@ -400,14 +400,14 @@ class DealtMission
     public function toArray()
     {
         return [
-            "id_mission" => $this->getId(),
-            "dealt_id_mission" => $this->getDealtMissionId(),
-            "dealt_status_mission" => $this->getDealtMissionStatus(),
-            "id_order" => $this->getOrderId(),
-            "id_offer" => $this->getOffer()->getId(),
-            "id_product" => $this->getProductId(),
-            "id_product_attribute" => $this->getProductAttributeId(),
-            "date_add" => $this->getDateAdd()
+            'id_mission' => $this->getId(),
+            'dealt_id_mission' => $this->getDealtMissionId(),
+            'dealt_status_mission' => $this->getDealtMissionStatus(),
+            'id_order' => $this->getOrderId(),
+            'id_offer' => $this->getOffer()->getId(),
+            'id_product' => $this->getProductId(),
+            'id_product_attribute' => $this->getProductAttributeId(),
+            'date_add' => $this->getDateAdd(),
         ];
     }
 }
