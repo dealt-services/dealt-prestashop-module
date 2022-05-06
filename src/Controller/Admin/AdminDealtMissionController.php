@@ -50,11 +50,9 @@ class AdminDealtMissionController extends AbstractAdminDealtController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
      * @param Request $request
      *
-     * @return Response
+     * @return void
      */
     protected function handleMissionAction(Request $request)
     {
@@ -66,9 +64,11 @@ class AdminDealtMissionController extends AbstractAdminDealtController
 
         switch ($action) {
       case 'resubmit':
-        return $this->handleResubmit($missionId);
+        $this->handleResubmit($missionId);
+        break;
       case 'cancel':
-        return $this->handleCancel($missionId);
+        $this->handleCancel($missionId);
+        break;
     }
     }
 
