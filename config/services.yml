@@ -2,12 +2,10 @@ services:
   #######################################
   ### DEALT CONFIGURATION FORM ##########
   #######################################
-  ### DATA PROVIDER #####################
   dealtmodule.admin.form.configuration.provider:
     class: DealtModule\Forms\Admin\DealtConfigurationFormDataProvider
     arguments:
       $configuration: "@prestashop.adapter.legacy.configuration"
-  ### FORM HANDLER ######################
   dealtmodule.admin.form.configuration.handler:
     class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
     arguments:
@@ -20,26 +18,22 @@ services:
   #######################################
   ### DEALT OFFER FORM ##################
   #######################################
-  ### DATA PROVIDER #####################
   dealtmodule.admin.form.offer.data.provider:
     class: DealtModule\Forms\Admin\DealtOfferFormDataProvider
     arguments:
       - "@dealtmodule.doctrine.dealt.offer.repository"
       - "@dealtmodule.doctrine.dealt.product.repository"
-  ### FORM BUILDER ######################
   dealtmodule.admin.form.offer.builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: "prestashop.core.form.builder.form_builder_factory:create"
     arguments:
       - 'DealtModule\Forms\Admin\DealtOfferFormType'
       - "@dealtmodule.admin.form.offer.data.provider"
-  ### FORM DATA HANDLER #################
   dealtmodule.admin.form.offer.data.handler:
     class: 'DealtModule\Forms\Admin\DealtOfferFormDataHandler'
     arguments:
       - "@dealtmodule.doctrine.dealt.offer.repository"
       - "@dealtmodule.doctrine.dealt.product.repository"
-  ### FORM HANDLER ######################
   dealtmodule.admin.form.offer.handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: "prestashop.core.form.identifiable_object.handler.form_handler_factory:create"
@@ -48,16 +42,13 @@ services:
   ########################################
   ### DEALT OFFER GRID  ##################
   ########################################
-  ### OFFER GRID DEFINITION FACTORY ######
   dealtmodule.admin.grid.offer.definition.factory:
     class: 'DealtModule\Core\Grid\Definition\Factory\DealtOfferGridDefinitionFactory'
     parent: "prestashop.core.grid.definition.factory.abstract_grid_definition"
-  ### OFFER GRID QUERY BUILDER ###########
   dealtmodule.admin.grid.offer.query.builder:
     class: 'DealtModule\Core\Grid\Query\DealtOfferQueryBuilder'
     parent: "prestashop.core.grid.abstract_query_builder"
     public: true
-  ### OFFER GRID DATA FACTORY ###########
   dealtmodule.admin.grid.offer.data.factory:
     class: 'DealtModule\Core\Grid\Data\Factory\DealtOfferGridDataFactory'
     arguments:
@@ -65,11 +56,34 @@ services:
       $hookDispatcher: "@prestashop.core.hook.dispatcher"
       $queryParser: "@prestashop.core.grid.query.doctrine_query_parser"
       $gridId: "dealt_offer"
-  ### OFFER GRID FACTORY ################
   dealtmodule.admin.grid.offer.factory:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
       $definitionFactory: "@dealtmodule.admin.grid.offer.definition.factory"
       $dataFactory: "@dealtmodule.admin.grid.offer.data.factory"
+      $filterFormFactory: "@prestashop.core.grid.filter.form_factory"
+      $hookDispatcher: "@prestashop.core.hook.dispatcher"
+  ########################################
+  ### DEALT MISSION GRID  ################
+  ########################################
+  dealtmodule.admin.grid.mission.definition.factory:
+    class: 'DealtModule\Core\Grid\Definition\Factory\DealtMissionGridDefinitionFactory'
+    parent: "prestashop.core.grid.definition.factory.abstract_grid_definition"
+  dealtmodule.admin.grid.mission.query.builder:
+    class: 'DealtModule\Core\Grid\Query\DealtMissionQueryBuilder'
+    parent: "prestashop.core.grid.abstract_query_builder"
+    public: true
+  dealtmodule.admin.grid.mission.data.factory:
+    class: 'DealtModule\Core\Grid\Data\Factory\DealtMissionGridDataFactory'
+    arguments:
+      $gridQueryBuilder: "@dealtmodule.admin.grid.mission.query.builder"
+      $hookDispatcher: "@prestashop.core.hook.dispatcher"
+      $queryParser: "@prestashop.core.grid.query.doctrine_query_parser"
+      $gridId: "dealt_mission"
+  dealtmodule.admin.grid.mission.factory:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      $definitionFactory: "@dealtmodule.admin.grid.mission.definition.factory"
+      $dataFactory: "@dealtmodule.admin.grid.mission.data.factory"
       $filterFormFactory: "@prestashop.core.grid.filter.form_factory"
       $hookDispatcher: "@prestashop.core.hook.dispatcher"

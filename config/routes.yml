@@ -5,6 +5,13 @@ admin_dealt_configure:
     _controller: 'DealtModule\Controller\Admin\AdminDealtConfigurationController::indexAction'
     _legacy_controller: "AdminDealtConfigurationController"
     _legacy_link: "AdminDealtConfigurationController"
+admin_dealt_mission_list:
+  path: /dealt/missions
+  methods: [GET]
+  defaults:
+    _controller: 'DealtModule\Controller\Admin\AdminDealtMissionController::indexAction'
+    _legacy_controller: "AdminDealtMissionController"
+    _legacy_link: "AdminDealtMissionController"
 admin_dealt_offer_list:
   path: /dealt/offer/list
   methods: [GET]

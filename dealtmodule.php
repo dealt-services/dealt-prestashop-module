@@ -41,6 +41,12 @@ class DealtModule extends Module
             'parent_class_name' => 'DEALTMODULE',
             'name' => 'Offers configuration',
         ],
+        [
+            'route_name' => 'admin_dealt_mission_list',
+            'class_name' => 'AdminDealtMissionController',
+            'parent_class_name' => 'DEALTMODULE',
+            'name' => 'Missions',
+        ],
     ];
 
     /** @var string[] */
