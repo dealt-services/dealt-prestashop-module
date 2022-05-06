@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_dealt_mission` (
   id_mission INT AUTO_INCREMENT NOT NULL,
   id_offer INT NOT NULL,
   id_product INT NOT NULL,
+  id_product_attribute INT NOT NULL,
   id_dealt_product INT NOT NULL,
   id_order INT NOT NULL,
   dealt_id_mission VARCHAR(255) NOT NULL,
