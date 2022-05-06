@@ -3,6 +3,8 @@
 namespace DealtModule\Core\Grid\Data\Factory;
 
 use Context;
+use DealtModule\Entity\DealtMission;
+use DealtModule\Repository\DealtMissionRepository;
 use DealtModule\Repository\DealtOfferRepository;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PDO;
@@ -22,6 +24,11 @@ final class DealtMissionGridDataFactory implements GridDataFactoryInterface
      * @var DealtOfferRepository
      */
     private $offerRepository;
+
+    /**
+     * @var DealtMissionRepository
+     */
+    private $missionRepository;
 
     /**
      * @var DoctrineQueryBuilderInterface
@@ -45,6 +52,7 @@ final class DealtMissionGridDataFactory implements GridDataFactoryInterface
 
     /**
      * @param DealtOfferRepository $offerRepository
+     * @param DealtMissionRepository $missionRepository
      * @param DoctrineQueryBuilderInterface $gridQueryBuilder
      * @param HookDispatcherInterface $hookDispatcher
      * @param QueryParserInterface $queryParser
@@ -52,12 +60,14 @@ final class DealtMissionGridDataFactory implements GridDataFactoryInterface
      */
     public function __construct(
         DealtOfferRepository $offerRepository,
+        DealtMissionRepository $missionRepository,
         DoctrineQueryBuilderInterface $gridQueryBuilder,
         HookDispatcherInterface $hookDispatcher,
         QueryParserInterface $queryParser,
         $gridId
     ) {
         $this->offerRepository = $offerRepository;
+        $this->missionRepository = $missionRepository;
         $this->gridQueryBuilder = $gridQueryBuilder;
         $this->hookDispatcher = $hookDispatcher;
         $this->queryParser = $queryParser;
@@ -95,20 +105,22 @@ final class DealtMissionGridDataFactory implements GridDataFactoryInterface
 
         foreach ($records as $record) {
             $orderId = (int) $record['id_order'];
+
+            /** @var DealtMission[] */
+            $missions = $this->missionRepository->findBy(["orderId" => $orderId]);
+
             $missionsByOrderId[$orderId] = [
-                "id_order" => $record['id_order'],
+                "id_order" => $orderId,
                 "date_add" => $record['date_add'],
-                "missions" =>  array_merge(
-                    isset($missionsByOrderId[$orderId]) ?
-                        $missionsByOrderId[$orderId]["missions"] :
-                        [],
-                    [array_merge($record, [
-                        "offer" => $offers[$record["id_offer"]],
-                        "product" => new Product($record["id_product"], false, Context::getContext()->language->id),
-                        "canResubmit" => $record["dealt_status_mission"] == "DRAFT" || $record["dealt_status_mission"] == "CANCELLED",
-                        "canCancel" => $record["dealt_status_mission"] == "DRAFT" || $record["dealt_status_mission"] == "SUBMITTED"
-                    ])]
-                )
+                "missions" =>  array_map(function (DealtMission $mission) {
+                    $status = $mission->getDealtMissionStatus();
+                    return array_merge($mission->toArray(), [
+                        "offer" => $mission->getOffer()->toArray(),
+                        "product" => new Product($mission->getProductId(), false, Context::getContext()->language->id),
+                        "canResubmit" => $status == "DRAFT" || $status == "CANCELLED",
+                        "canCancel" => $status == "DRAFT" || $status == "SUBMITTED"
+                    ]);
+                }, $missions)
             ];
         }
 

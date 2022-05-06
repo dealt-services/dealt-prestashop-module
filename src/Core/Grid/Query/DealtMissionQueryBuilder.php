@@ -29,8 +29,7 @@ class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
             dm.date_add,
             dm.id_product, 
             dm.id_product_attribute')
-            ->groupBy('dm.id_mission')
-            ->addGroupBy('dm.id_order')
+            ->groupBy('dm.id_offer')
             ->orderBy(
                 $searchCriteria->getOrderBy(),
                 $searchCriteria->getOrderWay()

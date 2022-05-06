@@ -11,17 +11,17 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class DealtMissionFilters extends Filters
 {
-    /** @var string */
-    protected $filterId = DealtMissionGridDefinitionFactory::GRID_ID;
+  /** @var string */
+  protected $filterId = DealtMissionGridDefinitionFactory::GRID_ID;
 
-    public static function getDefaults()
-    {
-        return [
+  public static function getDefaults()
+  {
+    return [
       'limit' => 10,
       'offset' => 0,
-      'orderBy' => 'id_offer',
-      'sortOrder' => 'asc',
+      'orderBy' => 'id_order',
+      'sortOrder' => 'desc',
       'filters' => [],
     ];
-    }
+  }
 }
