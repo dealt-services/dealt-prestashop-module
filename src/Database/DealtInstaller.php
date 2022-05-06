@@ -178,9 +178,10 @@ final class DealtInstaller
      */
     private function createCategories()
     {
-        $match = Category::searchByName(Context::getContext()->language->id, static::$DEALT_PRODUCT_CATEGORY_NAME, true);
+        $match = Category::searchByName(Context::getContext()->language->id, static::$DEALT_PRODUCT_CATEGORY_NAME, true, true);
 
-        if (empty($match)) {
+        if (empty($match) || is_null($match)) {
+            Helpers::externalDebug(["gothere" => true]);
             $category = new Category();
             $category->name = Helpers::createMultiLangField(static::$DEALT_PRODUCT_CATEGORY_NAME);
             $category->link_rewrite = Helpers::createMultiLangField(Tools::link_rewrite(static::$DEALT_PRODUCT_CATEGORY_NAME));
@@ -201,9 +202,9 @@ final class DealtInstaller
      */
     private function deleteCategories()
     {
-        $match = Category::searchByName(Context::getContext()->language->id, static::$DEALT_PRODUCT_CATEGORY_NAME, true);
+        $match = Category::searchByName(Context::getContext()->language->id, static::$DEALT_PRODUCT_CATEGORY_NAME, true, true);
 
-        if (!empty($match)) {
+        if (!empty($match) && !is_null($match)) {
             $category = new Category($match['id_category']);
 
             return $category->delete();
