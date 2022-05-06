@@ -3,7 +3,6 @@
 namespace DealtModule\Core\Grid\Data\Factory;
 
 use Context;
-use DealtModule\Entity\DealtOffer;
 use DealtModule\Repository\DealtOfferRepository;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PDO;
@@ -106,7 +105,7 @@ final class DealtMissionGridDataFactory implements GridDataFactoryInterface
                     [array_merge($record, [
                         "offer" => $offers[$record["id_offer"]],
                         "product" => new Product($record["id_product"], false, Context::getContext()->language->id),
-                        "canResubmit" => $record["dealt_status_mission"] == "DRAFT" || $record["dealt_status_mission"] == "CANCELED",
+                        "canResubmit" => $record["dealt_status_mission"] == "DRAFT" || $record["dealt_status_mission"] == "CANCELLED",
                         "canCancel" => $record["dealt_status_mission"] == "DRAFT" || $record["dealt_status_mission"] == "SUBMITTED"
                     ])]
                 )

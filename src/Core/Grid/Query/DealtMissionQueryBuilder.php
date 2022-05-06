@@ -53,7 +53,7 @@ class DealtMissionQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(dm.id_mission)');
+        $qb->select('COUNT(DISTINCT dm.id_offer)');
 
         return $qb;
     }
