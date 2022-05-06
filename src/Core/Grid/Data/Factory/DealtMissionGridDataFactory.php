@@ -2,8 +2,12 @@
 
 namespace DealtModule\Core\Grid\Data\Factory;
 
+use Context;
+use DealtModule\Entity\DealtOffer;
+use DealtModule\Repository\DealtOfferRepository;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PDO;
+use Product;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
@@ -15,6 +19,11 @@ use Symfony\Component\DependencyInjection\Container;
 
 final class DealtMissionGridDataFactory implements GridDataFactoryInterface
 {
+    /**
+     * @var DealtOfferRepository
+     */
+    private $offerRepository;
+
     /**
      * @var DoctrineQueryBuilderInterface
      */
@@ -36,17 +45,20 @@ final class DealtMissionGridDataFactory implements GridDataFactoryInterface
     private $gridId;
 
     /**
+     * @param DealtOfferRepository $offerRepository
      * @param DoctrineQueryBuilderInterface $gridQueryBuilder
      * @param HookDispatcherInterface $hookDispatcher
      * @param QueryParserInterface $queryParser
      * @param string $gridId
      */
     public function __construct(
+        DealtOfferRepository $offerRepository,
         DoctrineQueryBuilderInterface $gridQueryBuilder,
         HookDispatcherInterface $hookDispatcher,
         QueryParserInterface $queryParser,
         $gridId
     ) {
+        $this->offerRepository = $offerRepository;
         $this->gridQueryBuilder = $gridQueryBuilder;
         $this->hookDispatcher = $hookDispatcher;
         $this->queryParser = $queryParser;
@@ -67,11 +79,45 @@ final class DealtMissionGridDataFactory implements GridDataFactoryInterface
             'search_criteria' => $searchCriteria,
         ]);
 
-        $records = new RecordCollection([]);
+        $records = $searchQueryBuilder->execute()->fetchAll();
+        $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
+
+        $offerIds = array_unique(array_map(function ($record) {
+            return intval($record['id_offer']);
+        }, $records));
+
+        $offers = [];
+        foreach ($this->offerRepository->findBy(["id" => $offerIds]) as $offer) {
+            $offers[$offer->getId()] = $offer->toArray();
+        }
+
+
+        $missionsByOrderId = [];
+
+        foreach ($records as $record) {
+            $orderId = (int) $record['id_order'];
+            $missionsByOrderId[$orderId] = [
+                "id_order" => $record['id_order'],
+                "date_add" => $record['date_add'],
+                "missions" =>  array_merge(
+                    isset($missionsByOrderId[$orderId]) ?
+                        $missionsByOrderId[$orderId]["missions"] :
+                        [],
+                    [array_merge($record, [
+                        "offer" => $offers[$record["id_offer"]],
+                        "product" => new Product($record["id_product"], false, Context::getContext()->language->id),
+                        "canResubmit" => $record["dealt_status_mission"] == "DRAFT" || $record["dealt_status_mission"] == "CANCELED",
+                        "canCancel" => $record["dealt_status_mission"] == "DRAFT" || $record["dealt_status_mission"] == "SUBMITTED"
+                    ])]
+                )
+            ];
+        }
+
+        $records = new RecordCollection($missionsByOrderId);
 
         return new GridData(
             $records,
-            0,
+            $recordsTotal,
             $this->getRawQuery($searchQueryBuilder)
         );
     }

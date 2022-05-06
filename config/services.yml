@@ -76,6 +76,7 @@ services:
   dealtmodule.admin.grid.mission.data.factory:
     class: 'DealtModule\Core\Grid\Data\Factory\DealtMissionGridDataFactory'
     arguments:
+      $offerRepository: "@dealtmodule.doctrine.dealt.offer.repository"
       $gridQueryBuilder: "@dealtmodule.admin.grid.mission.query.builder"
       $hookDispatcher: "@prestashop.core.hook.dispatcher"
       $queryParser: "@prestashop.core.grid.query.doctrine_query_parser"

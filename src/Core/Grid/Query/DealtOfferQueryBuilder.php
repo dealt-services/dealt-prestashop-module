@@ -18,18 +18,18 @@ class DealtOfferQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('dm.id_offer, dm.dealt_id_offer, dm.title_offer, dm.id_dealt_product, dmc.id_category')
-      ->groupBy('dm.id_offer')
-      ->addGroupBy('dmc.id_category')
-      ->orderBy(
-        $searchCriteria->getOrderBy(),
-        $searchCriteria->getOrderWay()
-      );
+        $qb->select('do.id_offer, do.dealt_id_offer, do.title_offer, do.id_dealt_product, doc.id_category')
+            ->groupBy('do.id_offer')
+            ->addGroupBy('doc.id_category')
+            ->orderBy(
+                $searchCriteria->getOrderBy(),
+                $searchCriteria->getOrderWay()
+            );
 
         if ($searchCriteria->getLimit() > 0) {
             $qb
-        ->setFirstResult($searchCriteria->getOffset())
-        ->setMaxResults($searchCriteria->getLimit());
+                ->setFirstResult($searchCriteria->getOffset())
+                ->setMaxResults($searchCriteria->getLimit());
         }
 
         return $qb;
@@ -43,7 +43,7 @@ class DealtOfferQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(dm.id_offer)');
+        $qb->select('COUNT(do.id_offer)');
 
         return $qb;
     }
@@ -56,15 +56,15 @@ class DealtOfferQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getQueryBuilder(array $filters)
     {
         $allowedFilters = [
-      'id_offer',
-      'dealt_id_offer',
-      'title_offer',
-    ];
+            'id_offer',
+            'dealt_id_offer',
+            'title_offer',
+        ];
 
         $qb = $this->connection
-      ->createQueryBuilder()
-      ->from($this->dbPrefix . 'dealt_offer', 'dm')
-      ->leftJoin('dm', $this->dbPrefix . 'dealt_offer_category', 'dmc', 'dm.id_offer = dmc.id_offer');
+            ->createQueryBuilder()
+            ->from($this->dbPrefix . 'dealt_offer', 'do')
+            ->leftJoin('do', $this->dbPrefix . 'dealt_offer_category', 'doc', 'do.id_offer = doc.id_offer');
 
         foreach ($filters as $name => $value) {
             if (!in_array($name, $allowedFilters, true)) {
@@ -72,7 +72,7 @@ class DealtOfferQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_offer' === $name || 'dealt_id_offer' === $name) {
-                $qb->andWhere('dm.`' . $name . '` = :' . $name);
+                $qb->andWhere('do.`' . $name . '` = :' . $name);
                 $qb->setParameter($name, $value);
 
                 continue;

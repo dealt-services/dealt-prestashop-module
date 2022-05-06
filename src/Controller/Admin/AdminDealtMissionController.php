@@ -33,6 +33,7 @@ class AdminDealtMissionController extends AbstractAdminDealtController
     $grid = $this->presentGrid($missionGrid);
 
     $this->flashModuleWarnings();
+    $this->handleMissionAction($request);
 
     return $this->render('@Modules/dealtmodule/views/templates/admin/mission.list.html.twig', [
       'enableSidebar' => true,
@@ -40,5 +41,18 @@ class AdminDealtMissionController extends AbstractAdminDealtController
       'grid' => $grid,
       'layoutHeaderToolbarBtn' => [],
     ]);
+  }
+
+  /**
+   * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+   *
+   * @param Request $request
+   *
+   * @return Response
+   */
+  protected function handleMissionAction(Request $request)
+  {
+    $action = $request->get('action');
+    echo $action;
   }
 }
