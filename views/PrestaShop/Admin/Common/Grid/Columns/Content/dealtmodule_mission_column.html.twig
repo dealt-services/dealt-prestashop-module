@@ -31,11 +31,17 @@
 			</a>
 		</div>
 		<div>
-			<a class="btn btn-primary btn-sm pointer {% if mission.canResubmit == false %} disabled {% endif %}">{{ "RESUBMIT"|trans({}, 'Modules.DealtModule.Admin') }}</a>
+			<a class="btn btn-primary btn-sm pointer {% if mission.canResubmit == false %} disabled {% endif %}" href="{{ app.request.requesturi }}&action=resubmit&missionId={{ mission.id_mission }}">
+				{{ "RESUBMIT"|trans({}, 'Modules.DealtModule.Admin') }}
+			</a>
 
-			<a class="btn btn-danger btn-sm pointer {% if mission.canCancel == false %} disabled {% endif %}">{{ "CANCEL"|trans({}, 'Modules.DealtModule.Admin') }}</a>
+			<a class="btn btn-danger btn-sm pointer {% if mission.canCancel == false %} disabled {% endif %}" href="{{ app.request.requesturi }}&action=cancel&missionId={{ mission.id_mission }}">
+				{{ "CANCEL"|trans({}, 'Modules.DealtModule.Admin') }}
+			</a>
 
-			<a class="btn btn-primary btn-sm pointer" href="{{ path('admin_orders_view', { 'orderId' : mission.id_order}) }}">{{ "VIEW ORDER"|trans({}, 'Modules.DealtModule.Admin') }}</a>
+			<a class="btn btn-primary btn-sm pointer" href="{{ path('admin_orders_view', { 'orderId' : mission.id_order}) }}">
+				{{ "VIEW ORDER"|trans({}, 'Modules.DealtModule.Admin') }}
+			</a>
 
 
 		</div>
