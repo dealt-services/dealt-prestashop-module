@@ -2,6 +2,8 @@
 
 namespace DealtModule\Core\Grid\Data\Factory;
 
+use DealtModule\Entity\DealtOffer;
+use DealtModule\Repository\DealtOfferCategoryRepository;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
@@ -15,6 +17,11 @@ use Symfony\Component\DependencyInjection\Container;
 
 final class DealtOfferGridDataFactory implements GridDataFactoryInterface
 {
+    /**
+     * @var DealtOfferCategoryRepository
+     */
+    private $offerCategoryRepository;
+
     /**
      * @var DoctrineQueryBuilderInterface
      */
@@ -36,17 +43,20 @@ final class DealtOfferGridDataFactory implements GridDataFactoryInterface
     private $gridId;
 
     /**
+     * @param DealtOfferCategoryRepository $offerCategoryRepository
      * @param DoctrineQueryBuilderInterface $gridQueryBuilder
      * @param HookDispatcherInterface $hookDispatcher
      * @param QueryParserInterface $queryParser
      * @param string $gridId
      */
     public function __construct(
+        DealtOfferCategoryRepository $offerCategoryRepository,
         DoctrineQueryBuilderInterface $gridQueryBuilder,
         HookDispatcherInterface $hookDispatcher,
         QueryParserInterface $queryParser,
         $gridId
     ) {
+        $this->offerCategoryRepository = $offerCategoryRepository;
         $this->gridQueryBuilder = $gridQueryBuilder;
         $this->hookDispatcher = $hookDispatcher;
         $this->queryParser = $queryParser;
@@ -70,24 +80,13 @@ final class DealtOfferGridDataFactory implements GridDataFactoryInterface
         $records = $searchQueryBuilder->execute()->fetchAll();
         $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
 
-        $offersById = [];
-        $offerCategoriesById = [];
+        $offers = [];
         foreach ($records as $record) {
             $offerId = (int) $record['id_offer'];
-            if (isset($record['id_category'])) {
-                $offerCategoriesById[$offerId][] = (int) $record['id_category'];
-            }
-
-            $offersById[$offerId] = $record;
-        }
-
-        $offers = [];
-        foreach ($offersById as $offerId => $offer) {
-            $hasCategories = isset($offerCategoriesById[$offerId]);
-            $offer['id_categories'] = $hasCategories ? $offerCategoriesById[$offerId] : [];
-            $offer['total_categories'] = count($offer['id_categories']);
-            unset($offer['id_category']);
-            $offers[] = $offer;
+            $offerCategories = $this->offerCategoryRepository->findBy(['offer' => (new DealtOffer())->setId($offerId)]);
+            $offers[] = array_merge($record, [
+                'total_categories' => count($offerCategories),
+            ]);
         }
 
         $records = new RecordCollection($offers);

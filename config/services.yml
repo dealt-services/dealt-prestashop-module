@@ -52,6 +52,7 @@ services:
   dealtmodule.admin.grid.offer.data.factory:
     class: 'DealtModule\Core\Grid\Data\Factory\DealtOfferGridDataFactory'
     arguments:
+      $offerCategoryRepository: "@dealtmodule.doctrine.dealt.offer.category.repository"
       $gridQueryBuilder: "@dealtmodule.admin.grid.offer.query.builder"
       $hookDispatcher: "@prestashop.core.hook.dispatcher"
       $queryParser: "@prestashop.core.grid.query.doctrine_query_parser"
