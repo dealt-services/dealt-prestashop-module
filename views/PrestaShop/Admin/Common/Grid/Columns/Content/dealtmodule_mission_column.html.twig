@@ -1,0 +1,47 @@
+{% set missions = record[column.id] %}
+
+
+{% for mission in missions %}
+	<div style="{% if loop.index != 1 %} border-top: 1px solid rgba(0,0,0,0.2);{% endif %} padding: 5px 0; display: grid; align-items: center; grid-template-columns: 2fr 2fr 2fr 2fr 2fr 2fr; grid-column-gap: 5px; grid-row-gap: 15px;">
+
+		<div>{{ mission.dealt_id_mission }}</div>
+		<div>
+			<mark style="margin-left: 15px; display: inline-block; padding: 3px 6px; font-size: 12px; border-radius: 3px; background-color:rgb(36,185,215); color: white;">
+				{{ "Status : "|trans({}, 'Modules.DealtModule.Admin') }}
+
+				<strong>
+					{{ mission.dealt_status_mission|trans({}, 'Modules.DealtModule.Admin') }}
+				</strong>
+			</mark>
+
+		</div>
+
+		<div>
+			<a href="{{ path('admin_dealt_offer_edit', { 'offerId' : mission.id_offer}) }}">
+				<i class="material-icons">link</i>
+				{{ mission.offer.title_offer }}
+			</a>
+		</div>
+
+		<div>
+			<a href="{{ path('admin_product_form', { 'id' : mission.id_product}) }}">
+				<i class="material-icons">link</i>
+				{{ mission.product.name }}
+
+			</a>
+		</div>
+		<div>
+			<a class="btn btn-primary btn-sm pointer {% if mission.canResubmit == false %} disabled {% endif %}">{{ "RESUBMIT"|trans({}, 'Modules.DealtModule.Admin') }}</a>
+
+			<a class="btn btn-danger btn-sm pointer {% if mission.canCancel == false %} disabled {% endif %}">{{ "CANCEL"|trans({}, 'Modules.DealtModule.Admin') }}</a>
+
+			<a class="btn btn-primary btn-sm pointer" href="{{ path('admin_orders_view', { 'orderId' : mission.id_order}) }}">{{ "VIEW ORDER"|trans({}, 'Modules.DealtModule.Admin') }}</a>
+
+
+		</div>
+		<div>
+			{{mission.date_add|date('Y/d/m H:i:s') }}
+		</div>
+
+	</div>
+{% endfor %}
