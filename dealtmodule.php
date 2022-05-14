@@ -61,7 +61,6 @@ class DealtModule extends Module
         'actionPresentCart',
         'actionPresentOrder',
         'actionCartSave',
-        'actionCartUpdateQuantityBefore',
         'actionCheckoutRender',
         'actionPaymentConfirmation',
     ];
