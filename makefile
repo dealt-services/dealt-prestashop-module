@@ -1,17 +1,21 @@
-STAGING_STACK_NAME=StagingStack
-STAGING_BUCKET_NAME=`aws cloudformation describe-stacks --stack-name ${STAGING_STACK_NAME} --query "Stacks[0].Outputs[?OutputKey=='PrestaShopModuleApplicationBucketName'].OutputValue" --output text`
+### Make sure to expose the _PS_ROOT_DIR_ variable in your
+### .zshrc/.bashrc 
 
-install:
-	npm ci
+csfix:
+	php vendor/bin/php-cs-fixer fix;
 
-build:
-	npm run build
+phpstan:
+	vendor/bin/phpstan analyse --configuration=./phpstan.neon --memory-limit 512M;
 
-dev:
-	npm start
+publish:
+	./resources/scripts/publish.sh;
 
-bundle_ci: install build
+npm-install:
+	cd views && npm install;
 
-deploy_staging:
-	aws s3 sync dist s3://${STAGING_BUCKET_NAME} --exclude "index.html" --exclude "robots.txt" --exclude ".well-known" --cache-control max-age=31536000,public
-	aws s3 cp dist/index.html s3://${STAGING_BUCKET_NAME}/index.html --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate --content-type text/html --acl public-read 
+npm-build:
+	rm -rf views/public;
+	cd views && npm run build;
+
+npm-watch:
+	cd ./views && npm run watch;

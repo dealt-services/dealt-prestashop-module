@@ -1,6 +1,8 @@
 /vendor
 node_modules
 .php-cs-fixer.cache
+dealtmodule
+dealtmodule_v*.zip
 
 ### Keep refence to overriden theme files
 ### ps_shoppingcart
