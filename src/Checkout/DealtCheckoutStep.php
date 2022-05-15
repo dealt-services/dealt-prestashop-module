@@ -76,7 +76,8 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
 
     public function handleRequest(array $requestParameters = [])
     {
-        $this->setTitle($this->getTranslator()->trans('Service availability'));
+        $this->setTitle($this->getTranslator()->trans('Service availability', [], 'Modules.Dealtmodule.Shop'));
+
         $checkoutSession = $this->getCheckoutSession();
         if ($this->valid == null || $this->validPhone == null) {
             $this->setComplete(false);

@@ -15,13 +15,13 @@
         </p>
         {if !empty($offer.missions)}
             <div style="font-size: 12px; margin-top: 8px; ">
-                <strong>{l s='Service reference(s) :' d='Modules.DealtModule.Front'}</strong>
+                <strong>{l s='Service reference(s) :' d='Modules.Dealtmodule.Shop'}</strong>
                 <ul style="font-size: 10px;">
                     {foreach $offer.missions as $mission}
                         <li style="margin-bottom: 2px;"> •
                             <mark
                                 style="padding: 2px 3px; font-size: 10px; border-radius: 3px; background-color:rgb(36,185,215); color: white; margin-right: 5px;">
-                                <strong>{l s=$mission->getDealtMissionStatus() d='Modules.DealtModule.Front'}</strong>
+                                <strong>{l s=$mission->getDealtMissionStatus() d='Modules.Dealtmodule.Shop'}</strong>
                             </mark>
                             <span
                                 style="line-height: 1; display: inline-block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 70px;">{$mission->getDealtMissionId()}</span>

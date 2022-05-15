@@ -7,10 +7,10 @@
 		<div>{{ mission.dealt_id_mission }}</div>
 		<div>
 			<mark style="margin-left: 15px; display: inline-block; padding: 3px 6px; font-size: 12px; border-radius: 3px; background-color:rgb(36,185,215); color: white;">
-				{{ "Status : "|trans({}, 'Modules.DealtModule.Admin') }}
+				{{ "Status : "|trans({}, 'Modules.Dealtmodule.Admin') }}
 
 				<strong>
-					{{ mission.dealt_status_mission|trans({}, 'Modules.DealtModule.Admin') }}
+					{{ mission.dealt_status_mission|trans({}, 'Modules.Dealtmodule.Admin') }}
 				</strong>
 			</mark>
 
@@ -32,15 +32,15 @@
 		</div>
 		<div>
 			<a class="btn btn-primary btn-sm pointer {% if mission.canResubmit == false %} disabled {% endif %}" href="{{ app.request.requesturi }}&action=resubmit&missionId={{ mission.id_mission }}">
-				{{ "RESUBMIT"|trans({}, 'Modules.DealtModule.Admin') }}
+				{{ "RESUBMIT"|trans({}, 'Modules.Dealtmodule.Admin') }}
 			</a>
 
 			<a class="btn btn-danger btn-sm pointer {% if mission.canCancel == false %} disabled {% endif %}" href="{{ app.request.requesturi }}&action=cancel&missionId={{ mission.id_mission }}">
-				{{ "CANCEL"|trans({}, 'Modules.DealtModule.Admin') }}
+				{{ "CANCEL"|trans({}, 'Modules.Dealtmodule.Admin') }}
 			</a>
 
 			<a class="btn btn-secondary btn-sm pointer" href="{{ path('admin_orders_view', { 'orderId' : mission.id_order}) }}">
-				{{ "VIEW ORDER"|trans({}, 'Modules.DealtModule.Admin') }}
+				{{ "VIEW ORDER"|trans({}, 'Modules.Dealtmodule.Admin') }}
 			</a>
 
 

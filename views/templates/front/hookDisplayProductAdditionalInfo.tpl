@@ -2,7 +2,7 @@
 {assign var=offerImage value=$offer.image}
 
 <div class="card card-block loading" id="dealt-offer-card">
-	<h4>{l s="New : simplify your life !" d='Modules.DealtModule.Front'}</h4>
+	<h4>{l s="New : simplify your life !" d='Modules.Dealtmodule.Shop'}</h4>
 	<br />
 	<article id="dealt-offer-error" class="alert alert-danger" role="alert" data-alert="danger" style="display: none;">
 	</article>
@@ -28,12 +28,12 @@
 		<div>
 			{if $attached}
 				<strong style="color: #24b9d7">
-					{l s="Service already associated with this product in your cart." d='Modules.DealtModule.Front'}
+					{l s="Service already associated with this product in your cart." d='Modules.Dealtmodule.Shop'}
 
 				</strong>
 			{else}
 				<i>
-					{l s="Check the availability of the service : " d='Modules.DealtModule.Front'}
+					{l s="Check the availability of the service : " d='Modules.Dealtmodule.Shop'}
 				</i>
 			{/if}
 

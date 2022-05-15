@@ -18,21 +18,21 @@ final class DealtMissionGridDefinitionFactory extends AbstractFilterableGridDefi
 
     protected function getName()
     {
-        return $this->trans('Dealt missions by orders', [], 'Modules.DealtModule.Admin');
+        return $this->trans('Dealt missions by orders', [], 'Modules.Dealtmodule.Admin');
     }
 
     protected function getColumns()
     {
         return (new ColumnCollection())
-      ->add((new DataColumn('id_order'))
-          ->setName($this->trans('Order ID', [], 'Modules.DealtModule.Admin'))
-          ->setOptions([
-            'field' => 'id_order',
-          ])
-      )
-      ->add((new DealtMissionColumn('missions'))
-          ->setName($this->trans('Missions', [], 'Modules.DealtModule.Admin'))
-          ->setOptions(['field' => 'missions'])
-      );
+            ->add((new DataColumn('id_order'))
+                    ->setName($this->trans('Order ID', [], 'Modules.Dealtmodule.Admin'))
+                    ->setOptions([
+                        'field' => 'id_order',
+                    ])
+            )
+            ->add((new DealtMissionColumn('missions'))
+                    ->setName($this->trans('Missions', [], 'Modules.Dealtmodule.Admin'))
+                    ->setOptions(['field' => 'missions'])
+            );
     }
 }

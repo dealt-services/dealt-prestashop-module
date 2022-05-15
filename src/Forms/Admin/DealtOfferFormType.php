@@ -12,43 +12,43 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class DealtOfferFormType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param mixed $options
-     *
-     * @return void
-     */
-    public function buildForm($builder, $options)
-    {
-        $builder
+  /**
+   * @param FormBuilderInterface $builder
+   * @param mixed $options
+   *
+   * @return void
+   */
+  public function buildForm($builder, $options)
+  {
+    $builder
       ->add('id_offer', HiddenType::class)
       ->add('id_dealt_product', HiddenType::class)
       ->add('title_offer', TextType::class, [
         'label' => 'Title',
         'required' => true,
         'help' => "Will also be used as the virtual product's title",
-        'translation_domain' => 'Modules.DealtModule.Admin',
+        'translation_domain' => 'Modules.Dealtmodule.Admin',
       ])
       ->add('dealt_id_offer', TextWithLengthCounterType::class, [
         'label' => 'Offer UUID',
         'required' => true,
         'max_length' => 36,
         'position' => 'after',
-        'translation_domain' => 'Modules.DealtModule.Admin',
+        'translation_domain' => 'Modules.Dealtmodule.Admin',
       ])
       ->add('offer_price', MoneyWithSuffixType::class, [
         'label' => 'Offer price',
         'currency' => 'EUR',
         'suffix' => '(tax excl.)',
         'help' => 'Tax excluded',
-        'translation_domain' => 'Modules.DealtModule.Admin',
+        'translation_domain' => 'Modules.Dealtmodule.Admin',
       ])
       ->add('ids_category', CategoryChoiceTreeType::class, [
         'multiple' => true,
         'required' => false,
         'label' => 'Categories',
         'disabled_values' => [], /* __dealt__ internal category not visible by default */
-        'translation_domain' => 'Modules.DealtModule.Admin',
+        'translation_domain' => 'Modules.Dealtmodule.Admin',
       ]);
-    }
+  }
 }

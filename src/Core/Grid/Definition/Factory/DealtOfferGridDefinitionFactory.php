@@ -13,21 +13,21 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractFilterableGridDef
 
 final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-    public const GRID_ID = 'dealt_offer';
+  public const GRID_ID = 'dealt_offer';
 
-    protected function getId()
-    {
-        return self::GRID_ID;
-    }
+  protected function getId()
+  {
+    return self::GRID_ID;
+  }
 
-    protected function getName()
-    {
-        return $this->trans('Dealt offer', [], 'Modules.DealtModule.Admin');
-    }
+  protected function getName()
+  {
+    return $this->trans('Dealt offer', [], 'Modules.Dealtmodule.Admin');
+  }
 
-    protected function getColumns()
-    {
-        return (new ColumnCollection())
+  protected function getColumns()
+  {
+    return (new ColumnCollection())
       ->add((new DataColumn('id_offer'))
           ->setName($this->trans('ID', [], 'Admin.Global'))
           ->setOptions([
@@ -35,25 +35,25 @@ final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefini
           ])
       )
       ->add((new DataColumn('dealt_id_offer'))
-          ->setName($this->trans('Offer ID', [], 'Modules.DealtModule.Admin'))
+          ->setName($this->trans('Offer ID', [], 'Modules.Dealtmodule.Admin'))
           ->setOptions([
             'field' => 'dealt_id_offer',
           ])
       )
       ->add((new DataColumn('title_offer'))
-          ->setName($this->trans('Offer title', [], 'Modules.DealtModule.Admin'))
+          ->setName($this->trans('Offer title', [], 'Modules.Dealtmodule.Admin'))
           ->setOptions([
             'field' => 'title_offer',
           ])
       )
       ->add((new DataColumn('total_categories'))
-          ->setName($this->trans('Total categories', [], 'Modules.DealtModule.Admin'))
+          ->setName($this->trans('Total categories', [], 'Modules.Dealtmodule.Admin'))
           ->setOptions([
             'field' => 'total_categories',
           ])
       )
       ->add((new LinkColumn('product_link'))
-          ->setName($this->trans('Virtual Dealt Product', [], 'Modules.DealtModule.Admin'))
+          ->setName($this->trans('Virtual Dealt Product', [], 'Modules.Dealtmodule.Admin'))
           ->setOptions([
             'icon' => 'link',
             'target' => '_BLANK',
@@ -87,11 +87,11 @@ final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefini
                     'confirm_message' => $this->trans(
                       'Are you sure you want to delete this Dealt Offer ? All associated data will be forever lost (dealt product, linked categories etc..)',
                       [],
-                      'Modules.DealtModule.Admin'
+                      'Modules.Dealtmodule.Admin'
                     ),
                   ])
               ),
           ])
       );
-    }
+  }
 }

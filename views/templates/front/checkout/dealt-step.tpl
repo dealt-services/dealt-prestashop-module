@@ -3,18 +3,18 @@
 {block name='step_content'}
     {if !($validPhone)}
         <article id="dealt-offer-error" class="alert alert-danger" role="alert" data-alert="danger" style="margin-bottom: 10px">
-            {l s='You must specify at least one phone number in your delivery address in order to confirm your services' sprintf=['%zipCode%' => $zipCode, '%country%' => $country] d='Modules.DealtModule.Front'}
-            : <i>{l s='Update your delivery address in the previous steps' d='Modules.DealtModule.Front'}</i>
+            {l s='You must specify at least one phone number in your delivery address in order to confirm your services' sprintf=['%zipCode%' => $zipCode, '%country%' => $country] d='Modules.Dealtmodule.Shop'}
+            : <i>{l s='Update your delivery address in the previous steps' d='Modules.Dealtmodule.Shop'}</i>
         </article>
     {/if}
 
     {if $valid}
-        {l s='Services are available for <strong>%zipCode%, %country%</strong> and are awaiting order payment for confirmation' sprintf=['%zipCode%' => $zipCode, '%country%' => $country] d='Modules.DealtModule.Front'}
+        {l s='Services are available for <strong>%zipCode%, %country%</strong> and are awaiting order payment for confirmation' sprintf=['%zipCode%' => $zipCode, '%country%' => $country] d='Modules.Dealtmodule.Shop'}
     {else}
         <article id="dealt-offer-error" class="alert alert-danger" role="alert" data-alert="danger" style="margin-bottom: 10px">
-            {l s='Unfortunately, Certain attached services are unvailable for <strong>%zipCode%, %country%</strong>' sprintf=['%zipCode%' => $zipCode, '%country%' => $country] d='Modules.DealtModule.Front'}
+            {l s='Unfortunately, Certain attached services are unvailable for <strong>%zipCode%, %country%</strong>' sprintf=['%zipCode%' => $zipCode, '%country%' => $country] d='Modules.Dealtmodule.Shop'}
             <br />
-            <i>{l s='Try changing your delivery address or remove the service(s) from your cart' d='Modules.DealtModule.Front'}</i>
+            <i>{l s='Try changing your delivery address or remove the service(s) from your cart' d='Modules.Dealtmodule.Shop'}</i>
         </article>
     {/if}
     <div>
@@ -36,13 +36,13 @@
                                     {else}
                                         {$data.offer.title} ⛔️
                                         <span style="display: block;font-size: 10px; opacity: 0.7; margin-top: 8px">
-                                            {l s='Unvailable for <strong>%zipCode%, %country%</strong>' sprintf=['%zipCode%' => $zipCode, '%country%' => $country] d='Modules.DealtModule.Front'}
+                                            {l s='Unvailable for <strong>%zipCode%, %country%</strong>' sprintf=['%zipCode%' => $zipCode, '%country%' => $country] d='Modules.Dealtmodule.Shop'}
                                         </span>
                                     {/if}
                                 </h5>
                                 <h6 style="margin-top: 8px;">
                                     <span style="font-size: 11px">
-                                        {l s='For  %quantity% x %title% %attributes%' sprintf=['%title%' => $data.binding.cartProduct.name, '%attributes%' => $data.binding.cartProduct.attributes, '%quantity%' => $data.binding.cartProduct.quantity] d='Modules.DealtModule.Front'}
+                                        {l s='For  %quantity% x %title% %attributes%' sprintf=['%title%' => $data.binding.cartProduct.name, '%attributes%' => $data.binding.cartProduct.attributes, '%quantity%' => $data.binding.cartProduct.quantity] d='Modules.Dealtmodule.Shop'}
                                     </span>
                                 </h6>
                                 <p style="font-size: 12px; margin: 0;  line-height: 1.2;">

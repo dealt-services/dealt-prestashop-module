@@ -270,7 +270,7 @@ final class DealtCartService
         if ($dealtTotal != 0) {
             $presentedCart['subtotals']['dealt_total'] = [
                 'type' => 'dealt_total',
-                'label' => $this->module->getTranslator()->trans('Service(s)', [], 'Modules.DealtModule.Front'),
+                'label' => $this->module->getTranslator()->trans('Service(s)', [], 'Modules.Dealtmodule.Shop'),
                 'amount' => $dealtTotal,
                 'value' => Helpers::formatPrice($dealtTotal),
             ];

@@ -37,7 +37,7 @@ class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontContro
 
         return array_merge(
             ['available' => $dealtOffer->available],
-            $dealtOffer->available ? [] : ['reason' => $this->trans('Offer unavailable for the requested zip code')]
+            $dealtOffer->available ? [] : ['reason' => $this->trans('Offer unavailable for the requested zip code', [], 'Modules.Dealtmodule.Shop')]
         );
     }
 

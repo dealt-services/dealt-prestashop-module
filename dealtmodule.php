@@ -92,12 +92,12 @@ class DealtModule extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->trans('Dealt Module', [], 'Modules.DealtModule.Admin');
-        $this->description = $this->trans('The official Dealt prestashop module.', [], 'Modules.DealtModule.Admin');
-        $this->confirmUninstall = $this->trans('Are you sure you want to uninstall?', [], 'Modules.DealtModule.Admin');
+        $this->displayName = $this->trans('Dealt Module', [], 'Modules.Dealtmodule.Admin');
+        $this->description = $this->trans('The official Dealt prestashop module.', [], 'Modules.Dealtmodule.Admin');
+        $this->confirmUninstall = $this->trans('Are you sure you want to uninstall?', [], 'Modules.Dealtmodule.Admin');
 
         if (!Configuration::get('dealtmodule')) {
-            $this->warning = $this->trans('No name provided', [], 'Modules.DealtModule.Admin');
+            $this->warning = $this->trans('No name provided', [], 'Modules.Dealtmodule.Admin');
         }
     }
 
@@ -190,11 +190,11 @@ class DealtModule extends Module
 
             $tab->name = [];
             foreach (Language::getLanguages() as $lang) {
-                $tab->name[$lang['id_lang']] = $this->trans($tabDefinition['name'], [], 'Modules.DealtModule.Admin', $lang['locale']);
+                $tab->name[$lang['id_lang']] = $this->trans($tabDefinition['name'], [], 'Modules.Dealtmodule.Admin', $lang['locale']);
             }
             $tab->id_parent = intval($tabRepo->findOneIdByClassName($tabDefinition['parent_class_name']));
             $tab->module = $this->name;
-            $tab->wording_domain = 'Modules.DealtModule.Admin';
+            $tab->wording_domain = 'Modules.Dealtmodule.Admin';
             $tab->wording = $tabDefinition['name'];
 
             $tab->save();

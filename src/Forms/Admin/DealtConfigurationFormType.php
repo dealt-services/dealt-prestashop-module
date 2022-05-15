@@ -9,21 +9,21 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class DealtConfigurationFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
+  public function buildForm(FormBuilderInterface $builder, array $options)
+  {
+    $builder
       ->add('api_key', TextWithLengthCounterType::class, [
         'label' => 'API Key (uuid)',
-        'translation_domain' => 'Modules.DealtModule.Admin',
+        'translation_domain' => 'Modules.Dealtmodule.Admin',
         'max_length' => 36,
       ])
       ->add('prod_env', SwitchType::class, [
         'label' => 'Environment',
-        'translation_domain' => 'Modules.DealtModule.Admin',
+        'translation_domain' => 'Modules.Dealtmodule.Admin',
         'choices' => [
           'Test' => false,
           'Production' => true,
         ],
       ]);
-    }
+  }
 }
