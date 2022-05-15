@@ -9,9 +9,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class DealtConfigurationFormType extends AbstractType
 {
-  public function buildForm(FormBuilderInterface $builder, array $options)
-  {
-    $builder
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
       ->add('api_key', TextWithLengthCounterType::class, [
         'label' => 'API Key (uuid)',
         'translation_domain' => 'Modules.Dealtmodule.Admin',
@@ -25,5 +25,5 @@ class DealtConfigurationFormType extends AbstractType
           'Production' => true,
         ],
       ]);
-  }
+    }
 }

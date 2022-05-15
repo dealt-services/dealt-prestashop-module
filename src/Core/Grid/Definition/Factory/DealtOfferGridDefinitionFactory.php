@@ -13,21 +13,21 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractFilterableGridDef
 
 final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-  public const GRID_ID = 'dealt_offer';
+    public const GRID_ID = 'dealt_offer';
 
-  protected function getId()
-  {
-    return self::GRID_ID;
-  }
+    protected function getId()
+    {
+        return self::GRID_ID;
+    }
 
-  protected function getName()
-  {
-    return $this->trans('Dealt offer', [], 'Modules.Dealtmodule.Admin');
-  }
+    protected function getName()
+    {
+        return $this->trans('Dealt offer', [], 'Modules.Dealtmodule.Admin');
+    }
 
-  protected function getColumns()
-  {
-    return (new ColumnCollection())
+    protected function getColumns()
+    {
+        return (new ColumnCollection())
       ->add((new DataColumn('id_offer'))
           ->setName($this->trans('ID', [], 'Admin.Global'))
           ->setOptions([
@@ -93,5 +93,5 @@ final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefini
               ),
           ])
       );
-  }
+    }
 }

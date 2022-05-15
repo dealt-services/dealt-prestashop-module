@@ -12,15 +12,15 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class DealtOfferFormType extends AbstractType
 {
-  /**
-   * @param FormBuilderInterface $builder
-   * @param mixed $options
-   *
-   * @return void
-   */
-  public function buildForm($builder, $options)
-  {
-    $builder
+    /**
+     * @param FormBuilderInterface $builder
+     * @param mixed $options
+     *
+     * @return void
+     */
+    public function buildForm($builder, $options)
+    {
+        $builder
       ->add('id_offer', HiddenType::class)
       ->add('id_dealt_product', HiddenType::class)
       ->add('title_offer', TextType::class, [
@@ -50,5 +50,5 @@ class DealtOfferFormType extends AbstractType
         'disabled_values' => [], /* __dealt__ internal category not visible by default */
         'translation_domain' => 'Modules.Dealtmodule.Admin',
       ]);
-  }
+    }
 }

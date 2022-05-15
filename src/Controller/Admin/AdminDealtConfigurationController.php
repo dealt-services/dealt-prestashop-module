@@ -17,34 +17,34 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AdminDealtConfigurationController extends AbstractAdminDealtController
 {
-  /**
-   * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-   *
-   * @param Request $request
-   *
-   * @return Response
-   */
-  public function indexAction(Request $request)
-  {
-    /** @var FormHandler */
-    $formHandler = $this->get('dealtmodule.admin.form.configuration.handler');
-    $form = $formHandler->getForm();
-    $form->handleRequest($request);
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request)
+    {
+        /** @var FormHandler */
+        $formHandler = $this->get('dealtmodule.admin.form.configuration.handler');
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted()) {
-      $data = $form->getData();
-      $errors = $formHandler->save($data);
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+            $errors = $formHandler->save($data);
 
-      if (0 === count($errors)) {
-        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-      }
+            if (0 === count($errors)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            }
 
-      $this->flashErrors($errors);
-    }
+            $this->flashErrors($errors);
+        }
 
-    $this->flashModuleWarnings();
+        $this->flashModuleWarnings();
 
-    return $this->render(
+        return $this->render(
       '@Modules/dealtmodule/views/templates/admin/form/dealt.configuration.form.html.twig',
       [
         'form' => $form->createView(),
@@ -52,19 +52,19 @@ class AdminDealtConfigurationController extends AbstractAdminDealtController
         'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
       ]
     );
-  }
+    }
 
-  /**
-   * @return array<string, mixed>
-   */
-  private function getToolbarButtons()
-  {
-    return [
+    /**
+     * @return array<string, mixed>
+     */
+    private function getToolbarButtons()
+    {
+        return [
       'offers_list' => [
         'href' => $this->generateUrl('admin_dealt_offer_list'),
         'desc' => $this->trans('Configure offers', 'Modules.Dealtmodule.Admin'),
         'icon' => 'dehaze',
       ],
     ];
-  }
+    }
 }
