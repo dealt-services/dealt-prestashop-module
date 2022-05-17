@@ -1,0 +1,6 @@
+parent: classic
+name: dealt_classic_child
+display_name: Dealt child theme of classic's theme
+version: 0.0.2
+assets:
+  use_parent_assets: true

@@ -6,12 +6,12 @@ dealtmodule_v*.zip
 
 ### Keep refence to overriden theme files
 ### ps_shoppingcart
-_theme/modules/ps_shoppingcart/**/*.tpl
-!_theme/modules/ps_shoppingcart/modal.tpl
-!_theme/modules/ps_shoppingcart/ps_shoppingcart.tpl
+child_classic/modules/ps_shoppingcart/**/*.tpl
+!child_classic/modules/ps_shoppingcart/modal.tpl
+!child_classic/modules/ps_shoppingcart/ps_shoppingcart.tpl
 ### checkout templates
-_theme/templates/checkout/**/*.tpl
-!_theme/templates/checkout/_partials/cart-summary-product-line.tpl
-!_theme/templates/checkout/_partials/cart-detailed-product-line.tpl
-!_theme/templates/checkout/_partials/order-confirmation-table.tpl
-!_theme/templates/checkout/order-confirmation.tpl
+child_classic/templates/checkout/**/*.tpl
+!child_classic/templates/checkout/_partials/cart-summary-product-line.tpl
+!child_classic/templates/checkout/_partials/cart-detailed-product-line.tpl
+!child_classic/templates/checkout/_partials/order-confirmation-table.tpl
+!child_classic/templates/checkout/order-confirmation.tpl
