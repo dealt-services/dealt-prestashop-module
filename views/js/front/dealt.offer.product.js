@@ -79,7 +79,13 @@ const dealtProductPage = () => {
         })
       )
       .catch((e) => {
-        $error.text(e);
+        $error.text(
+          e instanceof Error
+            ? e.message
+            : typeof e === "object"
+            ? JSON.stringify(e)
+            : e
+        );
         $error.show();
       })
       .finally(() => $submit.prop("disabled", false));
