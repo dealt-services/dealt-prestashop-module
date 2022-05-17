@@ -16,6 +16,7 @@ cp logo.png dealtmodule/logo.png
 
 ### clean-up unnecessary files
 rm -rf dealtmodule/resources/scripts
+rm -rf dealtmodule/resources/dealt_classic_child
 rm -rf dealtmodule/views/node_modules
 
 ### composer install & dump autoload
@@ -29,9 +30,13 @@ cd dealtmodule
 echo "✅    Composer install & dump-autoload successful"
 
 cd ../
-echo "🤐    Creating module zip file.."
+echo "🤐    Creating module module release.."
 VERSION=$(git tag | sort -g | tail -1)
 zip -r dealtmodule_$VERSION.zip dealtmodule &>/dev/null
 rm -rf dealtmodule
 
+echo "🤐    Creating child theme release.."
+zip -r dealtmodule_theme_$VERSION.zip resources/dealt_classic_child &>/dev/null
+
 echo "✅    Archive created : dealtmodule_$VERSION.zip"
+echo "✅    Archive created : dealtmodule_theme_$VERSION.zip"
