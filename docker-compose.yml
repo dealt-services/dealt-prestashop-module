@@ -20,7 +20,7 @@ services:
       - 8080:80
     volumes:
       - .:/var/www/html/modules/${PS_MODULE_NAME}
-      - ./child_classic:/var/www/html/themes/child_classic
+      - ./resources/dealt_classic_child:/var/www/html/themes/dealt_classic_child
     environment:
       - DB_SERVER=mysql
       - DB_PREFIX=ps173_
