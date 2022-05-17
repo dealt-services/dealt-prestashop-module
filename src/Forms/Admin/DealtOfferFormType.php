@@ -5,22 +5,27 @@ namespace DealtModule\Forms\Admin;
 use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
+use DealtModule\Database\DealtInstaller;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Category;
+use Context;
 
 class DealtOfferFormType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param mixed $options
-     *
-     * @return void
-     */
-    public function buildForm($builder, $options)
-    {
-        $builder
+  /**
+   * @param FormBuilderInterface $builder
+   * @param mixed $options
+   *
+   * @return void
+   */
+  public function buildForm($builder, $options)
+  {
+    $dealtCategory = Category::searchByName(Context::getContext()->language->id, DealtInstaller::$DEALT_PRODUCT_CATEGORY_NAME, true, true);
+
+    $builder
       ->add('id_offer', HiddenType::class)
       ->add('id_dealt_product', HiddenType::class)
       ->add('title_offer', TextType::class, [
@@ -47,8 +52,8 @@ class DealtOfferFormType extends AbstractType
         'multiple' => true,
         'required' => false,
         'label' => 'Categories',
-        'disabled_values' => [], /* __dealt__ internal category not visible by default */
+        'disabled_values' => [$dealtCategory['id_category']],
         'translation_domain' => 'Modules.Dealtmodule.Admin',
       ]);
-    }
+  }
 }
