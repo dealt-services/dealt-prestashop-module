@@ -20,8 +20,7 @@ services:
       - 8080:80
     volumes:
       - .:/var/www/html/modules/${PS_MODULE_NAME}
-      - ./_theme/modules/ps_shoppingcart:/var/www/html/themes/classic/modules/ps_shoppingcart
-      - ./_theme/templates/checkout:/var/www/html/themes/classic/templates/checkout
+      - ./child_classic:/var/www/html/themes/child_classic
     environment:
       - DB_SERVER=mysql
       - DB_PREFIX=ps173_
