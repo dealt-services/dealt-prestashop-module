@@ -4,6 +4,8 @@
 
 > ps version : ^1.7.8
 
+Each release contains the dealt module + a child theme for the classic prestashop theme as a reference for integrators.
+
 ---
 
 ##### Improvements
