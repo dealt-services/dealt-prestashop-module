@@ -34,9 +34,11 @@ echo "🤐    Creating module module release.."
 VERSION=$(git tag | sort -g | tail -1)
 zip -r dealtmodule_$VERSION.zip dealtmodule &>/dev/null
 rm -rf dealtmodule
+echo "✅    Archive created : dealtmodule_$VERSION.zip"
 
 echo "🤐    Creating child theme release.."
-zip -r dealtmodule_theme_$VERSION.zip resources/dealt_classic_child &>/dev/null
+cd resources/
+zip -r dealtmodule_theme_$VERSION.zip dealt_classic_child &>/dev/null
+mv dealtmodule_theme_$VERSION.zip ../dealtmodule_theme_$VERSION.zip
 
-echo "✅    Archive created : dealtmodule_$VERSION.zip"
 echo "✅    Archive created : dealtmodule_theme_$VERSION.zip"
