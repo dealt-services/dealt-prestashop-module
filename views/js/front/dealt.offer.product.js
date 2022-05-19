@@ -101,8 +101,12 @@ window.$(() => {
     cleanup = dealtProductPage();
   }, 1200);
 
-  prestashop.on("updateProduct", () => {
-    $("#dealt-offer-card").addClass("loading");
+  prestashop.on("updateProduct", () =>
+    $("#dealt-offer-card").addClass("loading")
+  );
+
+  prestashop.on("updatedProduct", () => {
     onUpdateProduct();
+    $("#dealt-offer-card").removeClass("loading");
   });
 });
