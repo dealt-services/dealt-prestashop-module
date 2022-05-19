@@ -11,18 +11,11 @@ const dealtProductPage = () => {
   $("#dealt-offer-card").removeClass("loading");
 
   /* selectors */
-  const $price = $("#dealt-offer-price");
   const $input = $("#dealt-zipcode-autocomplete");
   const $submit = $("#dealt-offer-submit");
   const $error = $("#dealt-offer-error");
   const $form = $submit.closest("form");
 
-  /* data normalization */
-  const data = $form.serializeArray();
-  const qty = data.find(({ name }) => name === "qty");
-  const quantity = qty ? parseInt(qty.value, 10) : 1;
-  const price = parseFloat($submit.attr("data-dealt-offer-unit-price"));
-  $price.text(`${ps.currency.sign}${(quantity * price).toFixed(2)}`);
   $error.hide();
 
   /* Attributes parsing */
