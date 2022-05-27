@@ -17,10 +17,10 @@
             {if $order.details.invoice_url}
               {* [1][/1] is for a HTML tag. *}
               {l
-                          s='You can also [1]download your invoice[/1]'
-                          d='Shop.Theme.Checkout'
-                          sprintf=[
-                            '[1]' => "<a href='{$order.details.invoice_url}'>",
+                                  s='You can also [1]download your invoice[/1]'
+                                  d='Shop.Theme.Checkout'
+                                  sprintf=[
+                                    '[1]' => "<a href='{$order.details.invoice_url}'>",
               '[/1]' => "</a>"
               ]
               }
@@ -29,7 +29,7 @@
 
           {block name='hook_order_confirmation'}
             {$HOOK_ORDER_CONFIRMATION nofilter}
-            {hook h='displayDealtOrderConfirmation' hasDealtServices=$order.hasDealtServices}
+            {hook h='displayDealtOrderConfirmation' order=$order}
           {/block}
         </div>
       </div>
@@ -44,13 +44,13 @@
 
         {block name='order_confirmation_table'}
           {include
-                    file='checkout/_partials/order-confirmation-table.tpl'
-                    products=$order.products
-                    subtotals=$order.subtotals
-                    totals=$order.totals
-                    labels=$order.labels
-                    add_product_link=false
-                  }
+                            file='checkout/_partials/order-confirmation-table.tpl'
+                            products=$order.products
+                            subtotals=$order.subtotals
+                            totals=$order.totals
+                            labels=$order.labels
+                            add_product_link=false
+                          }
         {/block}
 
         {block name='order_details'}

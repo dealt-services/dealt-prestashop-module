@@ -425,7 +425,7 @@ class DealtModule extends Module
      */
     public function hookDisplayDealtOrderConfirmation($params)
     {
-        if (!isset($params['hasDealtServices'])) {
+        if ((!isset($params['order']) && !isset($params['order']['hasDealtServices'])) || $params['order']['hasDealtServices'] == false) {
             return null;
         }
 
