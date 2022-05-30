@@ -42,11 +42,11 @@ class AdminDealtMissionController extends AbstractAdminDealtController
         $this->flashModuleWarnings();
 
         return $this->render('@Modules/dealtmodule/views/templates/admin/mission.list.html.twig', [
-      'enableSidebar' => true,
-      'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-      'grid' => $grid,
-      'layoutHeaderToolbarBtn' => [],
-    ]);
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'grid' => $grid,
+            'layoutHeaderToolbarBtn' => [],
+        ]);
     }
 
     /**
@@ -63,13 +63,13 @@ class AdminDealtMissionController extends AbstractAdminDealtController
         }
 
         switch ($action) {
-      case 'resubmit':
-        $this->handleResubmit($missionId);
-        break;
-      case 'cancel':
-        $this->handleCancel($missionId);
-        break;
-    }
+            case 'resubmit':
+                $this->handleResubmit($missionId);
+                break;
+            case 'cancel':
+                $this->handleCancel($missionId);
+                break;
+        }
     }
 
     /**
