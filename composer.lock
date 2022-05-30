@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d0ea32e7ba9567e2dbc51cf7864f763",
+    "content-hash": "74d2b52425bee758b546aa4eab9fc181",
     "packages": [
         {
             "name": "dealt/dealt-sdk",
-            "version": "v0.0.2",
+            "version": "v0.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Mon-Super-Voisin/dealt-php-sdk.git",
-                "reference": "c44defe63c0a7ca07779df010d1715eabb21e3c8"
+                "url": "https://github.com/dealt-services/dealt-php-sdk.git",
+                "reference": "45ba7f7a61e36ebf677996983a379d3efe742365"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mon-Super-Voisin/dealt-php-sdk/zipball/c44defe63c0a7ca07779df010d1715eabb21e3c8",
-                "reference": "c44defe63c0a7ca07779df010d1715eabb21e3c8",
+                "url": "https://api.github.com/repos/dealt-services/dealt-php-sdk/zipball/45ba7f7a61e36ebf677996983a379d3efe742365",
+                "reference": "45ba7f7a61e36ebf677996983a379d3efe742365",
                 "shasum": ""
             },
             "require": {
@@ -51,10 +51,10 @@
                 "sdk"
             ],
             "support": {
-                "issues": "https://github.com/Mon-Super-Voisin/dealt-php-sdk/issues",
-                "source": "https://github.com/Mon-Super-Voisin/dealt-php-sdk/tree/v0.0.2"
+                "issues": "https://github.com/dealt-services/dealt-php-sdk/issues",
+                "source": "https://github.com/dealt-services/dealt-php-sdk/tree/v0.0.3"
             },
-            "time": "2022-03-24T08:54:16+00:00"
+            "time": "2022-05-30T10:52:43+00:00"
         },
         {
             "name": "giggsey/libphonenumber-for-php",
