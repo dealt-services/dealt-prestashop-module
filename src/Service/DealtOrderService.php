@@ -7,6 +7,7 @@ namespace DealtModule\Service;
 use Address;
 use Cart;
 use DealtModule\Entity\DealtCartProductRef;
+use DealtModule\Entity\DealtMission;
 use DealtModule\Presenter\DealtOfferPresenter;
 use DealtModule\Repository\DealtCartProductRefRepository;
 use DealtModule\Repository\DealtMissionRepository;
@@ -14,6 +15,7 @@ use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Tools\Helpers;
 use Order;
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderLazyArray;
+use Product;
 
 final class DealtOrderService
 {
@@ -122,6 +124,7 @@ final class DealtOrderService
                 $grossPrice = $checked ? $offerAvailability->gross_price->amount : 0;
                 $netPrice = $checked ? $offerAvailability->net_price->amount : 0;
 
+                /** @var DealtMission|null */
                 $match = $this->missionRepository->findOneBy([
                     'orderId' => $orderId,
                     'productId' => $productId,
@@ -129,10 +132,12 @@ final class DealtOrderService
                     'offer' => $offer,
                 ]);
 
+                $product = new Product($productId);
+
                 /* make sure missions have not already been submitted */
                 if ($match == null) {
                     foreach (range(1, $quantity) as $_) {
-                        $mission = $available ? $this->apiService->submitMission($offer, $order) : null;
+                        $mission = $available ? $this->apiService->submitMission($offer, $order, $product) : null;
                         $status = $mission != null ? $mission->status : 'ERROR_UNABLE_TO_SUBMIT';
                         $dealtMissionId = $mission != null ? $mission->id : '-';
 

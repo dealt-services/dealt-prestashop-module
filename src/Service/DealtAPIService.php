@@ -18,7 +18,9 @@ use DealtModule\Action\DealtAPIAction;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Tools\Helpers;
 use Exception;
+use Link;
 use Order;
+use Product;
 
 /**
  * Dealt API class wrapping the DealtSDK library
@@ -92,11 +94,10 @@ final class DealtAPIService
 
     /**
      * @param DealtOffer $offer
-     * @param Order $order
      *
      * @return Mission|null
      */
-    public function submitMission(DealtOffer $offer, Order $order)
+    public function submitMission(DealtOffer $offer, Order $order, Product $product)
     {
         $customer = $order->getCustomer();
         $address = new Address((int) $order->id_address_delivery);
@@ -130,6 +131,7 @@ final class DealtAPIService
                     'api',
                     ['ajax' => true, 'action' => DealtAPIAction::$MISSION_WEBHOOK],
                 ),
+                'extraDetails' => (new Link())->getProductLink($product),
             ]);
 
             return $result->mission;

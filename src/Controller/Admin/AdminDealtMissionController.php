@@ -93,10 +93,11 @@ class AdminDealtMissionController extends AbstractAdminDealtController
             return;
         }
 
-        $order = $mission->getOrder();
         $offer = $mission->getOffer();
+        $order = $mission->getOrder();
+        $product = $mission->getProduct();
 
-        $result = $apiService->submitMission($offer, $order);
+        $result = $apiService->submitMission($offer, $order, $product);
         if ($result == null) {
             return;
         }
