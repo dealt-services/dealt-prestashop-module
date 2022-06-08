@@ -83,7 +83,11 @@ class DealtProductRepository
         /* set stock available even when quantity = 0 */
         $stockAvailable = new StockAvailable(StockAvailable::getStockAvailableIdByProductId($product->id));
         $stockAvailable->out_of_stock = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
-        $stockAvailable->update();
+        $stockAvailable->id_product = $product->id;
+        $stockAvailable->id_product_attribute = 0;
+        $stockAvailable->quantity = 0;
+        $stockAvailable->save();
+
 
         return $product;
     }
