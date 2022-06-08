@@ -7,7 +7,6 @@ use Context;
 use DealtModule\Database\DealtInstaller;
 use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
-use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -34,11 +33,9 @@ class DealtOfferFormType extends AbstractType
         'help' => "Will also be used as the virtual product's title",
         'translation_domain' => 'Modules.Dealtmodule.Admin',
       ])
-      ->add('dealt_id_offer', TextWithLengthCounterType::class, [
+      ->add('dealt_id_offer', TextType::class, [
         'label' => 'Offer UUID',
         'required' => true,
-        'max_length' => 36,
-        'position' => 'after',
         'translation_domain' => 'Modules.Dealtmodule.Admin',
       ])
       ->add('offer_price', MoneyWithSuffixType::class, [

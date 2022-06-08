@@ -88,7 +88,6 @@ class DealtProductRepository
         $stockAvailable->quantity = 0;
         $stockAvailable->save();
 
-
         return $product;
     }
 
