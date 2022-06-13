@@ -2,7 +2,7 @@
 <module>
     <name>dealtmodule</name>
     <displayName><![CDATA[Dealt Module]]></displayName>
-    <version><![CDATA[0.0.5]]></version>
+    <version><![CDATA[0.0.6]]></version>
     <description><![CDATA[The official Dealt prestashop module.]]></description>
     <author><![CDATA[Dealt Developers]]></author>
     <tab><![CDATA[administration]]></tab>

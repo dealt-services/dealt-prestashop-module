@@ -81,7 +81,7 @@ class DealtModule extends Module
     {
         $this->name = 'dealtmodule';
         $this->tab = 'administration';
-        $this->version = '0.0.5';
+        $this->version = '0.0.6';
         $this->author = 'Dealt Developers';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
