@@ -28,17 +28,21 @@ class DealtModuleApiModuleFrontController extends ModuleActionHandlerFrontContro
 
     protected function handleOfferAvailability()
     {
-        $client = $this->module->getAPIService();
-        $dealtOffer = $client->checkAvailability(strval(Tools::getValue('dealt_id_offer')), strval(Tools::getValue('zip_code')));
+        try {
+            $client = $this->module->getAPIService();
+            $dealtOffer = $client->checkAvailability(strval(Tools::getValue('dealt_id_offer')), strval(Tools::getValue('zip_code')));
 
-        if ($dealtOffer == null) {
-            throw new Exception('Unable to check offer availability');
+            if ($dealtOffer == null) {
+                throw new Exception('Unable to check offer availability');
+            }
+
+            return array_merge(
+                ['available' => $dealtOffer->available],
+                $dealtOffer->available ? [] : ['reason' => $this->trans('Offer unavailable for the requested zip code', [], 'Modules.Dealtmodule.Shop')]
+            );
+        } catch (Exception $e) {
+            return ['available' => false, 'reason' => $e->getMessage()];
         }
-
-        return array_merge(
-            ['available' => $dealtOffer->available],
-            $dealtOffer->available ? [] : ['reason' => $this->trans('Offer unavailable for the requested zip code', [], 'Modules.Dealtmodule.Shop')]
-        );
     }
 
     /**
