@@ -161,8 +161,7 @@ class Helpers
     {
         $phoneUtil = PhoneNumberUtil::getInstance();
         try {
-            $proto = $phoneUtil->parse($phoneNumber);
-
+            $proto = $phoneUtil->parse($phoneNumber, $countryCode);
             return $phoneUtil->format($proto, PhoneNumberFormat::E164);
         } catch (NumberParseException $e) {
             return false;
