@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7f87d4a71804f039b0ecc2f9bc45ff7",
+    "content-hash": "85a129f252a1cfaebe1ba6f4adcdf264",
     "packages": [
         {
             "name": "dealt/dealt-sdk",
-            "version": "v0.0.4",
+            "version": "v0.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dealt-services/dealt-php-sdk.git",
@@ -52,7 +52,7 @@
             ],
             "support": {
                 "issues": "https://github.com/dealt-services/dealt-php-sdk/issues",
-                "source": "https://github.com/dealt-services/dealt-php-sdk/tree/v0.0.4"
+                "source": "https://github.com/dealt-services/dealt-php-sdk/tree/v0.0.5"
             },
             "time": "2022-06-15T12:28:21+00:00"
         },
