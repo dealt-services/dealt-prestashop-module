@@ -285,6 +285,17 @@ final class DealtCartService
     }
 
     /**
+     * Checks wether a cart has at least one service
+     *
+     * @param string $cartId
+     * @return boolean
+     */
+    public function isCartAttachedToService($cartId)
+    {
+        return $this->dealtCartRefRepository->findOneByCartId($cartId) != null;
+    }
+
+    /**
      * @param DealtModule $module
      *
      * @return void

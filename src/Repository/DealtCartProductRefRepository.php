@@ -51,6 +51,13 @@ class DealtCartProductRefRepository extends EntityRepository
         return $dealtCartRef;
     }
 
+    public function findOneByCartId($cartId)
+    {
+        $match = $this->findOneBy(['cartId' => $cartId]);
+
+        return $match;
+    }
+
     /**
      * @param int $id
      *
