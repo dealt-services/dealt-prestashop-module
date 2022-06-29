@@ -303,6 +303,13 @@ class DealtModule extends Module
      */
     public function hookActionCheckoutRender($params)
     {
+        $cartService = $this->getCartService();
+        $cartHasService = $cartService->isCartAttachedToService($params['cart']->id);
+
+        if (!$cartHasService) {
+            return;
+        }
+
         /** @var CheckoutProcess */
         $checkoutProcess = $params['checkoutProcess'];
 
