@@ -372,6 +372,8 @@ class DealtModule extends Module
             $this->smarty->assign($data);
             return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayProductAdditionalInfo.tpl');
         }
+
+        return null;
     }
 
     /**
