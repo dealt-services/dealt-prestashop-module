@@ -12,6 +12,8 @@ export const zipcodeAutocomplete = ($input, $submit) => {
    * - save zipCode in globals if valid
    */
   const onInputChange = (input) => {
+    if (typeof input !== "string") return $submit.prop("disabled", true);
+
     const zipCode = input.trim();
     const valid = source.some(({ value }) => zipCode === value);
     if (valid) window.DealtGlobals.customer = { zipCode };
