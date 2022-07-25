@@ -360,6 +360,8 @@ class DealtModule extends Module
         $productService = $this->getProductService();
 
         if (isset($params['product'])) {
+            if ($params['product']['availability'] == 'unavailable') return null;
+
             $productId = (int) $params['product']['id'];
             $productAttributeId = (int) $params['product']['id_product_attribute'];
             $data = $productService->presentOfferForProduct($productId, $productAttributeId);
