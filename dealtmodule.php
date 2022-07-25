@@ -356,25 +356,22 @@ class DealtModule extends Module
      *
      * @return string|null
      */
-    public function hookDisplayProductAdditionalInfo()
+    public function hookDisplayProductAdditionalInfo($params)
     {
-        $productId = (int) Tools::getValue('id_product');
-        $productAttributeId = Helpers::resolveProductAttributeId(
-            $productId,
-            Tools::getValue('id_product_attribute'),
-            Tools::getValue('group')
-        );
-
         $productService = $this->getProductService();
-        $data = $productService->presentOfferForProduct($productId, $productAttributeId);
 
-        if ($data == null) {
-            return null;
+        if (isset($params['product'])) {
+            $productId = (int) $params['product']['id'];
+            $productAttributeId = (int) $params['product']['id_product_attribute'];
+            $data = $productService->presentOfferForProduct($productId, $productAttributeId);
+
+            if ($data == null) {
+                return null;
+            }
+
+            $this->smarty->assign($data);
+            return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayProductAdditionalInfo.tpl');
         }
-
-        $this->smarty->assign($data);
-
-        return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayProductAdditionalInfo.tpl');
     }
 
     /**

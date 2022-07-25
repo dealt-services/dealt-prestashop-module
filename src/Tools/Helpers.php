@@ -127,31 +127,6 @@ class Helpers
     }
 
     /**
-     * Based on the current context, we must resolve
-     * the product attribute id differently
-     * - on ajax refresh : we only have the group values
-     *
-     * @param int|false $productAttributeId
-     * @param int|int[]|false|null $groupValues
-     *
-     * @return int|null
-     */
-    public static function resolveProductAttributeId($productId, $productAttributeId, $groupValues)
-    {
-        if ($productAttributeId != false) {
-            return $productAttributeId;
-        }
-        if (!isset($groupValues) || $groupValues == false) {
-            return null;
-        }
-
-        return Product::getIdProductAttributeByIdAttributes(
-            $productId,
-            $groupValues
-        );
-    }
-
-    /**
      * @param string $phoneNumber
      * @param string $countryCode
      *
