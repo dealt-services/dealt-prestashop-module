@@ -288,7 +288,8 @@ final class DealtCartService
      * Checks wether a cart has at least one service
      *
      * @param string $cartId
-     * @return boolean
+     *
+     * @return bool
      */
     public function isCartAttachedToService($cartId)
     {

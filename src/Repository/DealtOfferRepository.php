@@ -8,11 +8,9 @@ use Cart;
 use DealtModule\Entity\DealtOffer;
 use DealtModule\Entity\DealtOfferCategory;
 use Doctrine\ORM\EntityRepository;
-use Exception;
 use PrestaShopException;
 use Product;
 use Throwable;
-use UnexpectedValueException;
 
 /**
  * Doctrine DealtOffer repository class
@@ -65,7 +63,7 @@ class DealtOfferRepository extends EntityRepository
         $em = $this->getEntityManager();
 
         /** @var DealtOffer */
-        $offer = ($this->findOneBy(['id' => $offerId]))
+        $offer = $this->findOneBy(['id' => $offerId])
             ->setOfferTitle($offerTitle)
             ->setDealtOfferId($dealtOfferId);
 
@@ -101,7 +99,7 @@ class DealtOfferRepository extends EntityRepository
         $em = $this->getEntityManager();
 
         /** @var DealtOffer */
-        $offer = ($this->findOneBy(['id' => $offerId]));
+        $offer = $this->findOneBy(['id' => $offerId]);
         $product = $offer->getDealtProduct();
 
         try {
@@ -109,7 +107,6 @@ class DealtOfferRepository extends EntityRepository
         } catch (PrestaShopException $_) {
             /* product may have been manually deleted */
         }
-
 
         $em->remove($offer);
         $em->flush();

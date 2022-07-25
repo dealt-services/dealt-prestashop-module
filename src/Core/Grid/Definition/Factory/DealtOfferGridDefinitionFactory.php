@@ -85,9 +85,9 @@ final class DealtOfferGridDefinitionFactory extends AbstractFilterableGridDefini
                     'route_param_name' => 'offerId',
                     'route_param_field' => 'id_offer',
                     'confirm_message' => $this->trans(
-                      'Are you sure you want to delete this Dealt Offer ? All associated data will be forever lost (dealt product, linked categories etc..)',
-                      [],
-                      'Modules.Dealtmodule.Admin'
+                        'Are you sure you want to delete this Dealt Offer ? All associated data will be forever lost (dealt product, linked categories etc..)',
+                        [],
+                        'Modules.Dealtmodule.Admin'
                     ),
                   ])
               ),

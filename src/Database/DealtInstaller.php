@@ -12,7 +12,6 @@ use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Tools\Helpers;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
-use Exception;
 use Tools;
 
 final class DealtInstaller

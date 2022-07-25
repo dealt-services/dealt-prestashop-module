@@ -6,7 +6,6 @@ use DealtModule\Service\DealtAPIService;
 use DealtModule\Service\DealtCartService;
 use DealtModule\Service\DealtOrderService;
 use DealtModule\Service\DealtProductService;
-use DealtModule\Tools\Helpers;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 
 if (!defined('_PS_VERSION_')) {
@@ -370,6 +369,7 @@ class DealtModule extends Module
             }
 
             $this->smarty->assign($data);
+
             return $this->fetch('module:dealtmodule/views/templates/front/hookDisplayProductAdditionalInfo.tpl');
         }
 

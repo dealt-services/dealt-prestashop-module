@@ -15,13 +15,13 @@ class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontContr
     public function handleAction($action)
     {
         switch ($action) {
-      case DealtCartAction::$ADD_TO_CART:
-        return $this->handleAddToCart();
-      case DealtCartAction::$DETACH_OFFER:
-        return $this->handleDetachOffer();
-      case DealtCartAction::$GET_PRODUCT_ATTRIBUTE_ID:
-        return $this->handleGetProductAttributeId();
-    }
+            case DealtCartAction::$ADD_TO_CART:
+                return $this->handleAddToCart();
+            case DealtCartAction::$DETACH_OFFER:
+                return $this->handleDetachOffer();
+            case DealtCartAction::$GET_PRODUCT_ATTRIBUTE_ID:
+                return $this->handleGetProductAttributeId();
+        }
 
         throw new Exception('something went wrong while handling Cart action');
     }
@@ -32,10 +32,10 @@ class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontContr
     protected function handleAddToCart()
     {
         return $this->module->getCartService()->addDealtOfferToCart(
-      strval(Tools::getValue('dealt_id_offer')),
-      intval(Tools::getValue('id_product')),
-      intval(Tools::getValue('id_product_attribute'))
-    );
+            strval(Tools::getValue('dealt_id_offer')),
+            intval(Tools::getValue('id_product')),
+            intval(Tools::getValue('id_product_attribute'))
+        );
     }
 
     /**
@@ -44,10 +44,10 @@ class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontContr
     protected function handleDetachOffer()
     {
         return $this->module->getCartService()->detachDealtOffer(
-      strval(Tools::getValue('dealt_id_offer')),
-      intval(Tools::getValue('id_product')),
-      intval(Tools::getValue('id_product_attribute'))
-    );
+            strval(Tools::getValue('dealt_id_offer')),
+            intval(Tools::getValue('id_product')),
+            intval(Tools::getValue('id_product_attribute'))
+        );
     }
 
     /**
@@ -57,8 +57,8 @@ class DealtModuleCartModuleFrontController extends ModuleActionHandlerFrontContr
     {
         return [
       'productAttributeId' => (int) Product::getIdProductAttributeByIdAttributes(
-        Tools::getValue('id_product'),
-        Tools::getValue('group')
+          Tools::getValue('id_product'),
+          Tools::getValue('group')
       ),
     ];
     }

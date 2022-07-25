@@ -7,7 +7,6 @@ namespace DealtModule\Controller\Front;
 use DealtModule;
 use Exception;
 use ModuleFrontController;
-use PrestaShopException;
 use Throwable;
 use Tools;
 

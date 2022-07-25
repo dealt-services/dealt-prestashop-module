@@ -76,12 +76,12 @@ class AdminDealtOfferController extends AbstractAdminDealtController
     ', 'Modules.Dealtmodule.Admin'));
 
         return $this->render(
-      '@Modules/dealtmodule/views/templates/admin/form/dealt.offer.form.html.twig',
-      [
-        'form' => $form->createView(),
-        'enableSidebar' => true,
-      ]
-    );
+            '@Modules/dealtmodule/views/templates/admin/form/dealt.offer.form.html.twig',
+            [
+              'form' => $form->createView(),
+              'enableSidebar' => true,
+            ]
+        );
     }
 
     /**
@@ -108,12 +108,12 @@ class AdminDealtOfferController extends AbstractAdminDealtController
         }
 
         return $this->render(
-      '@Modules/dealtmodule/views/templates/admin/form/dealt.offer.form.html.twig',
-      [
-        'form' => $form->createView(),
-        'enableSidebar' => true,
-      ]
-    );
+            '@Modules/dealtmodule/views/templates/admin/form/dealt.offer.form.html.twig',
+            [
+              'form' => $form->createView(),
+              'enableSidebar' => true,
+            ]
+        );
     }
 
     /**

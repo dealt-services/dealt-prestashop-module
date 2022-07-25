@@ -45,13 +45,13 @@ class AdminDealtConfigurationController extends AbstractAdminDealtController
         $this->flashModuleWarnings();
 
         return $this->render(
-      '@Modules/dealtmodule/views/templates/admin/form/dealt.configuration.form.html.twig',
-      [
-        'form' => $form->createView(),
-        'enableSidebar' => true,
-        'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-      ]
-    );
+            '@Modules/dealtmodule/views/templates/admin/form/dealt.configuration.form.html.twig',
+            [
+              'form' => $form->createView(),
+              'enableSidebar' => true,
+              'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
+            ]
+        );
     }
 
     /**

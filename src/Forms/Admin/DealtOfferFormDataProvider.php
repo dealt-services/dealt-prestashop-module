@@ -6,7 +6,6 @@ use DealtModule\Entity\DealtOffer;
 use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Repository\DealtProductRepository;
 use DealtModule\Tools\Helpers;
-use Exception;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 use Throwable;
 
