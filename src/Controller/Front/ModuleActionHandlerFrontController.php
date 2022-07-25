@@ -7,6 +7,8 @@ namespace DealtModule\Controller\Front;
 use DealtModule;
 use Exception;
 use ModuleFrontController;
+use PrestaShopException;
+use Throwable;
 use Tools;
 
 abstract class ModuleActionHandlerFrontController extends ModuleFrontController
@@ -61,7 +63,7 @@ abstract class ModuleActionHandlerFrontController extends ModuleFrontController
                 'action' => $action,
                 'result' => $result,
             ]));
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->displayAjaxError($e->getMessage());
         }
     }

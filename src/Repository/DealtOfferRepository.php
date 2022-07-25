@@ -9,7 +9,10 @@ use DealtModule\Entity\DealtOffer;
 use DealtModule\Entity\DealtOfferCategory;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use PrestaShopException;
 use Product;
+use Throwable;
+use UnexpectedValueException;
 
 /**
  * Doctrine DealtOffer repository class
@@ -103,9 +106,10 @@ class DealtOfferRepository extends EntityRepository
 
         try {
             $product->delete();
-        } catch (Exception $_) {
-            /* product may have been manually delete */
+        } catch (PrestaShopException $_) {
+            /* product may have been manually deleted */
         }
+
 
         $em->remove($offer);
         $em->flush();
@@ -179,7 +183,7 @@ class DealtOfferRepository extends EntityRepository
             }, $cartProducts);
 
             return $this->findBy(['dealtProductId' => $cartProductIds]);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             /* cart may not exist yet in DB and will make internal cart methods crash */
             return [];
         }

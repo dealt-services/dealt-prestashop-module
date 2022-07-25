@@ -132,7 +132,7 @@ final class DealtInstaller
                 }
                 $this->connection->executeQuery($query);
             }
-        } catch (Exception $e) {
+        } catch (DBALException $e) {
             $errors[] = [
                 'key' => json_encode($e),
                 'parameters' => [],
@@ -159,7 +159,7 @@ final class DealtInstaller
                 $sql = 'DROP TABLE IF EXISTS ' . $this->dbPrefix . $tableName;
                 $this->connection->executeQuery($sql);
             }
-        } catch (Exception $e) {
+        } catch (DBALException $e) {
             $errors[] = [
                 'key' => json_encode($e),
                 'parameters' => [],

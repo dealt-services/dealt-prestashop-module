@@ -8,6 +8,7 @@ use DealtModule\Repository\DealtProductRepository;
 use DealtModule\Tools\Helpers;
 use Exception;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
+use Throwable;
 
 class DealtOfferFormDataProvider implements FormDataProviderInterface
 {
@@ -46,7 +47,7 @@ class DealtOfferFormDataProvider implements FormDataProviderInterface
         try {
             $product = $this->dealtDealtProductRepository->findOneById($offer->getDealtProductId());
             $offerData['offer_price'] = $product->price;
-        } catch (Exception $_) { /* associated product may have been deleted */
+        } catch (Throwable $e) { /* associated product may have been deleted */
             $offerData['offer_price'] = Helpers::formatPriceForDB('0.00');
         }
 

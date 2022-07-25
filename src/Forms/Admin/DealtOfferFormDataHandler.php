@@ -64,7 +64,7 @@ class DealtOfferFormDataHandler implements FormDataHandlerInterface
         try {
             $this->productRepository->update($offer->getDealtProductId(), $offerTitle, $offerPrice);
             $this->offerRepository->update($offerId, $offerTitle, $dealtOfferId, null, $categoryIds);
-        } catch (ProductNotFoundException $_) {
+        } catch (ProductNotFoundException $e) {
             $product = $this->productRepository->create($offerTitle, $dealtOfferId, $offerPrice);
             $this->offerRepository->update($offerId, $offerTitle, $dealtOfferId, $product->id, $categoryIds);
         }

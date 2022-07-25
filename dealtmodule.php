@@ -149,7 +149,7 @@ class DealtModule extends Module
     {
         try {
             $installer = $this->get('dealtmodule.installer');
-        } catch (Exception $_) {
+        } catch (Exception $e) {
             $installer = null;
         }
 
