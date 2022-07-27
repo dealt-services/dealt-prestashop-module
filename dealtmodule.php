@@ -339,8 +339,13 @@ class DealtModule extends Module
      */
     public function hookActionCartSave($data)
     {
+        /* if the cart is being tampered with outside of a user context -> skip hook */
+        if (Context::getContext()->cart == null) {
+            return;
+        }
+
         $cartService = $this->getCartService();
-        $cartService->sanitizeDealtCart($data['cart']->id);
+        $cartService->sanitizeDealtCart($data['cart']);
     }
 
     public function hookActionPaymentConfirmation($data)
@@ -359,9 +364,10 @@ class DealtModule extends Module
     public function hookDisplayProductAdditionalInfo($params)
     {
         $productService = $this->getProductService();
-
         if (isset($params['product'])) {
-            if ($params['product']['availability'] == 'unavailable') return null;
+            if ($params['product']['availability'] == 'unavailable') {
+                return null;
+            }
 
             $productId = (int) $params['product']['id'];
             $productAttributeId = (int) $params['product']['id_product_attribute'];
