@@ -114,7 +114,7 @@ final class DealtCartService
         }
 
         $offerProductId = $offer->getDealtProductId();
-        $productQuantity = intval($cartProductsIndex[$productId][$productAttributeId]['quantity']);
+        $productQuantity = intval($cartProductsIndex[$productId][$productAttributeId]['cart_quantity']);
 
         $this->dealtCartRefRepository->delete($dealtCartRef->getId());
         $cart->updateQty($productQuantity, $offerProductId, null, false, 'down');
@@ -219,7 +219,7 @@ final class DealtCartService
                 if (isset($cartProductsIndex[$cartProductId][$cartProductAttributeId])) {
                     /* we have a match in the cart */
                     $cartProduct = $cartProductsIndex[$cartProductId][$cartProductAttributeId];
-                    $quantity += $cartProduct['quantity'];
+                    $quantity += $cartProduct['cart_quantity'];
                 } else {
                     /*
                      * we should delete the DealtCartProductRef reference as the product id/attribute_id pair could not be
@@ -231,7 +231,7 @@ final class DealtCartService
 
             $offerProductId = $offer->getDealtProductId();
             $newQty = (int) $quantity;
-            $currentQty = (int) $cartProductsIndex[$offerProductId][0]['quantity'];
+            $currentQty = (int) $cartProductsIndex[$offerProductId][0]['cart_quantity'];
 
             if ($newQty != $currentQty) {
                 $delta = $newQty - $currentQty;

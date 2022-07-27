@@ -43,7 +43,7 @@ class DealtOfferPresenter
     public function present(DealtOffer $offer, Cart $cart, $productId, $productAttributeId, $orderId = null)
     {
         $cartProduct = Helpers::getProductFromCart($cart, $productId, $productAttributeId);
-        $quantity = Tools::getValue('quantity_wanted', isset($cartProduct['quantity']) ? $cartProduct['quantity'] : null);
+        $quantity = Tools::getValue('quantity_wanted', isset($cartProduct['cart_quantity']) ? $cartProduct['cart_quantity'] : null);
 
         return [
             'offer' => array_merge([

@@ -112,7 +112,7 @@ final class DealtOrderService
          */
         foreach ($results as $_ => $subResults) {
             foreach ($subResults as $subResult) {
-                $quantity = $subResult['cartProduct']['quantity'];
+                $quantity = $subResult['cartProduct']['cart_quantity'];
                 $productId = $subResult['cartProduct']['id_product'];
                 $productAttributeId = $subResult['cartProduct']['id_product_attribute'];
                 $offer = $subResult['offer'];

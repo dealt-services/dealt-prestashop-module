@@ -34,7 +34,7 @@
     <div class="col-sm-6 col-xs-12 qty">
         <div class="row">
             <div class="col-xs-4 text-sm-center text-xs-left">{$offer.unitPriceFormatted}</div>
-            <div class="col-xs-4 text-sm-center">{$binding.cartProduct["quantity"]}</div>
+            <div class="col-xs-4 text-sm-center">{$binding.cartProduct["cart_quantity"]}</div>
             <div class="col-xs-4 text-sm-center text-xs-right bold">{$offer.price}</div>
         </div>
     </div>

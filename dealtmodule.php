@@ -328,6 +328,7 @@ class DealtModule extends Module
         $dealtStep->setCheckoutProcess($checkoutProcess);
 
         array_splice($steps, $deliveryStepIdx + 1, 0, [$dealtStep]);
+
         $checkoutProcess->setSteps($steps);
     }
 
