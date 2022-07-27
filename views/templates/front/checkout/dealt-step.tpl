@@ -42,7 +42,7 @@
                                 </h5>
                                 <h6 style="margin-top: 8px;">
                                     <span style="font-size: 11px">
-                                        {l s='For  %quantity% x %title% %attributes%' sprintf=['%title%' => $data.binding.cartProduct.name, '%attributes%' => $data.binding.cartProduct.attributes, '%quantity%' => $data.binding.cartProduct.quantity] d='Modules.Dealtmodule.Shop'}
+                                        {l s='For  %quantity% x %title%' sprintf=['%title%' => $data.binding.cartProduct.name, '%quantity%' => $data.binding.cartProduct.quantity] d='Modules.Dealtmodule.Shop'}
                                     </span>
                                 </h6>
                                 <p style="font-size: 12px; margin: 0;  line-height: 1.2;">

@@ -87,7 +87,7 @@ class Helpers
      */
     public static function getProductFromCart(Cart $cart, $productId, $productAttributeId = null, $fullInfos = false)
     {
-        $cartProducts = $cart->getProducts(true, false, null, $fullInfos, false);
+        $cartProducts = $cart->getProducts(false, false, null, $fullInfos, false);
 
         foreach ($cartProducts as $cartProduct) {
             if (

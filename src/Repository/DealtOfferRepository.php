@@ -172,7 +172,7 @@ class DealtOfferRepository extends EntityRepository
      */
     public function getDealtOffersFromCart(Cart $cart)
     {
-        $cartProducts = $cart->getProducts(true, false, null, false, false);
+        $cartProducts = $cart->getProducts(false, false, null, false, false);
 
         $cartProductIds = array_map(function ($cartProduct) {
             return (int) $cartProduct['id_product'];

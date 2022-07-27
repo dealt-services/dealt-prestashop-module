@@ -14,6 +14,7 @@ use DealtModule\Repository\DealtCartProductRefRepository;
 use DealtModule\Repository\DealtOfferRepository;
 use DealtModule\Tools\Helpers;
 use Exception;
+use Product;
 
 /**
  * Dealt Cart class allows interacting with
@@ -86,12 +87,14 @@ final class DealtCartService
         $this->dealtCartRefRepository->create($cart->id, $productId, $productAttributeId, $offer);
 
         /* this will trigger the dealt cart sanitization via PS hooks */
-        return $cart->updateQty(
-            (int) $cartProduct['quantity'],
+        $result = Context::getContext()->cart->updateQty(
+            (int) $cartProduct['cart_quantity'],
             $offer->getDealtProductId(),
             null,
-            false
+            false,
         );
+
+        return $result;
     }
 
     public function detachDealtOffer($dealtOfferId, $productId, $productAttributeId)
@@ -117,7 +120,7 @@ final class DealtCartService
         $productQuantity = intval($cartProductsIndex[$productId][$productAttributeId]['cart_quantity']);
 
         $this->dealtCartRefRepository->delete($dealtCartRef->getId());
-        $cart->updateQty($productQuantity, $offerProductId, null, false, 'down');
+        Context::getContext()->cart->updateQty($productQuantity, $offerProductId, null, false, 'down');
 
         return ['deleted' => true];
     }
@@ -133,6 +136,7 @@ final class DealtCartService
     public function sanitizeCartPresenter(&$presentedCart)
     {
         $cart = Context::getContext()->cart;
+
         /** @var DealtCartProductRef[] */
         $dealtCartRefs = $this->dealtCartRefRepository->findBy(['cartId' => $cart->id]);
 
@@ -172,6 +176,7 @@ final class DealtCartService
          * have filtered the dealt products
          */
         $totalCount = 0;
+
         foreach ($presentedCart['products'] as $product) {
             $totalCount += (int) $product['quantity'];
         }
@@ -186,18 +191,17 @@ final class DealtCartService
      * Sanitization of prestashop cart against dealt constraints
      * - get all dealt cart products
      *
-     * @param int $cartId
+     * @param Cart $cart
      *
      * @return void
      */
-    public function sanitizeDealtCart($cartId)
+    public function sanitizeDealtCart($cart)
     {
         if ($this->cartSanitized) {
             return;
         }
-        $this->cartSanitized = true;
 
-        $cart = new Cart($cartId);
+        $this->cartSanitized = true;
         $offers = $this->offerRepository->getDealtOffersFromCart($cart);
         $cartProductsIndex = Helpers::indexCartProducts($cart);
 
@@ -253,7 +257,7 @@ final class DealtCartService
      */
     protected function sanitizeSubTotals(Cart $cart, &$presentedCart, $products_count)
     {
-        $cartProductsIndex = Helpers::indexCartProducts($cart);
+        $cartProductsIndex = Helpers::indexCartProducts($cart, true);
         $offers = $this->offerRepository->getDealtOffersFromCart($cart);
 
         $dealtTotal = 0;
