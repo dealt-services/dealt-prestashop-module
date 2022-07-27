@@ -81,12 +81,13 @@ class Helpers
      * @param Cart $cart
      * @param int $productId
      * @param int|null $productAttributeId
+     * @param bool $fullInfos
      *
      * @return mixed|null
      */
-    public static function getProductFromCart(Cart $cart, $productId, $productAttributeId = null)
+    public static function getProductFromCart(Cart $cart, $productId, $productAttributeId = null, $fullInfos = false)
     {
-        $cartProducts = $cart->getProducts();
+        $cartProducts = $cart->getProducts(true, false, null, $fullInfos, false);
 
         foreach ($cartProducts as $cartProduct) {
             if (
@@ -106,14 +107,15 @@ class Helpers
      * Useful for quick lookup.
      *
      * @param Cart $cart
+     * @param bool $fullInfos
      *
      * @return array<int, array<int, mixed>>
      */
-    public static function indexCartProducts(Cart $cart)
+    public static function indexCartProducts(Cart $cart, $fullInfos = false)
     {
         $cartProducts = [];
 
-        foreach ($cart->getProducts() as $cartProduct) {
+        foreach ($cart->getProducts(true, false, null, $fullInfos, false) as $cartProduct) {
             $productId = $cartProduct['id_product'];
             $productAttributeId = $cartProduct['id_product_attribute'];
 
