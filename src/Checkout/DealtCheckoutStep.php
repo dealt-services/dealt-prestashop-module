@@ -79,15 +79,21 @@ class DealtCheckoutStep extends AbstractCheckoutStepCore
         $this->setTitle($this->getTranslator()->trans('Service availability', [], 'Modules.Dealtmodule.Shop'));
 
         $checkoutSession = $this->getCheckoutSession();
+
         if ($this->valid == null || $this->validPhone == null) {
             $this->setComplete(false);
+        }
+
+        if (intval($checkoutSession->getIdAddressDelivery()) != 0) {
+            $this->setReachable(true);
         }
 
         if (($this->isReachable() || intval($checkoutSession->getIdAddressDelivery()) != 0) && !$this->isComplete()) {
             $this->verifyOfferAvailabilityForSession();
             $this->verifyPhoneNumberForSession();
 
-            $this->setComplete($this->valid && $this->validPhone);
+            $pass = $this->valid && $this->validPhone;
+            $this->setComplete($pass);
         }
     }
 
