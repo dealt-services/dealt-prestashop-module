@@ -10,7 +10,6 @@ use DealtModule\Entity\DealtOfferCategory;
 use Doctrine\ORM\EntityRepository;
 use PrestaShopException;
 use Product;
-use Throwable;
 
 /**
  * Doctrine DealtOffer repository class
@@ -173,16 +172,12 @@ class DealtOfferRepository extends EntityRepository
      */
     public function getDealtOffersFromCart(Cart $cart)
     {
-        try {
-            $cartProducts = $cart->getProducts();
-            $cartProductIds = array_map(function ($cartProduct) {
-                return (int) $cartProduct['id_product'];
-            }, $cartProducts);
+        $cartProducts = $cart->getProducts(true, false, null, false, false);
 
-            return $this->findBy(['dealtProductId' => $cartProductIds]);
-        } catch (Throwable $e) {
-            /* cart may not exist yet in DB and will make internal cart methods crash */
-            return [];
-        }
+        $cartProductIds = array_map(function ($cartProduct) {
+            return (int) $cartProduct['id_product'];
+        }, $cartProducts);
+
+        return $this->findBy(['dealtProductId' => $cartProductIds]);
     }
 }
