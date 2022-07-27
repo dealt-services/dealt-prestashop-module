@@ -61,8 +61,8 @@ class DealtOfferPresenter
             'binding' => [
                 'productId' => $productId,
                 'productAttributeId' => $productAttributeId,
-                'cartProduct' => Helpers::getProductFromCart($cart, $productId, $productAttributeId),
-                'cartOffer' => Helpers::getProductFromCart($cart, $offer->getDealtProductId()),
+                'cartProduct' => $cartProduct,
+                'cartOffer' => Helpers::getProductFromCart($cart, $offer->getDealtProductId(), null),
                 'data' => array_merge(
                     [
                         'cartId' => $cart->id,
