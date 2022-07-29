@@ -9,7 +9,7 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "dealt/dealt-sdk": "0.0.6",
+    "dealt/dealt-sdk": "0.0.7",
     "giggsey/libphonenumber-for-php": "8.12.47.1"
   },
   "autoload": {
