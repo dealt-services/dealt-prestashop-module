@@ -60,7 +60,7 @@ final class DealtAPIService
 
         return new DealtClient([
             'api_key' => $this->api_key,
-            'env' => $this->production ? DealtEnvironment::PRODUCTION : DealtEnvironment::TEST,
+            'env' => $this->production ? DealtEnvironment::$PRODUCTION : DealtEnvironment::$TEST,
         ]);
     }
 
