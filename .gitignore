@@ -15,3 +15,4 @@ child_classic/templates/checkout/**/*.tpl
 !child_classic/templates/checkout/_partials/cart-detailed-product-line.tpl
 !child_classic/templates/checkout/_partials/order-confirmation-table.tpl
 !child_classic/templates/checkout/order-confirmation.tpl
+/.idea/*
